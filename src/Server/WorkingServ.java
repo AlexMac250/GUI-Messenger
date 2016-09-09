@@ -114,7 +114,7 @@ public class WorkingServ extends Thread {
                 }
                 break;
             case "register":
-                Server.register(command[1], command[2], command[3]);
+                Server.register(command[1], command[2]);
                 send(new Command("registered", "true"));
                 break;
             case "addFriend":
