@@ -146,7 +146,7 @@ public class Client {
                 for (Friend fr : account.friends){
                     if(fr.id == Integer.parseInt(command[2])){
                         fr.isOnline = true;
-                      //  Frames.MainFrame.panFriends.removeAll();
+                        //Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
                         break;
                     }
@@ -156,7 +156,7 @@ public class Client {
                 for (Friend fr : account.friends){
                     if(fr.id == Integer.parseInt(command[2])) {
                         fr.isOnline = false;
-                  //      Frames.MainFrame.panFriends.removeAll();
+                        //Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
                         break;
                     }

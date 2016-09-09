@@ -188,12 +188,14 @@ class Frames {
         private JTextField textField;
         private JScrollPane scrollFriends;
         private JScrollPane scrollMessage;
+        Friend currentFriend;
 
         public MainFrame() {
         }
 
         @Override
         public void initial() {
+            currentFriend = null;
             frame = new JFrame("NEOnline - Сообщения (v0.1 beta 1)");
             frame.setSize(701, 406);
             frame.setResizable(false);
@@ -252,6 +254,7 @@ class Frames {
             frame.setLocationRelativeTo(null);
 
             butSendMessage.addActionListener(e -> {
+                Client.execute(new  String[] {"send", currentFriend.id+"", textField.getText()});
             });
         }
 
@@ -382,7 +385,8 @@ class Frames {
                     login = login.substring(0, max - 1) + "...";
                 }
                 button.setText(login);
-                JCheckBox checkBoxOnline = new JCheckBox("", Client.account.friends.get(i).isOnline);
+                currentFriend = Client.account.friends.get(i);
+                JCheckBox checkBoxOnline = new JCheckBox("", currentFriend.isOnline);
                 checkBoxOnline.setEnabled(false);
 
                 if (checkBoxOnline.isSelected()) checkBoxOnline.setToolTipText("Online");
@@ -403,7 +407,10 @@ class Frames {
                     c.gridy = i+1;
                     panFriends.add(new JLabel("    "), c);
                 }
-                button.addActionListener(e -> System.out.println(frame.getSize().toString()));
+                button.addActionListener(e -> {
+                    currentFriend = Client.account.friends.get(1);// FIXME: 10.09.16 текущий диалог с френдом
+                    System.out.println(frame.getSize().toString());
+                });
             }
             //panFriends.setSize(600, panFriends.getHeight());
         }
@@ -555,8 +562,14 @@ class Frames {
             GridBagLayoutManager(frame, butRefuse, GridBagConstraints.HORIZONTAL, 0, 2, 1);
             GridBagLayoutManager(frame, butAccept, GridBagConstraints.HORIZONTAL, 1, 2, 1);
 
-            butAccept.addActionListener(e -> Client.resOfFriend("yes", friend.id));
-            butRefuse.addActionListener(e -> Client.resOfFriend("no", friend.id));
+            butAccept.addActionListener(e -> {
+                Client.resOfFriend("yes", friend.id);
+                frame.dispose();
+            });
+            butRefuse.addActionListener(e -> {
+                Client.resOfFriend("no", friend.id);
+                frame.dispose();
+            });
 
             frame.pack();
             frame.setAlwaysOnTop(true);
