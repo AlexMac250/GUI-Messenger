@@ -69,13 +69,17 @@ public class Client {
 
     public static void register(String login, String password){
         send(new Message("register",login,password,NODATE));
-        try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
+        try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
         if (statusRegistered){
             login(login, password);
             Frames.RegisterFrame.dispose();
         } else {
             Frames.RegisterFrame.setInfo("Ошибка регистрации", Color.RED);
         }
+    }
+
+    public static void resOfFriend(String ans, int id){
+        execute(descript("resOfFriend$"+id+"$"+ans));
     }
 
     public static void execute(String[] command){
@@ -159,7 +163,7 @@ public class Client {
                     break;
             //доделай сам
             case "askToFriend" :
-                //выводи блокирующиее окно
+                Frames.new AddFriend(new Friend(Integer.parseInt(command[2]), command[3]));
                 console.log("Accept friend :" +command[3] + " ?");
                 break;
             case "registered" :

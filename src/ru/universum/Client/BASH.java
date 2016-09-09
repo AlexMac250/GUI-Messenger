@@ -46,6 +46,9 @@ public class BASH extends Thread{
             case "login":
                 Client.login(line[1], line[2]);
                 break;
+            case "addFriend":
+                Client.addFriend(new String[]{line[1], line[2]});
+                break;
 
             case "exit":
                 System.exit(2);

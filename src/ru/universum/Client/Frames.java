@@ -555,7 +555,9 @@ class Frames {
             GridBagLayoutManager(frame, butRefuse, GridBagConstraints.HORIZONTAL, 0, 2, 1);
             GridBagLayoutManager(frame, butAccept, GridBagConstraints.HORIZONTAL, 1, 2, 1);
 
-            butRefuse.addActionListener(e -> frame.dispose());
+            butAccept.addActionListener(e -> Client.resOfFriend("yes", friend.id));
+            butRefuse.addActionListener(e -> Client.resOfFriend("no", friend.id));
+
             frame.pack();
             frame.setAlwaysOnTop(true);
             frame.setResizable(false);
