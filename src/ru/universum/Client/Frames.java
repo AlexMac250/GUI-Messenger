@@ -449,12 +449,10 @@ class Frames {
             frame.setLocationRelativeTo(null);
 
             registerBut.addActionListener(e -> {        // FIXME: 30.08.16 ДОБАВИТЬ MD5 ШИФРОВАНИЕ
-                //if (passwordField.getText().equals(passwordField2.getText()) & passwordField.getText().length() > 5){
                     if (!passwordField.getText().contains("!") && !passwordField.getText().contains("@") && !passwordField.getText().contains("\"") && !passwordField.getText().contains("?")){
                         Client.register(loginField.getText(), passwordField.getText());
                     }
                 }
-            //}
             );
         }
 

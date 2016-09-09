@@ -72,6 +72,7 @@ public class Client {
         try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
         if (statusRegistered){
             login(login, password);
+            Frames.RegisterFrame.dispose();
         } else {
             Frames.RegisterFrame.setInfo("Ошибка регистрации", Color.RED);
         }
