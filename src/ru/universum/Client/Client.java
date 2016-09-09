@@ -33,12 +33,6 @@ public class Client {
     static Frames Frames = new Frames();
 
     public static void main(String[] args) {
-
- //   } finally {
- //       try {
- //           socket.close();
- //       } catch (IOException ignored){}
-
         Frames.startGUI();
         new BASH().run();
     }
