@@ -252,9 +252,6 @@ class Frames {
             frame.setLocationRelativeTo(null);
 
             butSendMessage.addActionListener(e -> {
-                panFriends.setSize(panFriends.getWidth()+50,panFriends.getHeight());
-                MessageBox.setText("");
-                setInfo("Message sanded", Color.DARK_GRAY);
             });
         }
 
@@ -452,12 +449,13 @@ class Frames {
             frame.setLocationRelativeTo(null);
 
             registerBut.addActionListener(e -> {        // FIXME: 30.08.16 ДОБАВИТЬ MD5 ШИФРОВАНИЕ
-                if (passwordField.getText().equals(passwordField2.getText()) && passwordField.getText().length() > 5){
+                //if (passwordField.getText().equals(passwordField2.getText()) & passwordField.getText().length() > 5){
                     if (!passwordField.getText().contains("!") && !passwordField.getText().contains("@") && !passwordField.getText().contains("\"") && !passwordField.getText().contains("?")){
                         Client.register(loginField.getText(), passwordField.getText());
                     }
                 }
-            });
+            //}
+            );
         }
 
         @Override

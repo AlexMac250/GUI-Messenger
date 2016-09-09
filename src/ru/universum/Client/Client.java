@@ -69,6 +69,12 @@ public class Client {
 
     public static void register(String login, String password){
         send(new Message("register",login,password,NODATE));
+        try {TimeUnit.SECONDS.sleep(3);} catch (InterruptedException ignored) {}
+        if (statusRegistered){
+            login(login, password);
+        } else {
+            Frames.RegisterFrame.setInfo("Ошибка регистрации", Color.RED);
+        }
     }
 
     public static void execute(String[] command){
