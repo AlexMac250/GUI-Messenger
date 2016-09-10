@@ -185,6 +185,8 @@ public class Client {
             case "user" :
                 usersInSearch.add(new Account(command[2],Integer.parseInt(command[1])));
                 break;
+            case "findByNick" :
+                break;
         }
     }
 

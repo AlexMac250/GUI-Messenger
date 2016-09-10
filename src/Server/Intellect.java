@@ -96,6 +96,9 @@ public class Intellect extends Thread{
                 }
                 GettingUsers+=20;
                 break;
+            case "findByNick" :
+
+                break;
         }
     }
     @Override
