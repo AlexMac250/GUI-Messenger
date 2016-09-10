@@ -64,15 +64,10 @@ public class Client {
     }
 
     public static void login(String login, String password){
-        sendMessage("login$"+login+"$"+password);
-    }
+        send(new Message("login",login,password,NODATE));}
 
     public static void register(String login, String password){
-        sendMessage("register$"+login+"$"+password);
-    }
-
-    public static void sendMessage(String message){
-            execute(descript(message));
+        send(new Message("register",login,password,NODATE));
     }
 
     public static void execute(String[] command){
