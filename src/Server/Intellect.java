@@ -58,7 +58,6 @@ public class Intellect extends Thread{
         switch (command[0]){
             case "send":
                 if(Server.accs.get(Integer.parseInt(command[1])).isOnline){
-                    command[1] = acc.login;
                     Server.accs.get(Integer.parseInt(command[1])).getWorkingServ().execute(command);
                 }
                 else{
