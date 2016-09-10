@@ -6,7 +6,7 @@ import java.util.List;
 public class FileLoader {
 
     public static String getPath(){
-        return System.getProperty("user.home")+"/"+"Accounts(NEOnline).base";
+        return System.getProperty("user.home")+"/"+"Accounts(NEOnline).txt";
     }
 
     public static ArrayList<Account> Import() {
