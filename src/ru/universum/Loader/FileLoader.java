@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileLoader {
-
-    public static String getPath(){
-        return System.getProperty("user.home")+"/"+"Accounts(NEOnline).txt";
-    }
+    static File file = new File(System.getProperty("user.home")+"/"+"Accounts(NEOnline).txt");
 
     public static ArrayList<Account> Import() {
+        try {
+            file.createNewFile();
+        } catch (IOException e) {}
         ArrayList<Account> base = new ArrayList<>();
         List<String> inf = new ArrayList<>();
         String info = "";
         int i;
         ArrayList<Friend> friends = new ArrayList<>();
-        try (FileInputStream fin = new FileInputStream(getPath())) {
+        try (FileInputStream fin = new FileInputStream(file)) {
             while ((i = fin.read()) != -1) {
                 if ((char) i != '\n' & (char)i != '\r') {
                     if ((char) i == '/') {
@@ -76,7 +76,7 @@ public class FileLoader {
     }
 
     public static void writeInBase(Account acc) {
-        try (FileWriter fon = new FileWriter(getPath(), true)) {
+        try (FileWriter fon = new FileWriter(file, true)) {
             Integer i = 0;
             String info = "";
             info += "\r\n";
@@ -107,7 +107,7 @@ public class FileLoader {
     }
 
     public static void rewriteInBase(Account acc, boolean isFirst){
-        try (FileWriter fon = new FileWriter(getPath(), isFirst)) {
+        try (FileWriter fon = new FileWriter(file, isFirst)) {
         Integer i = 0;
         String info = "";
         info += "\r\n";
