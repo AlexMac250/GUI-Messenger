@@ -85,8 +85,18 @@ public class Client {
 
     public static void writeMessage(String from, String date, String message){
         Frames.MainFrame MFrame = Frames.MainFrame;
-        MFrame.insertText(MFrame.MessageBox, "\n---"+from+" ["+date+"]------------------", MFrame.heading);
-        MFrame.insertText(MFrame.MessageBox, message, MFrame.normal);
+        Friend friend = null;
+        for (Friend fr : account.friends) {
+            if (fr.id == Integer.parseInt(from)){
+                friend = fr;
+                break;
+            }
+        }
+        MFrame.currentFriend = friend;
+        MFrame.MessageBox.setText("");
+        assert friend != null;
+        MFrame.insertText(MFrame.MessageBox, "\n---"+friend.login+" ["+date+"]------------------", MFrame.heading);
+        MFrame.insertText(MFrame.MessageBox, message+"\n", MFrame.normal);
         MFrame.insertText(MFrame.MessageBox, "----------------------------------------\n", MFrame.heading);
     }
 

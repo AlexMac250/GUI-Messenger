@@ -200,7 +200,7 @@ class Frames {
         @Override
         public void initial() {
             currentFriend = null;
-            frame = new JFrame("NEOnline - Сообщения (v0.1 beta 1)");
+            frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
             frame.setSize(701, 406);
             frame.setResizable(false);
             contentPain = frame.getContentPane();
@@ -357,11 +357,7 @@ class Frames {
         }
 
         public void loadFriends(){
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            panFriends.removeAll();
             panFriends.setLayout(new GridBagLayout());
             panFriends.setSize(panFriends.getWidth()+50,panFriends.getHeight());
             scrollFriends.createVerticalScrollBar();
@@ -412,12 +408,18 @@ class Frames {
                     c.gridy = i+1;
                     panFriends.add(new JLabel("    "), c);
                 }
+                int finalI = i;
                 button.addActionListener(e -> {
-                    currentFriend = Client.account.friends.get(1);// FIXME: 10.09.16 текущий диалог с френдом
-                    System.out.println(frame.getSize().toString());
+                    setDialog(Client.account.friends.get(finalI));
+                    MessageBox.setText("");
+                    insertText(MessageBox, "Диалог с "+currentFriend.login,heading);
+                    System.out.println("Opened dialog with "+currentFriend.login);
                 });
             }
             //panFriends.setSize(600, panFriends.getHeight());
+        }
+        public void setDialog(Friend friend){
+            currentFriend = friend;
         }
 
 
