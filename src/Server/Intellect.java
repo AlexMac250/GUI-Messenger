@@ -58,11 +58,8 @@ public class Intellect extends Thread{
         switch (command[0]){
             case "send":
                 if(Server.accs.get(Integer.parseInt(command[1])).isOnline){
-                    while (Server.getActive().get(i).acc.id != Integer.parseInt(command[1])){
-                        i++;
-                    }
                     command[1] = acc.login;
-                    Server.getActive().get(i).execute(command);
+                    Server.accs.get(Integer.parseInt(command[1])).getWorkingServ().execute(command);
                 }
                 else{
                     sendOffline(new Message("message", acc.login , command[2], command[3]) , Integer.parseInt(command[1]));
@@ -84,12 +81,20 @@ public class Intellect extends Thread{
             case "getUsers":
                 for(Account acc : Server.accs){
                     if(GettingUsers!=20){
+                        serv.execute(new String[]{"send","user",String.valueOf(acc.id),acc.login});
                         i++;
                     }
                     else{
-
+                        break;
                     }
                 }
+                break;
+            case "get20More" :
+                for(i = GettingUsers;i<=GettingUsers+20;i++){
+                    Account account = Server.accs.get(i);
+                    serv.execute(new String[]{"send","user",String.valueOf(account.id),account.login});
+                }
+                GettingUsers+=20;
                 break;
         }
     }

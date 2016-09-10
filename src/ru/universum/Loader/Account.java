@@ -42,6 +42,11 @@ public class Account {
 
     }
 
+    public Account(String login, int id) {
+        this.login = login;
+        this.id = id;
+    }
+
     public Account(int id, String login, String password, ArrayList<Friend> friends){
         this.id = id;
         this.login = login;

@@ -32,7 +32,8 @@ public class Client {
     static boolean statusConnected = false;
     static boolean statusRegistered = false;
     static Frames Frames = new Frames();
-
+    //есть только id и login
+    static List<Account> usersInSearch = new ArrayList<>();
     public static void main(String[] args) {
         Frames.startGUI();
         new BASH().run();
@@ -178,8 +179,11 @@ public class Client {
             case "getUsers" :
                 send(new Message(command[0],"","",NODATE));
                 break;
-            case "get20more" :
+            case "get20More" :
                 send(new Message(command[0],"","",NODATE));
+                break;
+            case "user" :
+                usersInSearch.add(new Account(command[2],Integer.parseInt(command[1])));
                 break;
         }
     }
