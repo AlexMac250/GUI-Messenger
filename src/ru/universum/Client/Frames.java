@@ -348,6 +348,7 @@ class Frames {
             radio.setOpaque(false);
             radio.setSelected(true);
             editor.insertComponent(radio);*/
+
         }
 
         public void loadFriends(){
