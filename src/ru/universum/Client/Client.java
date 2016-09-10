@@ -160,12 +160,16 @@ public class Client {
             //доделай сам
             case "askToFriend" :
                 //выводи блокирующиее окно
-                console.log("Accept friend :" +command[2] + " ?");
+                console.log("Accept friend :" +command[3] + " ?");
                 break;
             case "registered" :
                 if(command[2].equals("true")){
                     statusRegistered = true;
                 }
+                break;
+            case "resOfFriend" :
+                //resOfFriend id answer
+                send(new Message(command[0],command[1],command[2],NODATE));
                 break;
         }
     }

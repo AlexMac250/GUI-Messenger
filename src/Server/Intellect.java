@@ -83,7 +83,6 @@ public class Intellect extends Thread{
                 break;
         }
     }
-
     @Override
     public void run() {
         while (!interrupted()){
