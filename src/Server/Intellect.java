@@ -78,6 +78,7 @@ public class Intellect extends Thread{
                 answers.add(new Answer(Integer.parseInt(command[1]),command[2],serv));
                 break;
             case "getUsers":
+                GettingUsers = 0;
                 for(Account acc : Server.accs){
                     if(GettingUsers!=20){
                         serv.execute(new String[]{"send","user",String.valueOf(acc.id),acc.login});
