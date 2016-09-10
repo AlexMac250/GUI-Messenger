@@ -83,6 +83,13 @@ public class Client {
         execute(descript("resOfFriend$"+id+"$"+ans));
     }
 
+    public static void writeMessage(String from, String date, String message){
+        Frames.MainFrame MFrame = Frames.MainFrame;
+        MFrame.insertText(MFrame.MessageBox, "\n---"+from+" ["+date+"]------------------", MFrame.heading);
+        MFrame.insertText(MFrame.MessageBox, message, MFrame.normal);
+        MFrame.insertText(MFrame.MessageBox, "----------------------------------------\n", MFrame.heading);
+    }
+
     public static void execute(String[] command){
         switch (command[0]){
             // второй аргумент - логин третий пароль
@@ -100,7 +107,9 @@ public class Client {
             case "message" :
                 //принял входящее сообщеине
                 messages.add(new ClientMessage(command[1] , command[2], command[3]));
+                writeMessage(command[1], command[2], command[3]);
                 System.out.println(messages.get(messages.size()-1));
+
                 break;
                 //заполняет френдов с сервера.
             case "friend" :
@@ -146,7 +155,7 @@ public class Client {
                 for (Friend fr : account.friends){
                     if(fr.id == Integer.parseInt(command[2])){
                         fr.isOnline = true;
-                        //Frames.MainFrame.panFriends.removeAll();
+                        Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
                         break;
                     }
@@ -156,7 +165,7 @@ public class Client {
                 for (Friend fr : account.friends){
                     if(fr.id == Integer.parseInt(command[2])) {
                         fr.isOnline = false;
-                        //Frames.MainFrame.panFriends.removeAll();
+                        Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
                         break;
                     }

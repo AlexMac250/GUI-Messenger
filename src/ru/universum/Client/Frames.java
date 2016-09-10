@@ -83,6 +83,8 @@ class Frames {
         }
     }
 
+    //-------------------------------------------//
+
     class LoginFrame extends AbsFrame {
 
         private JFrame frame;
@@ -166,10 +168,12 @@ class Frames {
         }
     }
 
+    //-------------------------------------------//
+
     class MainFrame extends AbsFrame{
 
-        private Style heading = null; // стиль заголовка
-        private Style normal  = null; // стиль текста
+        public Style heading = null; // стиль заголовка
+        public Style normal  = null; // стиль текста
         private  final  String[][]  TEXT = {
                 {"                                                                                              ", "heading"},
                 {"\r\n                                               "                                           , "normal" },
@@ -184,7 +188,7 @@ class Frames {
         private JPanel panMessages;
         private JPanel panSendMessage;
         private JButton butSendMessage;
-        private JTextPane MessageBox;
+        public JTextPane MessageBox;
         private JTextField textField;
         private JScrollPane scrollFriends;
         private JScrollPane scrollMessage;
@@ -320,7 +324,8 @@ class Frames {
          * @param string строка
          * @param style стиль
          */
-        private void insertText(JTextPane editor, String string, Style style) {
+
+        public void insertText(JTextPane editor, String string, Style style) {
             try {
                 Document doc = editor.getDocument();
                 doc.insertString(doc.getLength(), string, style);
@@ -414,7 +419,11 @@ class Frames {
             }
             //panFriends.setSize(600, panFriends.getHeight());
         }
+
+
     }
+
+    //-------------------------------------------//
 
     class RegisterFrame extends AbsFrame{
 
