@@ -92,7 +92,7 @@ public class Intellect extends Thread{
                 serv.console.log("Got command " + message);
                 execute(descript(message));
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.print("Error in server " + '#' + (serv.port-40000));
                 interrupt();
             }
         }
