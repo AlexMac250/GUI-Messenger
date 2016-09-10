@@ -120,7 +120,7 @@ public class Server{
     public static void main(String[] args) {
         System.out.println(accs.toString());
         Account.idGL = accs.size()-1;
-//Читает команды для сервера , внутри переделай
+        //Читает команды для сервера , внутри переделай
         ServerComReader reader = new ServerComReader();
         reader.start();
         try {
@@ -130,7 +130,7 @@ public class Server{
                 try {
                     new Server(mainSocket.accept());
                 }catch (Exception e){
-                    console.log("Connection refused");
+                    console.log("Connection lost");
                 }
             }
         } catch (Exception e) {

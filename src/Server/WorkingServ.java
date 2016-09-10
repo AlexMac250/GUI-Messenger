@@ -89,24 +89,22 @@ public class WorkingServ extends Thread {
 
     public void execute(String[] command){
         switch (command[0]) {
-//останавливает работу сервера 
+            //останавливает работу сервера
             case "stop":
                 try {
                     close();
                 } catch (IOException ignored) {
                 }
                 break;
-//отправляет сообщение 
+            //отправляет сообщение
             case "send":
                 send(new Message("message", command[1], command[2], command[3]));
                 break;
-//логинит входящее соединение 
+            //логинит входящее соединение
             case "login":
                 login(command[1], command[2]);
                 if (acc != null) {
-                    for (Message message : acc.oflineMes) {
-                        send(message);
-                    }
+                    acc.oflineMes.forEach(this::send);
                     if (acc.oflineMes.size() != 0) {
                         acc.oflineMes = new ArrayList<>();
                     }
@@ -126,10 +124,10 @@ public class WorkingServ extends Thread {
     public void newFriend(Friend friend){
         boolean res = Server.addFriend(acc.id, friend);
         if (res) {
-            String[] friendarr = new String[2];
-            friendarr[0] = String.valueOf(acc.friends.get(acc.friends.size() - 1).id);
-            friendarr[1] = acc.friends.get(acc.friends.size() - 1).login;
-            send(new Command("friend", Arrays.asList(friendarr)));
+            String[] friendArr = new String[2];
+            friendArr[0] = String.valueOf(acc.friends.get(acc.friends.size() - 1).id);
+            friendArr[1] = acc.friends.get(acc.friends.size() - 1).login;
+            send(new Command("friend", Arrays.asList(friendArr)));
             if(Server.accs.get(friend.id).isOnline){
                 send(new Command("online",String.valueOf(friend.id)));
             }
@@ -158,12 +156,9 @@ public class WorkingServ extends Thread {
         int i = 0;
         if (acc != null) {
             if (acc.friends.size() != 0) {
-                for (Friend friend
-                        : acc.friends) {
-                    if (Server.accs.get(friend.id).isOnline) {
-                        Server.accs.get(friend.id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id)));
-                    }
-                }
+                acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend -> {
+                    Server.accs.get(friend.id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id)));
+                });
             }
         }
     }
@@ -183,10 +178,8 @@ public class WorkingServ extends Thread {
         try {
             ds.writeUTF(message.toString());
             ds.flush();
-        } catch (IOException ignored) {
-        }
+        } catch (IOException ignored) {}
     }
-
     @Override
     public void run() {
         try {
