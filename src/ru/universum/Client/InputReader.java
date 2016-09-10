@@ -22,6 +22,7 @@ public class InputReader extends Thread {
                 Client.console.log("Got command " + message);
                 throwCommand();
             }catch (Exception e){
+                e.printStackTrace();
                 Client.execute(new String[]{"connection"});
                 interrupt();
             }

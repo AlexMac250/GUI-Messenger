@@ -364,7 +364,7 @@ class Frames {
             scrollFriends.setMaximumSize(new Dimension(136, 391));
             panFriends.setBackground(Color.DARK_GRAY);
 
-            final int countFriends = Client.account.friends.size();
+            final int COUNTFRIENDS = Client.account.friends.size();
             GridBagConstraints c = new GridBagConstraints();
 
             {
@@ -376,7 +376,7 @@ class Frames {
                 panFriends.add(label, c);
             }
 
-            for (int i = 0; i < countFriends; i++) {
+            for (int i = 0; i < COUNTFRIENDS; i++) {
                 String login = Client.account.friends.get(i).login;
                 int max = 12;
                 JButton button = new JButton();
@@ -401,7 +401,7 @@ class Frames {
                 c.gridx = 1;
                 c.gridy = i+1;
                 panFriends.add(button, c);
-                if (countFriends > 13) {
+                if (COUNTFRIENDS > 13) {
                     c.fill = GridBagConstraints.HORIZONTAL;
                     c.gridx = 2;
                     c.gridy = i+1;

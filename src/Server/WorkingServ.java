@@ -78,9 +78,6 @@ public class WorkingServ extends Thread {
                 friend[0] = String.valueOf(fr.id);
                 friend[1] = fr.login;
                 send(new Command("friend", Arrays.asList(friend)));
-                if(Server.accs.get(fr.id).isOnline){
-                    send(new Command("online",String.valueOf(fr.id)));
-                }
             }
         }else{
             send(new Command("friend","null"));
@@ -105,9 +102,7 @@ public class WorkingServ extends Thread {
                 login(command[1], command[2]);
                 if (acc != null) {
                     acc.oflineMes.forEach(this::send);
-                    if (acc.oflineMes.size() != 0) {
-                        acc.oflineMes = new ArrayList<>();
-                    }
+                    acc.oflineMes = new ArrayList<>();
                     sendOnline();
                 }
                 break;
@@ -146,6 +141,7 @@ public class WorkingServ extends Thread {
         if (acc.friends.size() != 0) {
             for (Friend friend : acc.friends) {
                 if (Server.accs.get(friend.id).isOnline) {
+                    send(new Command("online",String.valueOf(friend.id)));
                     Server.accs.get(friend.id).getWorkingServ().send(new Command("online", String.valueOf(acc.id)));
                 }
             }
