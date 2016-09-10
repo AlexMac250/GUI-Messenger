@@ -175,6 +175,12 @@ public class Client {
                 //resOfFriend id answer
                 send(new Message(command[0],command[1],command[2],NODATE));
                 break;
+            case "getUsers" :
+                send(new Message(command[0],"","",NODATE));
+                break;
+            case "get20more" :
+                send(new Message(command[0],"","",NODATE));
+                break;
         }
     }
 

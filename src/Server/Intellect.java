@@ -11,7 +11,7 @@ import java.util.List;
 
 
 public class Intellect extends Thread{
-
+    private int GettingUsers = 0;
     private DataOutputStream os;
     private DataInputStream is;
     private Account acc;
@@ -80,6 +80,16 @@ public class Intellect extends Thread{
                 break;
             case "resOfFriend" :
                 answers.add(new Answer(Integer.parseInt(command[1]),command[2],serv));
+                break;
+            case "getUsers":
+                for(Account acc : Server.accs){
+                    if(GettingUsers!=20){
+                        i++;
+                    }
+                    else{
+
+                    }
+                }
                 break;
         }
     }
