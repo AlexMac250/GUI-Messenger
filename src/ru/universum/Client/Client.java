@@ -30,6 +30,7 @@ public class Client {
     static boolean statusLogged = false;
     //статус подключения
     static boolean statusConnected = false;
+    static boolean statusRegistered = false;
     static Frames Frames = new Frames();
 
     public static void main(String[] args) {
@@ -154,7 +155,11 @@ public class Client {
                 //выводи блокирующиее окно
                 console.log("Accept friend :" +command[2] + " ?");
                 break;
-
+            case "registered" :
+                if(command[2].equals("true")){
+                    statusRegistered = true;
+                }
+                break;
         }
     }
 
