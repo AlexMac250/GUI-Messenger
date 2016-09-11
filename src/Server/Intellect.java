@@ -63,7 +63,9 @@ public class Intellect extends Thread{
                     Server.accs.get(to).getWorkingServ().execute(command);
                 }
                 else{
-                    sendOffline(new Message("message", command[1] , command[2], command[3]) , Integer.parseInt(command[1]));
+                    int to = Integer.parseInt(command[1]);
+                    command[1] = String.valueOf(acc.id);
+                    sendOffline(new Message("message", command[1] , command[2], command[3]) , to);
                 }
                 break;
             case "login":
