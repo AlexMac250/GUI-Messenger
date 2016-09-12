@@ -84,7 +84,51 @@ public class WorkingServ extends Thread {
         }
     }
 
-    public void execute(String[] command){
+    void newFriend(Friend friend){
+        boolean res = Server.addFriend(acc.id, friend);
+        if (res) {
+            String[] friendArr = new String[2];
+            friendArr[0] = String.valueOf(acc.friends.get(acc.friends.size() - 1).id);
+            friendArr[1] = acc.friends.get(acc.friends.size() - 1).login;
+            send(new Command("friend", Arrays.asList(friendArr)));
+            if(Server.accs.get(friend.id).isOnline){
+                send(new Command("online",String.valueOf(friend.id)));
+            }
+        } else
+            send(new Command("friended", "false"));
+    }
+
+    private void askToFriend(int idOf){
+        if(Server.accs.get(idOf).isOnline){
+            Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend" , Arrays.asList(String.valueOf(acc.id),acc.login)));
+        }
+    }
+
+    private void sendOnline() {
+        int i = 0;
+        if (acc.friends.size() != 0) {
+            for (Friend friend : acc.friends) {
+                if (Server.accs.get(friend.id).isOnline) {
+                    send(new Command("online",String.valueOf(friend.id)));
+                    Server.accs.get(friend.id).getWorkingServ().send(new Command("online", String.valueOf(acc.id)));
+                }
+            }
+        }
+    }
+
+    private void sendOffline() {
+        int i = 0;
+        if (acc != null) {
+            if (acc.friends.size() != 0) {
+                acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend -> {
+                    Server.accs.get(friend.id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id)));
+                });
+            }
+        }
+    }
+
+
+    void execute(String[] command){
         switch (command[0]) {
             //останавливает работу сервера
             case "stop":
@@ -115,52 +159,8 @@ public class WorkingServ extends Thread {
                 break;
         }
     }
-
-    public void newFriend(Friend friend){
-        boolean res = Server.addFriend(acc.id, friend);
-        if (res) {
-            String[] friendArr = new String[2];
-            friendArr[0] = String.valueOf(acc.friends.get(acc.friends.size() - 1).id);
-            friendArr[1] = acc.friends.get(acc.friends.size() - 1).login;
-            send(new Command("friend", Arrays.asList(friendArr)));
-            if(Server.accs.get(friend.id).isOnline){
-                send(new Command("online",String.valueOf(friend.id)));
-            }
-        } else
-            send(new Command("friended", "false"));
-    }
-
-    public void askToFriend(int idOf){
-        if(Server.accs.get(idOf).isOnline){
-            Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend" , Arrays.asList(String.valueOf(acc.id),acc.login)));
-        }
-    }
-
-    public void sendOnline() {
-        int i = 0;
-        if (acc.friends.size() != 0) {
-            for (Friend friend : acc.friends) {
-                if (Server.accs.get(friend.id).isOnline) {
-                    send(new Command("online",String.valueOf(friend.id)));
-                    Server.accs.get(friend.id).getWorkingServ().send(new Command("online", String.valueOf(acc.id)));
-                }
-            }
-        }
-    }
-
-    public void sendOffline() {
-        int i = 0;
-        if (acc != null) {
-            if (acc.friends.size() != 0) {
-                acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend -> {
-                    Server.accs.get(friend.id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id)));
-                });
-            }
-        }
-    }
-
     //Отправляет команду с 1 или 2мя аргументами
-    public void send(Command message){
+    void send(Command message){
         try {
             ds.writeUTF(message.toString());
             ds.flush();
@@ -170,7 +170,7 @@ public class WorkingServ extends Thread {
         }
     }
     //Отправляет сообщение аккаунту клиента
-    public void send(Message message){
+    private void send(Message message){
         try {
             ds.writeUTF(message.toString());
             ds.flush();
