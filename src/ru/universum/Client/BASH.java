@@ -18,6 +18,7 @@ public class BASH extends Thread{
     private void command(String command){
         String[] line = decrypt(command);
         switch (line[0]){
+
             case "showFrame":
                 switch (line[1]){
                     case "MainFrame":

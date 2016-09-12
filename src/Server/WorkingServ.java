@@ -127,7 +127,6 @@ public class WorkingServ extends Thread {
         }
     }
 
-
     void execute(String[] command){
         switch (command[0]) {
             //останавливает работу сервера
@@ -159,6 +158,7 @@ public class WorkingServ extends Thread {
                 break;
         }
     }
+
     //Отправляет команду с 1 или 2мя аргументами
     void send(Command message){
         try {

@@ -170,7 +170,7 @@ public class Client {
                     }
                 }
                 break;
-            case  "offline" :
+            case "offline" :
                 for (Friend fr : account.friends){
                     if(fr.id == Integer.parseInt(command[2])) {
                         fr.isOnline = false;
