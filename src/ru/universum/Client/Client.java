@@ -92,12 +92,11 @@ public class Client {
                 break;
             }
         }
+
         MFrame.currentFriend = friend;
-        MFrame.MessageBox.setText("");
         assert friend != null;
-        MFrame.insertText(MFrame.MessageBox, "\n---"+friend.login+" ["+date+"]------------------", MFrame.heading);
+        MFrame.insertText(MFrame.MessageBox, "\n"+friend.login+" ["+date+"]----------------------\n", MFrame.heading);
         MFrame.insertText(MFrame.MessageBox, message+"\n", MFrame.normal);
-        MFrame.insertText(MFrame.MessageBox, "----------------------------------------\n", MFrame.heading);
     }
 
     public static void execute(String[] command){
