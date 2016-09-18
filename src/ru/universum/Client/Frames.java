@@ -1,11 +1,13 @@
 package ru.universum.Client;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
+import com.sun.tracing.dtrace.ModuleName;
 import ru.universum.Loader.Friend;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.util.concurrent.TimeUnit;
 
 class Frames {
     private final String STYLE_heading = "heading", STYLE_normal  = "normal" , FONT_style    = "Trebuchet MS";
@@ -16,7 +18,7 @@ class Frames {
     AboutFrame AboutFrame = new AboutFrame();
     MainFrame MainFrame = new MainFrame();
 
-    private class MainMenuFrame extends AbsFrame {
+    class MainMenuFrame extends AbsFrame {
         private JFrame frame;
         private JButton butLogin;
         private JButton butRegister;
@@ -172,8 +174,8 @@ class Frames {
 
     class MainFrame extends AbsFrame{
 
-        public Style heading = null; // стиль заголовка
-        public Style normal  = null; // стиль текста
+        Style heading = null; // стиль заголовка
+        Style normal  = null; // стиль текста
         private  final  String[][]  TEXT = {
                 {"                                                                                              ", "heading"},
                 {"\r\n                                               "                                           , "normal" },
@@ -183,18 +185,18 @@ class Frames {
                 // FIXME: 30.08.16 ПОФИКСИТЬ КОСТЫЛЬ
         private JFrame frame;
         private Container contentPain;
-        public JPanel panFriends;
+        JPanel panFriends;
         private JPanel panMainContent;
         private JPanel panMessages;
         private JPanel panSendMessage;
         private JButton butSendMessage;
-        public JTextPane MessageBox;
+        JTextPane MessageBox;
         private JTextField textField;
         private JScrollPane scrollFriends;
         private JScrollPane scrollMessage;
         Friend currentFriend;
 
-        public MainFrame() {
+        MainFrame() {
         }
 
         @Override
@@ -209,57 +211,49 @@ class Frames {
             panMessages = new JPanel();
             panSendMessage = new JPanel();
             butSendMessage = new JButton("Отправить");
-            MessageBox = new JTextPane(){
-                @Override
-                public void setSize(Dimension d) {
-                    if(d.width <= getParent().getSize().width){
-                        d.width = getParent().getSize().width;
-                    }
-                    super.setSize(d);
-                }
-                public boolean getScrollableTracksViewportWidth() {
-                    return false;
-                }
-            };
+            MessageBox = new JTextPane();
+            loadText(MessageBox);
             textField = new JTextField(30);
             scrollFriends = new JScrollPane(panFriends);
             scrollMessage = new JScrollPane();
 
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             scrollMessage.createVerticalScrollBar();
-
-
-            contentPain.add(panMainContent,BorderLayout.CENTER);
-            panMainContent.add(scrollMessage);
-
             scrollMessage.getViewport().add(MessageBox);
             scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-            panMainContent.add(panSendMessage, BorderLayout.SOUTH);
+            contentPain.setLayout(new FlowLayout());
 
-            MessageBox.setMinimumSize(new Dimension(300, 336));
-            MessageBox.setSize(new Dimension(445, 336));
-
-            panSendMessage.setLayout(new FlowLayout());
-            panSendMessage.add(textField);
-            panSendMessage.add(butSendMessage);
             contentPain.add(scrollFriends, BorderLayout.WEST);
+            contentPain.add(panMainContent, BorderLayout.CENTER);
+
+            buildPanMessages();
+
+//            MessageBox.setMinimumSize(new Dimension(300, 336));
+//            MessageBox.setSize(new Dimension(445, 336));
 
             panSendMessage.setBackground(Color.GRAY);
             panMainContent.setBackground(Color.GRAY);
             scrollMessage.setBackground(Color.GRAY);
 
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             createStyles(MessageBox);
-            loadText(MessageBox);
             loadFriends();
-
 
             frame.setLocationRelativeTo(null);
 
             butSendMessage.addActionListener(e -> {
-                Client.execute(new  String[] {"send", currentFriend.id+"", textField.getText()});
+                Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
+                textField.setText("");
             });
+//            panMainContent.add(scrollMessage);
+//            panMainContent.add(panSendMessage, BorderLayout.SOUTH);
+//            panSendMessage.setLayout(new FlowLayout());
+//            panSendMessage.add(textField);
+//            panSendMessage.add(butSendMessage);
+//            contentPain.add(scrollFriends, BorderLayout.WEST);
+
+
         }
 
         @Override
@@ -309,14 +303,13 @@ class Frames {
             StyleConstants.setFontSize(heading, 18);
             StyleConstants.setBold(heading, true);
         }
-
-        private void changeDocumentStyle(JTextPane editor) {
-            // Изменение стиля части текста
-            SimpleAttributeSet blue = new SimpleAttributeSet();
-            StyleConstants.setForeground(blue, Color.blue);
-            StyledDocument doc = editor.getStyledDocument();
-            doc.setCharacterAttributes(10, 9, blue, false);
-        }
+//        private void changeDocumentStyle(JTextPane editor) {
+//            // Изменение стиля части текста
+//            SimpleAttributeSet blue = new SimpleAttributeSet();
+//            StyleConstants.setForeground(blue, Color.blue);
+//            StyledDocument doc = editor.getStyledDocument();
+//            doc.setCharacterAttributes(10, 9, blue, false);
+//        }
 
         /**
          * Процедура добавления в редактор строки определенного стиля
@@ -325,7 +318,7 @@ class Frames {
          * @param style стиль
          */
 
-        public void insertText(JTextPane editor, String string, Style style) {
+        void insertText(JTextPane editor, String string, Style style) {
             try {
                 Document doc = editor.getDocument();
                 doc.insertString(doc.getLength(), string, style);
@@ -356,7 +349,14 @@ class Frames {
 
         }
 
-        public void loadFriends(){
+        private void buildPanMessages(){
+            panMainContent.setLayout(new GridBagLayout());
+            GridBagLayoutManager(panMainContent, scrollMessage, GridBagConstraints.CENTER, 0, 0, 2);
+            GridBagLayoutManager(panMainContent, textField, GridBagConstraints.HORIZONTAL, 0, 1, 1);
+            GridBagLayoutManager(panMainContent, butSendMessage, GridBagConstraints.CENTER, 1, 1, 1);
+        }
+
+        void loadFriends(){
             panFriends.removeAll();
             panFriends.setLayout(new GridBagLayout());
             panFriends.setSize(panFriends.getWidth()+50,panFriends.getHeight());
@@ -419,7 +419,8 @@ class Frames {
             MessageBox.setText("");
             //panFriends.setSize(600, panFriends.getHeight());
         }
-        public void setDialog(Friend friend){
+
+        void setDialog(Friend friend){
             currentFriend = friend;
         }
 
@@ -512,9 +513,9 @@ class Frames {
 
     //-------------------------------------------//
 
-    class AboutFrame{
+    private class AboutFrame{
 
-        public void showFrame() {
+        void showFrame() {
             JFrame frame = new JFrame("О NEOnline");
             JLabel label = new JLabel("NEOnline");
             JLabel empty= new JLabel(" ");
@@ -524,7 +525,7 @@ class Frames {
             JLabel labAlex = new JLabel("ALEX - Александр Василенко    (https://vk.com/aleksandr_vasilenko)");
             JButton butCl = new JButton("Закрыть");
 
-            frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.setLayout(new GridBagLayout());
 
             label.setFont(new Font(FONT_style, Font.BOLD, 20));
@@ -593,7 +594,7 @@ class Frames {
         }
     }
 
-    public void GridBagLayoutManager(JFrame frame, JComponent component, int fill, int gridX, int gridY, int gridWidth){
+    private void GridBagLayoutManager(JFrame frame, JComponent component, int fill, int gridX, int gridY, int gridWidth){
         GridBagConstraints c = new GridBagConstraints();
         c.fill = fill;
         c.gridwidth = gridWidth;
@@ -601,8 +602,24 @@ class Frames {
         c.gridy = gridY;
         frame.add(component, c);
     }
+    private void GridBagLayoutManager(JComponent parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = fill;
+        c.gridwidth = gridWidth;
+        c.gridx = gridX;
+        c.gridy = gridY;
+        parent.add(component, c);
+    }
+    private void GridBagLayoutManager(Container parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = fill;
+        c.gridwidth = gridWidth;
+        c.gridx = gridX;
+        c.gridy = gridY;
+        parent.add(component, c);
+    }
 
-    public void startGUI(){
+    void startGUI(){
         MainMenuFrame.showFrame();
     }
 }
