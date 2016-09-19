@@ -200,7 +200,7 @@ class Frames {
         public void initial() {
             currentFriend = null;
             frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
-            frame.setSize(662, 317);
+            frame.setSize(662, 340);
             frame.setResizable(false);
             contentPain = frame.getContentPane();
             panFriends = new JPanel();
@@ -243,6 +243,7 @@ class Frames {
             frame.setLocationRelativeTo(null);
 
             butSendMessage.addActionListener(e -> {
+                System.out.println(frame.getSize());
                 Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
                 textField.setText("");
             });
