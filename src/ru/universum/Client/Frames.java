@@ -416,7 +416,7 @@ class Frames {
                     System.out.println("Opened dialog with "+currentFriend.login);
                 });
             }
-            MessageBox.setText("");
+            //MessageBox.setText("");
             //panFriends.setSize(600, panFriends.getHeight());
         }
 
