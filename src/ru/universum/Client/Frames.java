@@ -1,8 +1,5 @@
 package ru.universum.Client;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
-import com.sun.tracing.dtrace.ModuleName;
 import ru.universum.Loader.Friend;
 
 import javax.swing.*;
@@ -203,7 +200,7 @@ class Frames {
         public void initial() {
             currentFriend = null;
             frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
-            frame.setSize(701, 406);
+            frame.setSize(662, 317);
             frame.setResizable(false);
             contentPain = frame.getContentPane();
             panFriends = new JPanel();
@@ -224,6 +221,7 @@ class Frames {
             scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
             contentPain.setLayout(new FlowLayout());
+            contentPain.setBackground(Color.DARK_GRAY);
 
             contentPain.add(scrollFriends, BorderLayout.WEST);
             contentPain.add(panMainContent, BorderLayout.CENTER);
@@ -233,9 +231,11 @@ class Frames {
 //            MessageBox.setMinimumSize(new Dimension(300, 336));
 //            MessageBox.setSize(new Dimension(445, 336));
 
-            panSendMessage.setBackground(Color.GRAY);
+            panSendMessage.setBackground(Color.DARK_GRAY);
             panMainContent.setBackground(Color.GRAY);
             scrollMessage.setBackground(Color.GRAY);
+            scrollFriends.setMaximumSize(new Dimension(scrollFriends.getWidth(), 317));
+
 
             createStyles(MessageBox);
             loadFriends();
