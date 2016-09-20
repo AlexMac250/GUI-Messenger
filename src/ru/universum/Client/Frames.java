@@ -223,22 +223,22 @@ class Frames {
             contentPain.setLayout(new FlowLayout());
             contentPain.setBackground(Color.DARK_GRAY);
 
-            contentPain.add(scrollFriends, BorderLayout.WEST);
+            contentPain.add(scrollFriends, BorderLayout.PAGE_START);
             contentPain.add(panMainContent, BorderLayout.CENTER);
 
             buildPanMessages();
+            loadFriends();
 
 //            MessageBox.setMinimumSize(new Dimension(300, 336));
 //            MessageBox.setSize(new Dimension(445, 336));
 
             panSendMessage.setBackground(Color.DARK_GRAY);
-            panMainContent.setBackground(Color.GRAY);
-            scrollMessage.setBackground(Color.GRAY);
+            panMainContent.setBackground(Color.DARK_GRAY);
+            scrollMessage.setBackground(Color.DARK_GRAY);
             scrollFriends.setMaximumSize(new Dimension(scrollFriends.getWidth(), 317));
 
 
             createStyles(MessageBox);
-            loadFriends();
 
             frame.setLocationRelativeTo(null);
 
@@ -294,6 +294,8 @@ class Frames {
             frMess.setVisible(true);
         }
 
+        //-----//
+
         private void createStyles(JTextPane editor) {
             // Создание стилей
             normal = editor.addStyle(STYLE_normal, null);
@@ -304,20 +306,6 @@ class Frames {
             StyleConstants.setFontSize(heading, 18);
             StyleConstants.setBold(heading, true);
         }
-//        private void changeDocumentStyle(JTextPane editor) {
-//            // Изменение стиля части текста
-//            SimpleAttributeSet blue = new SimpleAttributeSet();
-//            StyleConstants.setForeground(blue, Color.blue);
-//            StyledDocument doc = editor.getStyledDocument();
-//            doc.setCharacterAttributes(10, 9, blue, false);
-//        }
-
-        /**
-         * Процедура добавления в редактор строки определенного стиля
-         * @param editor редактор
-         * @param string строка
-         * @param style стиль
-         */
 
         void insertText(JTextPane editor, String string, Style style) {
             try {
@@ -360,7 +348,7 @@ class Frames {
         void loadFriends(){
             panFriends.removeAll();
             panFriends.setLayout(new GridBagLayout());
-            panFriends.setSize(panFriends.getWidth()+50,panFriends.getHeight());
+            scrollFriends.setSize(panFriends.getWidth()+50,panFriends.getHeight());
             scrollFriends.createVerticalScrollBar();
             scrollFriends.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
             scrollFriends.setMaximumSize(new Dimension(136, 391));

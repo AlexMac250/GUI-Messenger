@@ -33,14 +33,6 @@ public class BASH extends Thread{
                 }
                 break;
 
-            case "startMethod":
-                switch (line[1]){
-                    case "interrupt();" :
-                        interrupt();
-                        break;
-                }
-                break;
-
             case "connect":
                 Client.connect();
 
