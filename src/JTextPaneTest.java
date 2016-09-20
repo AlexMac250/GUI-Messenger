@@ -1,5 +1,3 @@
-package ru.universum;
-
 import java.awt.Color;
 import java.awt.Font;
 

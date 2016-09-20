@@ -8,6 +8,7 @@ import java.awt.*;
 
 class Frames {
     private final String STYLE_heading = "heading", STYLE_normal  = "normal" , FONT_style    = "Trebuchet MS";
+    private final Color BLUE = new Color(69, 151, 249);
 
     MainMenuFrame MainMenuFrame = new MainMenuFrame();
     LoginFrame LoginFrame = new LoginFrame();
@@ -40,6 +41,9 @@ class Frames {
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setLayout(new GridBagLayout());
 
+            frame.getContentPane().setBackground(Color.DARK_GRAY);
+            label.setForeground(BLUE);
+
             GridBagLayoutManager(frame, label, GridBagConstraints.NORTH, 0, 0, 1);
             GridBagLayoutManager(frame, butLogin, GridBagConstraints.HORIZONTAL, 0, 1 ,1);
             GridBagLayoutManager(frame, butRegister, GridBagConstraints.HORIZONTAL, 0, 2, 1);
@@ -54,7 +58,7 @@ class Frames {
 
             });
             butRegister.addActionListener(e -> {
-                if (!Client.statusConnected)Client.connect();
+
                 RegisterFrame.showFrame();
             });
             butAbout.addActionListener(e -> AboutFrame.showFrame());
@@ -102,15 +106,22 @@ class Frames {
 
         @Override
         public void initial() {
-            frame = new JFrame("Войти");
-            panLogin = new JPanel();
-            panBut = new JPanel();
+            frame = new JFrame("Войти");;
             loginField = new JTextField(15);
             passwordField = new JPasswordField(15);
             butLogin = new JButton("Войти");
             checkBox = new JCheckBox("Запомнить");
             info = new JLabel();
             label = new JLabel("Введите логин и пароль");
+
+            label.setForeground(Color.WHITE);
+            checkBox.setForeground(Color.WHITE);
+            checkBox.setFocusable(false);
+            loginField.setBackground(Color.GRAY);
+            passwordField.setBackground(Color.GRAY);
+            frame.getContentPane().setBackground(Color.DARK_GRAY);
+            butLogin.setFocusable(false);
+            //butLogin.setForeground(Color.WHITE);
 
             loginField.setToolTipText("ЛОГИН");
             passwordField.setToolTipText("ПАРОЛЬ");
@@ -137,11 +148,9 @@ class Frames {
             frame.setResizable(false);
             frame.setLocationRelativeTo(null);
 
-            butLogin.addActionListener(e -> {
-                setInfo("Входим...", Color.ORANGE);
-                if (!Client.statusConnected) Client.connect();
-                Client.login(loginField.getText(), passwordField.getText());
-            });
+            butLogin.addActionListener(e -> login());
+            loginField.addActionListener(e -> login());
+            passwordField.addActionListener(e -> login());
         }
 
         @Override
@@ -165,16 +174,25 @@ class Frames {
             info.setForeground(color);
             info.setText(message);
         }
+
+        private void login(){
+            setInfo("Входим...", Color.ORANGE);
+            if (loginField.getText().length() > 1 & passwordField.getPassword().length > 1) {
+                if (!Client.statusConnected) Client.connect();
+                Client.login(loginField.getText(), passwordField.getText());
+            } else {
+                setInfo("Введите данные!", Color.RED);
+            }
+        }
     }
 
     //-------------------------------------------//
 
     class MainFrame extends AbsFrame{
-
         Style heading = null; // стиль заголовка
         Style normal  = null; // стиль текста
         private  final  String[][]  TEXT = {
-                {"                                                                                              ", "heading"},
+                {"                                                                                                                    ", "heading"},
                 {"\r\n                                               "                                           , "normal" },
                 {"\nВыберете диалог"                                                                             , "heading" },
                 {"\r\n                                               "                                           , "normal" },
@@ -200,8 +218,8 @@ class Frames {
         public void initial() {
             currentFriend = null;
             frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
-            frame.setSize(662, 340);
-            frame.setResizable(false);
+            frame.setSize(683, 340);
+            frame.setResizable(true);                                // FIXME: 20.09.16 resizable
             contentPain = frame.getContentPane();
             panFriends = new JPanel();
             panMainContent = new JPanel();
@@ -211,8 +229,15 @@ class Frames {
             MessageBox = new JTextPane();
             loadText(MessageBox);
             textField = new JTextField(30);
-            scrollFriends = new JScrollPane(panFriends);
             scrollMessage = new JScrollPane();
+            scrollFriends = new JScrollPane(panFriends);
+
+            panSendMessage.setBackground(Color.DARK_GRAY);
+            panMainContent.setBackground(Color.DARK_GRAY);
+            scrollMessage.setBackground(Color.DARK_GRAY);
+            contentPain.setBackground(Color.DARK_GRAY);
+            MessageBox.setBackground(Color.GRAY);
+            MessageBox.setForeground(Color.WHITE);
 
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -221,32 +246,25 @@ class Frames {
             scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
             contentPain.setLayout(new FlowLayout());
-            contentPain.setBackground(Color.DARK_GRAY);
-
-            contentPain.add(scrollFriends, BorderLayout.PAGE_START);
-            contentPain.add(panMainContent, BorderLayout.CENTER);
 
             buildPanMessages();
             loadFriends();
 
+            contentPain.add(scrollFriends, BorderLayout.PAGE_START);
+            contentPain.add(panMainContent, BorderLayout.CENTER);
+
+
 //            MessageBox.setMinimumSize(new Dimension(300, 336));
 //            MessageBox.setSize(new Dimension(445, 336));
 
-            panSendMessage.setBackground(Color.DARK_GRAY);
-            panMainContent.setBackground(Color.DARK_GRAY);
-            scrollMessage.setBackground(Color.DARK_GRAY);
             scrollFriends.setMaximumSize(new Dimension(scrollFriends.getWidth(), 317));
-
 
             createStyles(MessageBox);
 
             frame.setLocationRelativeTo(null);
 
-            butSendMessage.addActionListener(e -> {
-                System.out.println(frame.getSize());
-                Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
-                textField.setText("");
-            });
+            textField.addActionListener(e -> send());
+            butSendMessage.addActionListener(e -> send());
 //            panMainContent.add(scrollMessage);
 //            panMainContent.add(panSendMessage, BorderLayout.SOUTH);
 //            panSendMessage.setLayout(new FlowLayout());
@@ -346,25 +364,26 @@ class Frames {
         }
 
         void loadFriends(){
-            panFriends.removeAll();
             panFriends.setLayout(new GridBagLayout());
-            scrollFriends.setSize(panFriends.getWidth()+50,panFriends.getHeight());
+
             scrollFriends.createVerticalScrollBar();
             scrollFriends.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            scrollFriends.setMaximumSize(new Dimension(136, 391));
-            panFriends.setBackground(Color.DARK_GRAY);
+
+            scrollFriends.setSize(scrollFriends.getWidth(), contentPain.getHeight()-2);
+            //scrollFriends.setMaximumSize(new Dimension(136, 391));
+            panFriends.setBackground(Color.GRAY);
 
             final int COUNTFRIENDS = Client.account.friends.size();
             GridBagConstraints c = new GridBagConstraints();
 
-            {
-                JLabel label = new JLabel("Друзья");
-                label.setForeground(Color.WHITE);
-                c.fill = GridBagConstraints.CENTER;
-                c.gridx = 1;
-                c.gridy = 0;
-                panFriends.add(label, c);
-            }
+            JLabel label = new JLabel();
+            if (COUNTFRIENDS != 0) label.setText("Друзья:");
+            else label.setText("У вас ещё нет друзей :(");
+            label.setForeground(Color.WHITE);
+            c.fill = GridBagConstraints.CENTER;
+            c.gridx = 1;
+            c.gridy = 0;
+            panFriends.add(label, c);
 
             for (int i = 0; i < COUNTFRIENDS; i++) {
                 String login = Client.account.friends.get(i).login;
@@ -382,21 +401,10 @@ class Frames {
                 if (checkBoxOnline.isSelected()) checkBoxOnline.setToolTipText("Online");
                 else checkBoxOnline.setToolTipText("Offline");
 
-                c.fill = GridBagConstraints.CENTER;
-                c.gridx = 0;
-                c.gridy = i+1;
-                panFriends.add(checkBoxOnline, c);
+                GridBagLayoutManager(panFriends, checkBoxOnline, GridBagConstraints.CENTER, 0, i+1, 1);
+                GridBagLayoutManager(panFriends, button, GridBagConstraints.HORIZONTAL, 1, i+1, 1);
+                /*if (COUNTFRIENDS > 13) */GridBagLayoutManager(panFriends, new JLabel("    "), GridBagConstraints.HORIZONTAL, 2, i+1, 1);
 
-                c.fill = GridBagConstraints.HORIZONTAL;
-                c.gridx = 1;
-                c.gridy = i+1;
-                panFriends.add(button, c);
-                if (COUNTFRIENDS > 13) {
-                    c.fill = GridBagConstraints.HORIZONTAL;
-                    c.gridx = 2;
-                    c.gridy = i+1;
-                    panFriends.add(new JLabel("    "), c);
-                }
                 int finalI = i;
                 button.addActionListener(e -> {
                     setDialog(Client.account.friends.get(finalI));
@@ -405,14 +413,24 @@ class Frames {
                     System.out.println("Opened dialog with "+currentFriend.login);
                 });
             }
-            //MessageBox.setText("");
-            //panFriends.setSize(600, panFriends.getHeight());
+
         }
 
         void setDialog(Friend friend){
             currentFriend = friend;
         }
 
+        private void send(){
+            if (textField.getText().length()>0) {
+                System.out.println(frame.getSize());
+                Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
+                textField.setText("");
+            }
+        }
+
+        private void buildMenuBar(){
+
+        }
 
     }
 
@@ -448,6 +466,16 @@ class Frames {
             info = new JLabel("");
             registerBut = new JButton("Зарегистрироваться!");
 
+            frame.getContentPane().setBackground(Color.DARK_GRAY);
+            label.setForeground(BLUE);
+            label.setFont(new Font(FONT_style, Font.BOLD, 18));
+            labLogin.setForeground(Color.WHITE);
+            labPassword.setForeground(Color.WHITE);
+            labRPassword.setForeground(Color.WHITE);
+            loginField.setBackground(Color.GRAY);
+            passwordField.setBackground(Color.GRAY);
+            passwordField2.setBackground(Color.GRAY);
+
             frame.setLayout(new GridBagLayout());
             frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
@@ -459,6 +487,7 @@ class Frames {
 
             registerBut.addActionListener(e -> {        // FIXME: 30.08.16 ДОБАВИТЬ MD5 ШИФРОВАНИЕ
                     if (!passwordField.getText().contains("!") && !passwordField.getText().contains("@") && !passwordField.getText().contains("\"") && !passwordField.getText().contains("?")){
+                        if (!Client.statusConnected)Client.connect();
                         Client.register(loginField.getText(), passwordField.getText());
                     }
                 }
@@ -517,8 +546,10 @@ class Frames {
             frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             frame.setLayout(new GridBagLayout());
 
+            frame.getContentPane().setBackground(Color.DARK_GRAY);
+            text.setForeground(Color.WHITE);
             label.setFont(new Font(FONT_style, Font.BOLD, 20));
-            label.setForeground(Color.DARK_GRAY);
+            label.setForeground(BLUE);
             creatorsLab.setForeground(new Color(106, 135, 89));
             labAlex.setForeground(new Color(255, 100, 25));
             labZver.setForeground(new Color(255, 100, 25));
