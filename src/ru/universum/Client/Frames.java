@@ -473,6 +473,25 @@ class Frames {
             frame.setSize(frame.getWidth()+50,frame.getHeight()+20);
             frame.setLocationRelativeTo(null);
 
+            loginField.addActionListener(e -> {
+                setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
+                frame.pack();
+                frame.setSize(frame.getWidth()+50,frame.getHeight()+20);
+            });
+
+            passwordField.addActionListener(e -> {
+                setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
+                frame.pack();
+                frame.setSize(frame.getWidth()+50,frame.getHeight()+20);
+            });
+
+            passwordField2.addActionListener(e -> {
+                setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
+                frame.pack();
+                frame.setSize(frame.getWidth()+50,frame.getHeight()+20);
+            });
+
+
             registerBut.addActionListener(e -> {        // FIXME: 30.08.16 ДОБАВИТЬ MD5 ШИФРОВАНИЕ
                     if (!passwordField.getText().contains("!") && !passwordField.getText().contains("@") && !passwordField.getText().contains("\"") && !passwordField.getText().contains("?")){
                         if (!Client.statusConnected)Client.connect();
@@ -499,7 +518,8 @@ class Frames {
 
         @Override
         public void setInfo(String message, Color color) {
-
+            info.setText(message);
+            info.setForeground(color);
         }
 
         public void buildFrame(){
@@ -515,6 +535,36 @@ class Frames {
         }
 
 
+    }
+
+    //-------------------------------------------//
+
+    class FindFriend extends AbsFrame{
+
+        @Override
+        public void initial() {
+
+        }
+
+        @Override
+        public void showFrame() {
+
+        }
+
+        @Override
+        public void hideFrame() {
+
+        }
+
+        @Override
+        public void dispose() {
+
+        }
+
+        @Override
+        public void setInfo(String message, Color color) {
+
+        }
     }
 
     //-------------------------------------------//
