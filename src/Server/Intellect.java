@@ -10,24 +10,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Intellect extends Thread{
+@SuppressWarnings("ALL")
+class Intellect extends Thread{
     private int GettingUsers = 0;
     private DataOutputStream os;
     private DataInputStream is;
     private Account acc;
-    private String message;
-    WorkingServ serv ;
-    List<Answer> answers = new ArrayList<>();
+    private WorkingServ serv ;
+    private List<Answer> answers = new ArrayList<>();
 
-    public Intellect(WorkingServ workingServ) {
-        this.os = workingServ.ds;
+    Intellect(WorkingServ workingServ) {
+        this.os = workingServ.dataOutputStream;
         this.serv = workingServ;
         this.is = workingServ.is;
         this.acc = workingServ.acc;
         start();
     }
 
-    public String[] descript(String message){
+    private String[] descript(String message){
         List<StringBuilder> sl = new ArrayList<>();
         char[] c = message.toCharArray();
         int i = 0;
@@ -49,11 +49,11 @@ public class Intellect extends Thread{
         return s;
     }
 
-    public void sendOffline(Message message , int id){
+    private void sendOffline(Message message, int id){
         Server.accs.get(id).oflineMes.add(message);
     }
 
-    public void execute(String[] command){
+    private void execute(String[] command){
         int i = 0;
         switch (command[0]){
             case "send":
@@ -117,7 +117,7 @@ public class Intellect extends Thread{
     public void run() {
         while (!interrupted()){
             try {
-                message = is.readUTF();
+                String message = is.readUTF();
                 serv.console.log("Got command " + message);
                 execute(descript(message));
             } catch (IOException e) {

@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+@SuppressWarnings("ALL")
 public class Server{
     static ServerSocket mainSocket;
     static Integer connections = 40000;
@@ -23,6 +23,7 @@ public class Server{
     static boolean isClosed = false;
     static int portlocal = 0;
     static DataOutputStream os;
+
     public static List<WorkingServ> getActive() {
         return active;
     }

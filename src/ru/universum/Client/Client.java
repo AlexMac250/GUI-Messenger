@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-
+@SuppressWarnings("ALL")
 public class Client {
     static List<ClientMessage> messages = new ArrayList<>();
     static Socket socket;
@@ -92,9 +92,7 @@ public class Client {
                 break;
             }
         }
-
         MFrame.currentFriend = friend;
-        assert friend != null;
         MFrame.insertText(MFrame.MessageBox, "\n"+friend.login+" ["+date+"]----------------------\n", MFrame.heading);
         MFrame.insertText(MFrame.MessageBox, message+"\n", MFrame.normal);
     }

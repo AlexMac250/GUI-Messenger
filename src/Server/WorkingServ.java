@@ -16,21 +16,20 @@ import java.util.*;
 public class WorkingServ extends Thread {
     Account acc;
     int port;
-    Socket socketmain;
-    InetAddress ip;
-    ServerSocket serverSocket;
-    DataOutputStream ds;
-    Intellect intellect;
+    private Socket socketmain;
+    private ServerSocket serverSocket;
+    DataOutputStream dataOutputStream;
+    private Intellect intellect;
     DataInputStream is;
     Console console;
 
-    public WorkingServ(int port) {
+    WorkingServ(int port) {
         this.port = port;
         console = new Console("workingserv#"+ (port-40000));
         start();
     }
 
-    public void close() throws IOException {
+    private void close() throws IOException {
         if(acc !=null) {
             send(new Command("connection", "closed"));
         }
@@ -40,11 +39,10 @@ public class WorkingServ extends Thread {
         console.log("Closed");
         Server.connections--;
         int local = 0;
-        Iterator iterator = Server.getActive().iterator();
-        while (iterator.hasNext()){
-            iterator.next();
-            if(Server.getActive().get(local) == this){
-            }else{
+        for (Object ignored : Server.getActive()) {
+            if (Server.getActive().get(local) == this) {
+                break;
+            } else {
                 local++;
             }
         }
@@ -71,7 +69,7 @@ public class WorkingServ extends Thread {
         }
     }
     //отправляет всех друзей оушена
-    public void sendFriends(){
+    private void sendFriends(){
         if(acc.friends.size()!=0){
             for(Friend fr : acc.friends) {
                 String[] friend = new String[2];
@@ -105,24 +103,19 @@ public class WorkingServ extends Thread {
     }
 
     private void sendOnline() {
-        int i = 0;
         if (acc.friends.size() != 0) {
-            for (Friend friend : acc.friends) {
-                if (Server.accs.get(friend.id).isOnline) {
-                    send(new Command("online",String.valueOf(friend.id)));
-                    Server.accs.get(friend.id).getWorkingServ().send(new Command("online", String.valueOf(acc.id)));
-                }
-            }
+            acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend -> {
+                send(new Command("online", String.valueOf(friend.id)));
+                Server.accs.get(friend.id).getWorkingServ().send(new Command("online", String.valueOf(acc.id)));
+            });
         }
     }
 
     private void sendOffline() {
-        int i = 0;
         if (acc != null) {
             if (acc.friends.size() != 0) {
-                acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend -> {
-                    Server.accs.get(friend.id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id)));
-                });
+                acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend ->
+                    Server.accs.get(friend.id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id))));
             }
         }
     }
@@ -162,30 +155,30 @@ public class WorkingServ extends Thread {
     //Отправляет команду с 1 или 2мя аргументами
     void send(Command message){
         try {
-            ds.writeUTF(message.toString());
-            ds.flush();
-        } catch (IOException e) {
-            System.err.println("Error while sending");
-
+            dataOutputStream.writeUTF(message.toString());
+            dataOutputStream.flush();
+        } catch (IOException ignored) {
         }
     }
     //Отправляет сообщение аккаунту клиента
     private void send(Message message){
         try {
-            ds.writeUTF(message.toString());
-            ds.flush();
-        } catch (IOException ignored) {}
+            dataOutputStream.writeUTF(message.toString());
+            dataOutputStream.flush();
+        } catch (IOException e) {
+            System.err.println("Error while sending");
+        }
     }
     @Override
     public void run() {
         try {
             console.log("Started");
-            ip = InetAddress.getByName("localhost");
+            InetAddress ip = InetAddress.getByName("localhost");
             serverSocket = new ServerSocket(port, 0, ip);
             socketmain = serverSocket.accept();
             Server.connections++;
             console.log("Socket accepted");
-            ds = new DataOutputStream(socketmain.getOutputStream());
+            dataOutputStream = new DataOutputStream(socketmain.getOutputStream());
             is = new DataInputStream(socketmain.getInputStream());
             intellect = new Intellect(this);
             intellect.join();
