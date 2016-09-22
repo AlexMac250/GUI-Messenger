@@ -7,8 +7,10 @@ import javax.swing.text.*;
 import java.awt.*;
 
 class Frames {
-    private final String STYLE_heading = "heading", STYLE_normal  = "normal" , FONT_style    = "Trebuchet MS";
-    private final Color BLUE = new Color(69, 151, 249);
+    private final String STYLE_heading = "heading";
+    private final String STYLE_normal  = "normal";
+    private final String FONT_style    = "Trebuchet MS";
+    private final Color MAIN_COLOR = new Color(69, 151, 249);
 
     MainMenuFrame MainMenuFrame = new MainMenuFrame();
     LoginFrame LoginFrame = new LoginFrame();
@@ -42,7 +44,7 @@ class Frames {
             frame.setLayout(new GridBagLayout());
 
             frame.getContentPane().setBackground(Color.DARK_GRAY);
-            label.setForeground(BLUE);
+            label.setForeground(MAIN_COLOR);
 
             GridBagLayoutManager(frame, label, GridBagConstraints.NORTH, 0, 0, 1);
             GridBagLayoutManager(frame, butLogin, GridBagConstraints.HORIZONTAL, 0, 1 ,1);
@@ -117,17 +119,15 @@ class Frames {
             label.setForeground(Color.WHITE);
             checkBox.setForeground(Color.WHITE);
             checkBox.setFocusable(false);
+            checkBox.setBackground(Color.DARK_GRAY);
             loginField.setBackground(Color.GRAY);
             passwordField.setBackground(Color.GRAY);
             frame.getContentPane().setBackground(Color.DARK_GRAY);
             butLogin.setFocusable(false);
-            //butLogin.setForeground(Color.WHITE);
 
             loginField.setToolTipText("ЛОГИН");
             passwordField.setToolTipText("ПАРОЛЬ");
 
-//            frame.add(panLogin, BorderLayout.CENTER);
-//            frame.add(panBut, BorderLayout.SOUTH);
             frame.setLayout(new GridBagLayout());
             GridBagLayoutManager(frame, label, GridBagConstraints.CENTER, 0, 0, 2);
             GridBagLayoutManager(frame, loginField, GridBagConstraints.HORIZONTAL, 0, 1, 2);
@@ -135,12 +135,6 @@ class Frames {
             GridBagLayoutManager(frame, info, GridBagConstraints.CENTER, 0, 3, 2);
             GridBagLayoutManager(frame, checkBox, GridBagConstraints.CENTER, 0, 4, 1);
             GridBagLayoutManager(frame, butLogin, GridBagConstraints.CENTER, 1, 4, 1);
-//            panLogin.add(label);
-//            panLogin.add(loginField);
-//            panLogin.add(passwordField);
-//            panLogin.add(info);
-//            panBut.add(checkBox);
-//            panBut.add(butLogin);
 
             frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
             frame.setAlwaysOnTop(true);
@@ -216,68 +210,57 @@ class Frames {
 
         @Override
         public void initial() {
-            currentFriend = null;
-            frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
-            frame.setSize(683, 340);
-            frame.setResizable(true);                                // FIXME: 20.09.16 resizable
-            contentPain = frame.getContentPane();
-            panFriends = new JPanel();
-            panMainContent = new JPanel();
-            panMessages = new JPanel();
-            panSendMessage = new JPanel();
-            butSendMessage = new JButton("Отправить");
-            MessageBox = new JTextPane();
-            loadText(MessageBox);
-            textField = new JTextField(30);
-            scrollMessage = new JScrollPane();
-            scrollFriends = new JScrollPane(panFriends);
+            try {
+                currentFriend = null;
+                frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
+                frame.setSize(683, 340);
+                frame.setResizable(true);                                // FIXME: 20.09.16 resizable
+                contentPain = frame.getContentPane();
+                panFriends = new JPanel();
+                panMainContent = new JPanel();
+                panMessages = new JPanel();
+                panSendMessage = new JPanel();
+                butSendMessage = new JButton("Отправить");
+                MessageBox = new JTextPane();
+                textField = new JTextField(30);
+                scrollMessage = new JScrollPane();
+                scrollFriends = new JScrollPane(panFriends);
 
-            panSendMessage.setBackground(Color.DARK_GRAY);
-            panMainContent.setBackground(Color.DARK_GRAY);
-            scrollMessage.setBackground(Color.DARK_GRAY);
-            contentPain.setBackground(Color.DARK_GRAY);
-            MessageBox.setBackground(Color.GRAY);
-            MessageBox.setForeground(Color.WHITE);
+                panSendMessage.setBackground(Color.DARK_GRAY);
+                panMainContent.setBackground(Color.DARK_GRAY);
+                scrollMessage.setBackground(Color.DARK_GRAY);
+                contentPain.setBackground(Color.DARK_GRAY);
+                MessageBox.setBackground(Color.GRAY);
+                MessageBox.setForeground(Color.WHITE);
 
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                loadText(MessageBox);
+                MessageBox.setMinimumSize(MessageBox.getSize());
 
-            scrollMessage.createVerticalScrollBar();
-            scrollMessage.getViewport().add(MessageBox);
-            scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                scrollMessage.createVerticalScrollBar();
+                scrollMessage.getViewport().add(MessageBox);
+                scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                frame.setLayout(new GridBagLayout());
+                scrollFriends.setMaximumSize(new Dimension(scrollFriends.getWidth(), 317));
+                createStyles(MessageBox);
 
-            contentPain.setLayout(new FlowLayout());
+                GridBagLayoutManager(frame, scrollFriends, GridBagConstraints.FIRST_LINE_START, GridBagConstraints.HORIZONTAL, 0, 0, 1);
+                GridBagLayoutManager(frame, panMainContent, GridBagConstraints.CENTER, 1, 0, 1);
 
-            buildPanMessages();
-            loadFriends();
+                frame.setLocationRelativeTo(null);
+                textField.addActionListener(e -> send());
+                butSendMessage.addActionListener(e -> send());
 
-            contentPain.add(scrollFriends, BorderLayout.PAGE_START);
-            contentPain.add(panMainContent, BorderLayout.CENTER);
-
-
-//            MessageBox.setMinimumSize(new Dimension(300, 336));
-//            MessageBox.setSize(new Dimension(445, 336));
-
-            scrollFriends.setMaximumSize(new Dimension(scrollFriends.getWidth(), 317));
-
-            createStyles(MessageBox);
-
-            frame.setLocationRelativeTo(null);
-
-            textField.addActionListener(e -> send());
-            butSendMessage.addActionListener(e -> send());
-//            panMainContent.add(scrollMessage);
-//            panMainContent.add(panSendMessage, BorderLayout.SOUTH);
-//            panSendMessage.setLayout(new FlowLayout());
-//            panSendMessage.add(textField);
-//            panSendMessage.add(butSendMessage);
-//            contentPain.add(scrollFriends, BorderLayout.WEST);
-
-
+            } catch (Exception e){
+                setInfo(e.toString(), Color.RED);
+            }
         }
 
         @Override
         public void showFrame() {
             initial();
+            buildPanMessages();
+            loadFriends();
             frame.setVisible(true);
         }
 
@@ -319,7 +302,7 @@ class Frames {
             normal = editor.addStyle(STYLE_normal, null);
             StyleConstants.setFontFamily(normal, FONT_style);
             StyleConstants.setFontSize(normal, 16);
-            // Наследуем свойстdо FontFamily
+            // Наследуем свойство dо FontFamily
             heading = editor.addStyle(STYLE_heading, normal);
             StyleConstants.setFontSize(heading, 18);
             StyleConstants.setBold(heading, true);
@@ -403,7 +386,7 @@ class Frames {
 
                 GridBagLayoutManager(panFriends, checkBoxOnline, GridBagConstraints.CENTER, 0, i+1, 1);
                 GridBagLayoutManager(panFriends, button, GridBagConstraints.HORIZONTAL, 1, i+1, 1);
-                /*if (COUNTFRIENDS > 13) */GridBagLayoutManager(panFriends, new JLabel("    "), GridBagConstraints.HORIZONTAL, 2, i+1, 1);
+                if (COUNTFRIENDS > 13) GridBagLayoutManager(panFriends, new JLabel("    "), GridBagConstraints.HORIZONTAL, 2, i+1, 1);
 
                 int finalI = i;
                 button.addActionListener(e -> {
@@ -413,6 +396,10 @@ class Frames {
                     System.out.println("Opened dialog with "+currentFriend.login);
                 });
             }
+            JButton button = new JButton("+");
+            button.setForeground(MAIN_COLOR);
+            button.setFont(new Font(FONT_style, Font.BOLD, button.getFont().getSize()+6));
+            GridBagLayoutManager(panFriends, button,GridBagConstraints.HORIZONTAL, 0, COUNTFRIENDS+1, 2);
 
         }
 
@@ -422,7 +409,8 @@ class Frames {
 
         private void send(){
             if (textField.getText().length()>0) {
-                System.out.println(frame.getSize());
+                insertText(MessageBox, "\n--- "+Client.account.login+" ["+"?DATE?"+"] ----------------------\n", heading);
+                insertText(MessageBox, textField.getText()+"\n", normal);
                 Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
                 textField.setText("");
             }
@@ -467,7 +455,7 @@ class Frames {
             registerBut = new JButton("Зарегистрироваться!");
 
             frame.getContentPane().setBackground(Color.DARK_GRAY);
-            label.setForeground(BLUE);
+            label.setForeground(MAIN_COLOR);
             label.setFont(new Font(FONT_style, Font.BOLD, 18));
             labLogin.setForeground(Color.WHITE);
             labPassword.setForeground(Color.WHITE);
@@ -549,7 +537,7 @@ class Frames {
             frame.getContentPane().setBackground(Color.DARK_GRAY);
             text.setForeground(Color.WHITE);
             label.setFont(new Font(FONT_style, Font.BOLD, 20));
-            label.setForeground(BLUE);
+            label.setForeground(MAIN_COLOR);
             creatorsLab.setForeground(new Color(106, 135, 89));
             labAlex.setForeground(new Color(255, 100, 25));
             labZver.setForeground(new Color(255, 100, 25));
@@ -630,14 +618,23 @@ class Frames {
         c.gridy = gridY;
         parent.add(component, c);
     }
-    private void GridBagLayoutManager(Container parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
+    private void GridBagLayoutManager(JFrame frame, JComponent component, int anchor, int fill, int gridX, int gridY, int gridWidth){
         GridBagConstraints c = new GridBagConstraints();
+        c.anchor = anchor;
         c.fill = fill;
         c.gridwidth = gridWidth;
         c.gridx = gridX;
         c.gridy = gridY;
-        parent.add(component, c);
+        frame.add(component, c);
     }
+//    private void GridBagLayoutManager(Container parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
+//        GridBagConstraints c = new GridBagConstraints();
+//        c.fill = fill;
+//        c.gridwidth = gridWidth;
+//        c.gridx = gridX;
+//        c.gridy = gridY;
+//        parent.add(component, c);
+//    }
 
     void startGUI(){
         MainMenuFrame.showFrame();
