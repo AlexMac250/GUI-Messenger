@@ -42,9 +42,9 @@ public class Account {
 
     }
 
-    public Account(String login, int id) {
+    public Account(String login, boolean isOnline) {
         this.login = login;
-        this.id = id;
+        this.isOnline = isOnline;
     }
 
     public Account(int id, String login, String password, ArrayList<Friend> friends){

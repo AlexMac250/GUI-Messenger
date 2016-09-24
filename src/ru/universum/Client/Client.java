@@ -103,31 +103,35 @@ public class Client {
             case "login" :
                 send(new Message(command[0],command[1],command[2] , NODATE));
                 break;
+
             //так же как и в логине
             case "register" :
                 send(new Message(command[0], command[1], command[2] , NODATE));
                 break;
+
             case "send" :
                 //первый аргумент - send , второй - idTO , третий сам текст , на сеерв отправляется 4 аргумента где третий это дата а четвертый это текст.
                 send(new Message(command[0], command[1], command[2] , DATED));
                 break;
+
             case "message" :
                 //принял входящее сообщеине
                 messages.add(new ClientMessage(command[1] , command[2], command[3]));
                 writeMessage(command[1], command[2], command[3]);
                 System.out.println(messages.get(messages.size()-1));
-
                 break;
                 //заполняет френдов с сервера.
             case "friend" :
                 addFriend(command);
                 break;
+
             case "account" :
                 account.login = command[2];
                 account.id = Integer.parseInt(command[3]);
                 Frames.MainFrame.showFrame();
                 // отображаешь майн фрейм
                 break;
+
             case "logged" :
                 if(command[2].equals("true")){
                     statusLogged = true;
@@ -137,6 +141,7 @@ public class Client {
                     Frames.LoginFrame.setInfo("Неверные логин или пароль", Color.RED);
                 }
                 break;
+
             //ну тут понятно
             case "connection" :
                 Frames.LoginFrame.setInfo("Соединение потеряно!", Color.RED);
@@ -151,13 +156,16 @@ public class Client {
                 }
                 System.exit(1);
                 break;
+
             case "addFriend" :
                 send(new Message(command[0],command[1], command[2], NODATE));
                 break;
+
             //если ошибка при добавлении в друзья
             case "friended" :
                 console.log("Error friend");
                 break;
+
             case "online" :
                 for (Friend fr : account.friends){
                     if(fr.id == Integer.parseInt(command[2])){
@@ -168,6 +176,7 @@ public class Client {
                     }
                 }
                 break;
+
             case "offline" :
                 for (Friend fr : account.friends){
                     if(fr.id == Integer.parseInt(command[2])) {
@@ -178,30 +187,41 @@ public class Client {
                     }
                 }
                     break;
+
             //доделай сам
             case "askToFriend" :
                 Frames.new AddFriend(new Friend(Integer.parseInt(command[2]), command[3]));
                 console.log("Accept friend :" +command[3] + " ?");
                 break;
+
             case "registered" :
                 if(command[2].equals("true")){
                     statusRegistered = true;
                 }
                 break;
+
             case "resOfFriend" :
                 //resOfFriend id answer
                 send(new Message(command[0],command[1],command[2],NODATE));
                 break;
+
+            //при первом запросе юзеров
             case "getUsers" :
                 send(new Message(command[0],"","",NODATE));
                 break;
+
+            //при 2+ запросе
             case "get20More" :
                 send(new Message(command[0],"","",NODATE));
                 break;
+
             case "user" :
-                usersInSearch.add(new Account(command[2],Integer.parseInt(command[1])));
+                usersInSearch.add(new Account(command[2],Boolean.parseBoolean(command[3])));
+                System.out.println(usersInSearch.get(usersInSearch.size()-1).login + " " + usersInSearch.get(usersInSearch.size()-1).isOnline);
                 break;
+
             case "findByNick" :
+                    send(new Message(command[0],command[1],"",NODATE));
                 break;
         }
     }
@@ -236,7 +256,7 @@ public class Client {
     }
 
     //работает , не трогать
-    private static void send(Message message){
+    public static void send(Message message){
         try {
             os = new DataOutputStream(socket.getOutputStream());
             os.writeUTF(message.toString());

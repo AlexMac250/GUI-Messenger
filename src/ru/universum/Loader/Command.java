@@ -5,10 +5,10 @@ import java.util.List;
 public class Command {
     String toDo;
     final String from = "server";
-    List<String> args;
+    String[] args;
     String arg;
 
-    public Command(String toDo, List<String> args) {
+    public Command(String toDo, String[] args) {
         this.toDo = toDo;
         this.args = args;
     }
@@ -21,7 +21,7 @@ public class Command {
     @Override
     public String toString() {
         if(args!=null){
-            return toDo + '$' + from + '$' + args.get(0) + '$' + args.get(1);
+            return toDo + '$' + from + '$' + args[0] + '$' + args[1];
         }else {
         return toDo + '$' + from + '$' + arg;
         }

@@ -61,7 +61,7 @@ public class WorkingServ extends Thread {
             send(new Command("logged" , "true"));
             console.log("Acc " + acc.login + " logged");
             sendFriends();
-            send(new Command("account" , Arrays.asList(acc.login,String.valueOf(acc.id))));
+            send(new Command("account" , new String[]{acc.login,String.valueOf(acc.id)}));
         }
         else{
             console.log("Fail login");
@@ -75,7 +75,7 @@ public class WorkingServ extends Thread {
                 String[] friend = new String[2];
                 friend[0] = String.valueOf(fr.id);
                 friend[1] = fr.login;
-                send(new Command("friend", Arrays.asList(friend)));
+                send(new Command("friend", friend));
             }
         }else{
             send(new Command("friend","null"));
@@ -88,7 +88,7 @@ public class WorkingServ extends Thread {
             String[] friendArr = new String[2];
             friendArr[0] = String.valueOf(acc.friends.get(acc.friends.size() - 1).id);
             friendArr[1] = acc.friends.get(acc.friends.size() - 1).login;
-            send(new Command("friend", Arrays.asList(friendArr)));
+            send(new Command("friend",friendArr));
             if(Server.accs.get(friend.id).isOnline){
                 send(new Command("online",String.valueOf(friend.id)));
             }
@@ -98,7 +98,7 @@ public class WorkingServ extends Thread {
 
     private void askToFriend(int idOf){
         if(Server.accs.get(idOf).isOnline){
-            Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend" , Arrays.asList(String.valueOf(acc.id),acc.login)));
+            Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend" ,new String[]{String.valueOf(acc.id),acc.login}));
         }
     }
 

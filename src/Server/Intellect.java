@@ -1,12 +1,14 @@
 package Server;
 
 import ru.universum.Loader.Account;
+import ru.universum.Loader.Command;
 import ru.universum.Loader.Message;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -86,7 +88,7 @@ class Intellect extends Thread{
                 for(Account acc : Server.accs){
                     if(i<=Server.accs.size()-1) {
                         if (GettingUsers != 20) {
-                            serv.execute(new String[]{"send", "user", String.valueOf(acc.id), acc.login});
+                            serv.execute(new String[]{"send", "user", acc.login, String.valueOf(acc.isOnline)});
                             i++;
                         }else{
                             break;
@@ -101,7 +103,7 @@ class Intellect extends Thread{
                 for(i = GettingUsers;i<=GettingUsers+20;i++){
                     if(i<=Server.accs.size()-1) {
                         Account account = Server.accs.get(i);
-                        serv.execute(new String[]{"send", "user", String.valueOf(account.id), account.login});
+                        serv.execute(new String[]{"send", "user", account.login, String.valueOf(account.isOnline)});
                     }else{
                         break;
                     }
@@ -109,7 +111,11 @@ class Intellect extends Thread{
                 GettingUsers+=20;
                 break;
             case "findByNick" :
-
+                for(Account acc :Server.accs){
+                    if(acc.login.equals(command[1])){
+                        serv.send(new Command("user", new String[]{acc.login,String.valueOf(acc.isOnline)}));
+                    }
+                }
                 break;
         }
     }

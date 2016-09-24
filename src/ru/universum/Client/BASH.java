@@ -47,6 +47,10 @@ public class BASH extends Thread{
                 System.exit(2);
                 break;
 
+            case "findByNick":
+                Client.execute(line);
+                break;
+
             default:
                 System.err.println("Command \""+ line[0]+"\" not found!");
                 break;
