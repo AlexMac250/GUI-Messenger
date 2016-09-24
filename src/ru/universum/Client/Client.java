@@ -162,7 +162,7 @@ public class Client {
                 break;
 
             //если ошибка при добавлении в друзья
-            case "friended" :
+            case "noFriended" :
                 //ЗДЕСЬ СДЕЛАЙ ВЫВОД ТОГО ЧТО ЕГО ПРЕДЛОЖЕНИЕ В ДРУЗЬЯ ПРОИГНОРИЛ ПОЛЬЗОВАТЕЛЬ С НИКОМ command[1]
                 break;
 

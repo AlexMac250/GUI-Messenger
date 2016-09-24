@@ -88,12 +88,11 @@ public class WorkingServ extends Thread {
             String[] friendArr = new String[2];
             friendArr[0] = String.valueOf(acc.friends.get(acc.friends.size() - 1).id);
             friendArr[1] = acc.friends.get(acc.friends.size() - 1).login;
-            send(new Command("friend",friendArr));
-            if(Server.accs.get(friend.id).isOnline){
-                send(new Command("online",String.valueOf(friend.id)));
+            send(new Command("friend", friendArr));
+            if (Server.accs.get(friend.id).isOnline) {
+                send(new Command("online", String.valueOf(friend.id)));
             }
-        } else
-            send(new Command("friended", Server.accs.get(acc.id).login));
+        }
     }
 
     private void askToFriend(int idOf){
