@@ -217,7 +217,7 @@ public class Client {
 
             case "user" :
                 usersInSearch.add(new Account(command[2],Integer.parseInt(command[3])));
-                System.out.println(usersInSearch.get(usersInSearch.size()-1).login + " " + usersInSearch.get(usersInSearch.size()-1).isOnline);
+                System.out.println(usersInSearch.get(usersInSearch.size()-1).login + " " + usersInSearch.get(usersInSearch.size()-1).id);
                 break;
 
             case "findByNick" :
