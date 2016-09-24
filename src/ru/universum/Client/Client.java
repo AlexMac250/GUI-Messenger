@@ -163,6 +163,7 @@ public class Client {
 
             //если ошибка при добавлении в друзья
             case "noFriended" :
+                Frames.MainFrame.setInfo("Ваше предложение в друзья "+command[1]+", отменено.", Color.BLACK);
                 //ЗДЕСЬ СДЕЛАЙ ВЫВОД ТОГО ЧТО ЕГО ПРЕДЛОЖЕНИЕ В ДРУЗЬЯ ПРОИГНОРИЛ ПОЛЬЗОВАТЕЛЬ С НИКОМ command[1]
                 break;
 
@@ -216,7 +217,7 @@ public class Client {
                 break;
 
             case "user" :
-                usersInSearch.add(new Account(command[1],Integer.parseInt(command[2]),Boolean.parseBoolean(command[3])));
+                usersInSearch.add(new Account(command[1]+(command[1].equals(account.login) ? " (Вы)" : ""),Integer.parseInt(command[2]),Boolean.parseBoolean(command[3])));
                 System.out.println(usersInSearch.get(usersInSearch.size()-1).login + " " + usersInSearch.get(usersInSearch.size()-1).id);
                 break;
 

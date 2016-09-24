@@ -10,8 +10,8 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 class Frames {
     private final String STYLE_heading = "heading";
@@ -273,11 +273,12 @@ class Frames {
 
         @Override
         public void setInfo(String message, Color color) {
-            final JFrame frMess = new JFrame("СООБЩЕНИЕ!");
+            final JDialog frMess = new JDialog(frame, "СООБЩЕНИЕ!", true);
             final JPanel panel = new JPanel();
             final JPanel panel1 = new JPanel();
             final JLabel text = new JLabel(message);
             final JButton butOK = new JButton("Закрыть");
+            frMess.setResizable(false);
             text.setForeground(color);
             frMess.add(panel, BorderLayout.NORTH);
             frMess.add(panel1, BorderLayout.SOUTH);
@@ -543,61 +544,105 @@ class Frames {
 
     private class FindFriend extends AbsFrame{
         JDialog dialog;
+        JLabel labSearch;
+        JLabel labSend;
         JPanel panSearch;
-        JTextField textField;
-        JButton button;
-        JTable table;
+        JPanel panSend;
+        JTextField fieldSearch;
+        JTextField fieldSend;
+        JButton butSearch;
+        JButton butSend;
+        JButton butUpdate;
         JScrollPane scrollPane;
 
         @Override
         public void initial() {
+            Client.usersInSearch = new ArrayList<>();
             Client.execute(new String[]{"getUsers","",""});
-            try {
-                TimeUnit.MILLISECONDS.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                setInfo(e.toString(), Color.RED);
-            }
             dialog = new JDialog(MainFrame.frame, "Добавить друга", true);
+            labSearch = new JLabel("Поиск по логину. Введите логин:");
+            labSend = new JLabel("Введите логин человека из таблицы, которому хотите предложить дружбу:");
             panSearch = new JPanel();
-            textField = new JTextField(50);
-            button = new JButton("Поиск");
-
-            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-            textField.setForeground(Color.WHITE);
-            textField.setBackground(Color.GRAY);
-            panSearch.setBackground(Color.DARK_GRAY);
-            table.setBackground(Color.GRAY);
-
-            dialog.setLayout(new GridBagLayout());
-            panSearch.setLayout(new GridBagLayout());
-
-            dialog.getContentPane().setBackground(Color.DARK_GRAY);
+            panSend = new JPanel();
+            fieldSearch = new JTextField(50);
+            fieldSend = new JTextField(20);
+            butSearch = new JButton("Поиск");
+            butSend = new JButton("Предложить дружбу");
+            butUpdate = new JButton("Обновить");
 
             ArrayList<Account> users = Client.usersInSearch;
             TableModel model = new SearchUsersTabel(users);
-            table = new JTable(model);
+            JTable table = new JTable(model);
             scrollPane = new JScrollPane(table);
 
-            GridBagLayoutManager(dialog, panSearch, GridBagConstraints.HORIZONTAL, 0, 0, 1);
-            GridBagLayoutManager(dialog, scrollPane, GridBagConstraints.CENTER, 0, 1, 1);
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
-            GridBagLayoutManager(panSearch, textField, GridBagConstraints.HORIZONTAL, 0, 0 ,1);
-            GridBagLayoutManager(panSearch, button, GridBagConstraints.CENTER, 1, 0, 1);
+            fieldSearch.setForeground(Color.WHITE);
+            fieldSearch.setBackground(Color.GRAY);
+            fieldSend.setBackground(Color.GRAY);
+            fieldSend.setForeground(Color.WHITE);
+            panSearch.setBackground(Color.DARK_GRAY);
+            panSend.setBackground(Color.DARK_GRAY);
+            labSearch.setForeground(Color.DARK_GRAY);
+            labSend.setForeground(Color.WHITE);
+            butUpdate.setForeground(MAIN_COLOR);
+            dialog.getContentPane().setBackground(Color.DARK_GRAY);
+            table.setBackground(Color.DARK_GRAY);
+            table.setGridColor(Color.GRAY);
+            table.setForeground(Color.WHITE);
+
+            dialog.setLayout(new GridBagLayout());
+            panSearch.setLayout(new GridBagLayout());
+            panSend.setLayout(new GridBagLayout());
+
+            GridBagLayoutManager(dialog, panSearch, GridBagConstraints.HORIZONTAL, 0, 0, 2);
+            GridBagLayoutManager(dialog, scrollPane, GridBagConstraints.CENTER, 1, 1, 1);
+            GridBagLayoutManager(dialog, panSend, GridBagConstraints.HORIZONTAL, 0, 2, 2);
+
+            GridBagLayoutManager(panSearch, labSearch, GridBagConstraints.CENTER, 0, 0, 2);
+            GridBagLayoutManager(panSearch, fieldSearch, GridBagConstraints.HORIZONTAL, 0, 1, 1);
+            GridBagLayoutManager(panSearch, butSearch, GridBagConstraints.CENTER, 1, 1, 1);
+
+            GridBagLayoutManager(panSend, labSend, GridBagConstraints.CENTER, 0, 0, 2);
+            GridBagLayoutManager(panSend, butUpdate, GridBagConstraints.FIRST_LINE_START, 0, 1, 1);
+            GridBagLayoutManager(panSend, fieldSend, GridBagConstraints.HORIZONTAL, 2, 0, 1);
+            GridBagLayoutManager(panSend, butSend, GridBagConstraints.HORIZONTAL, 2, 1, 1);
 
             dialog.pack();
             dialog.setSize(dialog.getWidth()+30,dialog.getHeight()+10);
 
-
-
-
-            JTable table = new JTable(model);
             table.setSize(new Dimension(dialog.getWidth()-10, table.getHeight()));
 
             dialog.setLocationRelativeTo(null);
 
-            button.addActionListener(e -> table.setGridColor(Color.GRAY));
+            butSearch.addActionListener(e -> setInfo("Пока не поддерживается! :(", Color.BLACK));
+
+            butSend.addActionListener(e -> {
+                ArrayList<Account> usersInSearch = Client.usersInSearch;
+                for (int i = 0; i < usersInSearch.size(); i++) {
+                    Account acc = usersInSearch.get(i);
+                    if (!Objects.equals(acc.login, fieldSend.getText())) {
+                        if (Objects.equals(fieldSend.getText(), Client.account.login)) {
+                            Client.execute(new String[]{"addFriend", String.valueOf(acc.id), fieldSend.getText()});
+                            break;
+                        } else {
+                            setInfo("Нельзя добавить в друзья самого себя!", Color.RED);
+                            break;
+                        }
+                    } else {
+                        setInfo("Человек не зарегистрирован! (" + fieldSend.getText() + ")", Color.RED);
+                        break;
+                    }
+                }
+
+            });
+
+            butUpdate.addActionListener(e -> {
+                Client.usersInSearch = new ArrayList<>();
+                Client.execute(new String[]{"getUsers","",""});
+                dispose();
+                showFrame();
+            });
         }
 
         @Override
@@ -608,21 +653,22 @@ class Frames {
 
         @Override
         public void hideFrame() {
-
+            //NO USED
         }
 
         @Override
         public void dispose() {
-
+            dialog.dispose();
         }
 
         @Override
         public void setInfo(String message, Color color) {
-            final JFrame frMess = new JFrame("СООБЩЕНИЕ!");
+            final JDialog frMess = new JDialog(dialog, "СООБЩЕНИЕ!", true);
             final JPanel panel = new JPanel();
             final JPanel panel1 = new JPanel();
             final JLabel text = new JLabel(message);
             final JButton butOK = new JButton("Закрыть");
+            frMess.setResizable(false);
             text.setForeground(color);
             frMess.add(panel, BorderLayout.NORTH);
             frMess.add(panel1, BorderLayout.SOUTH);
@@ -638,7 +684,6 @@ class Frames {
         }
 
         class SearchUsersTabel implements TableModel {
-            @SuppressWarnings("ALL")
             private Set<TableModelListener> listeners = new HashSet<>();
             ArrayList<Account> users = null;
 
@@ -653,7 +698,7 @@ class Frames {
 
             @Override
             public int getColumnCount() {
-                return 3;
+                return 2;
             }
 
             @Override
@@ -669,7 +714,7 @@ class Frames {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                return null;
+                return String.class;
             }
 
             @Override
@@ -696,7 +741,7 @@ class Frames {
 
             @Override
             public void addTableModelListener(TableModelListener l) {
-
+                listeners.add(l);
             }
 
             @Override
@@ -749,7 +794,7 @@ class Frames {
         }
     }
 
-    //---------//
+    //-------------------------------------------//
 
     class AddFriend{
         Friend friend;
