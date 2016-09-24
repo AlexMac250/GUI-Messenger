@@ -33,7 +33,7 @@ public class Client {
     static boolean statusRegistered = false;
     static Frames Frames = new Frames();
     //есть только id и login
-    static List<Account> usersInSearch = new ArrayList<>();
+    static ArrayList<Account> usersInSearch = new ArrayList<>();
     public static void main(String[] args) {
         Frames.startGUI();
         new BASH().run();
