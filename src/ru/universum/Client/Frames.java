@@ -15,24 +15,24 @@ import java.util.concurrent.TimeUnit;
 
 class Frames {
     private final String STYLE_heading = "heading";
+    @SuppressWarnings("ALL")
     private final String STYLE_normal  = "normal";
     private final String FONT_style    = "Trebuchet MS";
     private final Color MAIN_COLOR = new Color(69, 151, 249);
 
-    MainMenuFrame MainMenuFrame = new MainMenuFrame();
+    private MainMenuFrame MainMenuFrame = new MainMenuFrame();
     LoginFrame LoginFrame = new LoginFrame();
     RegisterFrame RegisterFrame = new RegisterFrame();
-    AboutFrame AboutFrame = new AboutFrame();
+    private AboutFrame AboutFrame = new AboutFrame();
     MainFrame MainFrame = new MainFrame();
 
-    class MainMenuFrame extends AbsFrame {
+    private class MainMenuFrame extends AbsFrame {
         private JFrame frame;
         private JButton butLogin;
         private JButton butRegister;
         private JButton butAbout;
         private JLabel label;
         private JLabel info;
-
 
         MainMenuFrame() {
             initial();
@@ -62,14 +62,8 @@ class Frames {
             frame.setResizable(false);
             frame.setLocationRelativeTo(null);
 
-            butLogin.addActionListener(e -> {
-                LoginFrame.showFrame();
-
-            });
-            butRegister.addActionListener(e -> {
-
-                RegisterFrame.showFrame();
-            });
+            butLogin.addActionListener(e -> LoginFrame.showFrame());
+            butRegister.addActionListener(e -> RegisterFrame.showFrame());
             butAbout.addActionListener(e -> AboutFrame.showFrame());
         }
 
@@ -96,7 +90,7 @@ class Frames {
     }
 
     //-------------------------------------------//
-
+    @SuppressWarnings("ALL")
     class LoginFrame extends AbsFrame {
         JDialog dialog;
         private JTextField loginField;
@@ -144,7 +138,6 @@ class Frames {
             dialog.setAlwaysOnTop(true);
             dialog.setSize(200, 149);
             dialog.setResizable(false);
-            dialog.setLocationRelativeTo(null);
 
             butLogin.addActionListener(e -> login());
             loginField.addActionListener(e -> login());
@@ -153,6 +146,7 @@ class Frames {
 
         @Override
         public void showFrame() {
+            dialog.setLocationRelativeTo(null);
             dialog.setVisible(true);
         }
 
@@ -200,7 +194,6 @@ class Frames {
         private Container contentPain;
         JPanel panFriends;
         private JPanel panMainContent;
-        private JPanel panMessages;
         private JPanel panSendMessage;
         private JButton butSendMessage;
         JTextPane MessageBox;
@@ -223,7 +216,6 @@ class Frames {
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
                 panMainContent = new JPanel();
-                panMessages = new JPanel();
                 panSendMessage = new JPanel();
                 butSendMessage = new JButton("Отправить");
                 MessageBox = new JTextPane();
@@ -324,9 +316,9 @@ class Frames {
 
         private void loadText(JTextPane editor) {
             // Загружаем в документ содержимое
-            for (int i = 0; i < TEXT.length; i++) {
-                Style style = (TEXT[i][1].equals(STYLE_heading)) ? heading : normal;
-                insertText(editor, TEXT[i][0], style);
+            for (String[] aTEXT : TEXT) {
+                Style style = (aTEXT[1].equals(STYLE_heading)) ? heading : normal;
+                insertText(editor, aTEXT[0], style);
             }
            /* // Размещение компонента в конце текста
             StyledDocument doc = editor.getStyledDocument();
@@ -423,6 +415,7 @@ class Frames {
             }
         }
 
+        @SuppressWarnings("ALL")   // FIXME: 24.09.16 delete WrningBloker
         private void buildMenuBar(){
 
         }
@@ -431,11 +424,9 @@ class Frames {
 
     //-------------------------------------------//
 
+    @SuppressWarnings("ALL")
     class RegisterFrame extends AbsFrame{
 
-        public RegisterFrame() {
-            initial();
-        }
         JDialog dialog;
         JLabel label;
         JLabel labLogin;
@@ -446,6 +437,10 @@ class Frames {
         JPasswordField passwordField;
         JPasswordField passwordField2;
         JButton registerBut;
+
+        public RegisterFrame() {
+            initial();
+        }
 
         @Override
         public void initial() {
@@ -478,7 +473,6 @@ class Frames {
 
             dialog.pack();
             dialog.setSize(dialog.getWidth()+50,dialog.getHeight()+20);
-            dialog.setLocationRelativeTo(null);
 
             loginField.addActionListener(e -> {
                 setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
@@ -510,6 +504,7 @@ class Frames {
 
         @Override
         public void showFrame() {
+            dialog.setLocationRelativeTo(null);
             dialog.setVisible(true);
         }
 
@@ -546,7 +541,7 @@ class Frames {
 
     //-------------------------------------------//
 
-    class FindFriend extends AbsFrame{
+    private class FindFriend extends AbsFrame{
         JDialog dialog;
         JPanel panSearch;
         JTextField textField;
@@ -602,9 +597,7 @@ class Frames {
 
             dialog.setLocationRelativeTo(null);
 
-            button.addActionListener(e -> {
-                table.setGridColor(Color.GRAY);
-            });
+            button.addActionListener(e -> table.setGridColor(Color.GRAY));
         }
 
         @Override
@@ -645,10 +638,11 @@ class Frames {
         }
 
         class SearchUsersTabel implements TableModel {
+            @SuppressWarnings("ALL")
             private Set<TableModelListener> listeners = new HashSet<>();
             ArrayList<Account> users = null;
 
-            public SearchUsersTabel(ArrayList<Account> users){
+            SearchUsersTabel(ArrayList<Account> users){
                 this.users = users;
             }
 
@@ -755,10 +749,12 @@ class Frames {
         }
     }
 
+    //---------//
+
     class AddFriend{
         Friend friend;
 
-        public AddFriend(Friend friend) {
+        AddFriend(Friend friend) {
             this.friend = friend;
             initial();
         }
@@ -797,7 +793,9 @@ class Frames {
         }
     }
 
-    private void GridBagLayoutManager(JFrame frame, JComponent component, int fill, int gridX, int gridY, int gridWidth){
+    //-----------------------------------------------------------------------------------------------------//
+
+    private static void GridBagLayoutManager(JFrame frame, JComponent component, int fill, int gridX, int gridY, int gridWidth){
         GridBagConstraints c = new GridBagConstraints();
         c.fill = fill;
         c.gridwidth = gridWidth;
@@ -805,7 +803,7 @@ class Frames {
         c.gridy = gridY;
         frame.add(component, c);
     }
-    private void GridBagLayoutManager(JComponent parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
+    private static void GridBagLayoutManager(JComponent parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
         GridBagConstraints c = new GridBagConstraints();
         c.fill = fill;
         c.gridwidth = gridWidth;
@@ -813,7 +811,7 @@ class Frames {
         c.gridy = gridY;
         parent.add(component, c);
     }
-    private void GridBagLayoutManager(JFrame frame, JComponent component, int anchor, int fill, int gridX, int gridY, int gridWidth){
+    private static void GridBagLayoutManager(JFrame frame, JComponent component, int anchor, int fill, int gridX, int gridY, int gridWidth){
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = anchor;
         c.fill = fill;
@@ -822,7 +820,7 @@ class Frames {
         c.gridy = gridY;
         frame.add(component, c);
     }
-    private void GridBagLayoutManager(Container parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
+    private static void GridBagLayoutManager(Container parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
         GridBagConstraints c = new GridBagConstraints();
         c.fill = fill;
         c.gridwidth = gridWidth;
@@ -830,7 +828,6 @@ class Frames {
         c.gridy = gridY;
         parent.add(component, c);
     }
-
     void startGUI(){
         MainMenuFrame.showFrame();
     }
