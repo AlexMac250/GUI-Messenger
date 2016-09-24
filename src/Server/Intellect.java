@@ -88,7 +88,7 @@ class Intellect extends Thread{
                 for(Account acc : Server.accs){
                     if(i<=Server.accs.size()-1) {
                         if (GettingUsers != 20) {
-                            serv.execute(new String[]{"user", acc.login, String.valueOf(acc.isOnline)});
+                            serv.execute(new String[]{"user", acc.login, String.valueOf(acc.id)});
                             i++;
                         }else{
                             break;
@@ -103,7 +103,7 @@ class Intellect extends Thread{
                 for(i = GettingUsers;i<=GettingUsers+20;i++){
                     if(i<=Server.accs.size()-1) {
                         Account account = Server.accs.get(i);
-                        serv.execute(new String[]{"user", account.login, String.valueOf(account.isOnline)});
+                        serv.execute(new String[]{"user", account.login, String.valueOf(acc.id)});
                     }else{
                         break;
                     }
