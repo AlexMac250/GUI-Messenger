@@ -113,7 +113,7 @@ class Intellect extends Thread{
             case "findByNick" :
                 for(Account acc :Server.accs){
                     if(acc.login.equals(command[1])){
-                        serv.send(new Command("user", new String[]{acc.login,String.valueOf(acc.isOnline)}));
+                        serv.send(new Command("user", new String[]{acc.login,String.valueOf(acc.id)}));
                     }
                 }
                 break;
