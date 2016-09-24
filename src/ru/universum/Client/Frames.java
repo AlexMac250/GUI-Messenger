@@ -215,7 +215,7 @@ class Frames {
         @Override
         public void initial() {
             try {
-                Client.execute(new String[]{"getUsers","",""});
+
                 currentFriend = null;
                 frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
                 frame.setSize(683, 340);
