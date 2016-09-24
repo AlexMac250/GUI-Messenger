@@ -100,7 +100,7 @@ public class WorkingServ extends Thread {
         if(Server.accs.get(idOf).isOnline){
             Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend" ,new String[]{String.valueOf(acc.id),acc.login}));
         }else{
-            Server.accs.get(idOf).writeOffline(new Message("askToFriend" , "", String.valueOf(acc.id), acc.login));
+            Server.accs.get(idOf).oflineMes.add(new Message("askToFriend" , "", String.valueOf(acc.id), acc.login));
         }
     }
 
