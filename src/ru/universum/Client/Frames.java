@@ -1,10 +1,17 @@
 package ru.universum.Client;
 
+import ru.universum.Loader.Account;
 import ru.universum.Loader.Friend;
 
 import javax.swing.*;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.TableModel;
 import javax.swing.text.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 class Frames {
     private final String STYLE_heading = "heading";
@@ -91,10 +98,7 @@ class Frames {
     //-------------------------------------------//
 
     class LoginFrame extends AbsFrame {
-
-        private JFrame frame;
-        private JPanel panLogin;
-        private JPanel panBut;
+        JDialog dialog;
         private JTextField loginField;
         private JPasswordField passwordField;
         private JButton butLogin;
@@ -108,7 +112,7 @@ class Frames {
 
         @Override
         public void initial() {
-            frame = new JFrame("Войти");;
+            dialog = new JDialog(MainMenuFrame.frame, "Войти", true);
             loginField = new JTextField(15);
             passwordField = new JPasswordField(15);
             butLogin = new JButton("Войти");
@@ -122,25 +126,25 @@ class Frames {
             checkBox.setBackground(Color.DARK_GRAY);
             loginField.setBackground(Color.GRAY);
             passwordField.setBackground(Color.GRAY);
-            frame.getContentPane().setBackground(Color.DARK_GRAY);
+            dialog.getContentPane().setBackground(Color.DARK_GRAY);
             butLogin.setFocusable(false);
 
             loginField.setToolTipText("ЛОГИН");
             passwordField.setToolTipText("ПАРОЛЬ");
 
-            frame.setLayout(new GridBagLayout());
-            GridBagLayoutManager(frame, label, GridBagConstraints.CENTER, 0, 0, 2);
-            GridBagLayoutManager(frame, loginField, GridBagConstraints.HORIZONTAL, 0, 1, 2);
-            GridBagLayoutManager(frame, passwordField, GridBagConstraints.HORIZONTAL, 0, 2, 2);
-            GridBagLayoutManager(frame, info, GridBagConstraints.CENTER, 0, 3, 2);
-            GridBagLayoutManager(frame, checkBox, GridBagConstraints.CENTER, 0, 4, 1);
-            GridBagLayoutManager(frame, butLogin, GridBagConstraints.CENTER, 1, 4, 1);
+            dialog.setLayout(new GridBagLayout());
+            GridBagLayoutManager(dialog, label, GridBagConstraints.CENTER, 0, 0, 2);
+            GridBagLayoutManager(dialog, loginField, GridBagConstraints.HORIZONTAL, 0, 1, 2);
+            GridBagLayoutManager(dialog, passwordField, GridBagConstraints.HORIZONTAL, 0, 2, 2);
+            GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 3, 2);
+            GridBagLayoutManager(dialog, checkBox, GridBagConstraints.CENTER, 0, 4, 1);
+            GridBagLayoutManager(dialog, butLogin, GridBagConstraints.CENTER, 1, 4, 1);
 
-            frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-            frame.setAlwaysOnTop(true);
-            frame.setSize(200, 149);
-            frame.setResizable(false);
-            frame.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+            dialog.setAlwaysOnTop(true);
+            dialog.setSize(200, 149);
+            dialog.setResizable(false);
+            dialog.setLocationRelativeTo(null);
 
             butLogin.addActionListener(e -> login());
             loginField.addActionListener(e -> login());
@@ -149,22 +153,22 @@ class Frames {
 
         @Override
         public void showFrame() {
-            frame.setVisible(true);
+            dialog.setVisible(true);
         }
 
         @Override
         public void hideFrame() {
-            frame.setVisible(false);
+            dialog.setVisible(false);
         }
 
         @Override
         public void dispose() {
-            frame.dispose();
+            dialog.dispose();
             MainMenuFrame.dispose();
         }
 
         @Override
-        public synchronized void setInfo(String message, Color color) {
+        public void setInfo(String message, Color color) {
             info.setForeground(color);
             info.setText(message);
         }
@@ -211,6 +215,7 @@ class Frames {
         @Override
         public void initial() {
             try {
+
                 currentFriend = null;
                 frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
                 frame.setSize(683, 340);
@@ -401,6 +406,8 @@ class Frames {
             button.setFont(new Font(FONT_style, Font.BOLD, button.getFont().getSize()+6));
             GridBagLayoutManager(panFriends, button,GridBagConstraints.HORIZONTAL, 0, COUNTFRIENDS+1, 2);
 
+            button.addActionListener(e -> new FindFriend().showFrame());
+
         }
 
         void setDialog(Friend friend){
@@ -429,8 +436,7 @@ class Frames {
         public RegisterFrame() {
             initial();
         }
-
-        JFrame frame;
+        JDialog dialog;
         JLabel label;
         JLabel labLogin;
         JLabel labPassword;
@@ -443,7 +449,7 @@ class Frames {
 
         @Override
         public void initial() {
-            frame = new JFrame("NEOnline - Регистрация");
+            dialog = new JDialog(MainMenuFrame.frame, "NEOnline - Регистрация", true);
             label = new JLabel("Регистрация");
             labLogin = new JLabel("Логин:");
             labPassword = new JLabel("Пароль:");
@@ -454,7 +460,7 @@ class Frames {
             info = new JLabel("");
             registerBut = new JButton("Зарегистрироваться!");
 
-            frame.getContentPane().setBackground(Color.DARK_GRAY);
+            dialog.getContentPane().setBackground(Color.DARK_GRAY);
             label.setForeground(MAIN_COLOR);
             label.setFont(new Font(FONT_style, Font.BOLD, 18));
             labLogin.setForeground(Color.WHITE);
@@ -464,31 +470,32 @@ class Frames {
             passwordField.setBackground(Color.GRAY);
             passwordField2.setBackground(Color.GRAY);
 
-            frame.setLayout(new GridBagLayout());
-            frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+            dialog.setLayout(new GridBagLayout());
+            dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+            dialog.setResizable(false);
 
             buildFrame();
 
-            frame.pack();
-            frame.setSize(frame.getWidth()+50,frame.getHeight()+20);
-            frame.setLocationRelativeTo(null);
+            dialog.pack();
+            dialog.setSize(dialog.getWidth()+50,dialog.getHeight()+20);
+            dialog.setLocationRelativeTo(null);
 
             loginField.addActionListener(e -> {
                 setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
-                frame.pack();
-                frame.setSize(frame.getWidth()+50,frame.getHeight()+20);
+                dialog.pack();
+                dialog.setSize(dialog.getWidth()+50,dialog.getHeight()+20);
             });
 
             passwordField.addActionListener(e -> {
                 setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
-                frame.pack();
-                frame.setSize(frame.getWidth()+50,frame.getHeight()+20);
+                dialog.pack();
+                dialog.setSize(dialog.getWidth()+50,dialog.getHeight()+20);
             });
 
             passwordField2.addActionListener(e -> {
                 setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
-                frame.pack();
-                frame.setSize(frame.getWidth()+50,frame.getHeight()+20);
+                 dialog.pack();
+                 dialog.setSize(dialog.getWidth()+50,dialog.getHeight()+20);
             });
 
 
@@ -503,17 +510,17 @@ class Frames {
 
         @Override
         public void showFrame() {
-            frame.setVisible(true);
+            dialog.setVisible(true);
         }
 
         @Override
         public void hideFrame() {
-            frame.setVisible(false);
+            dialog.setVisible(false);
         }
 
         @Override
         public void dispose() {
-            frame.dispose();
+            dialog.dispose();
         }
 
         @Override
@@ -523,15 +530,15 @@ class Frames {
         }
 
         public void buildFrame(){
-            GridBagLayoutManager(frame, label, GridBagConstraints.CENTER, 0, 0, 2);
-            GridBagLayoutManager(frame, labLogin, GridBagConstraints.EAST, 0, 1, 1);
-            GridBagLayoutManager(frame, loginField, GridBagConstraints.HORIZONTAL, 1, 1, 1);
-            GridBagLayoutManager(frame, labPassword, GridBagConstraints.EAST, 0, 2, 1);
-            GridBagLayoutManager(frame, passwordField,GridBagConstraints.HORIZONTAL, 1, 2, 1);
-            GridBagLayoutManager(frame, labRPassword, GridBagConstraints.EAST, 0, 3, 1);
-            GridBagLayoutManager(frame, passwordField2, GridBagConstraints.HORIZONTAL, 1, 3, 1);
-            GridBagLayoutManager(frame, info, GridBagConstraints.CENTER, 0, 4, 2);
-            GridBagLayoutManager(frame, registerBut, GridBagConstraints.HORIZONTAL, 0, 5, 2);
+            GridBagLayoutManager(dialog, label, GridBagConstraints.CENTER, 0, 0, 2);
+            GridBagLayoutManager(dialog, labLogin, GridBagConstraints.EAST, 0, 1, 1);
+            GridBagLayoutManager(dialog, loginField, GridBagConstraints.HORIZONTAL, 1, 1, 1);
+            GridBagLayoutManager(dialog, labPassword, GridBagConstraints.EAST, 0, 2, 1);
+            GridBagLayoutManager(dialog, passwordField,GridBagConstraints.HORIZONTAL, 1, 2, 1);
+            GridBagLayoutManager(dialog, labRPassword, GridBagConstraints.EAST, 0, 3, 1);
+            GridBagLayoutManager(dialog, passwordField2, GridBagConstraints.HORIZONTAL, 1, 3, 1);
+            GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 4, 2);
+            GridBagLayoutManager(dialog, registerBut, GridBagConstraints.HORIZONTAL, 0, 5, 2);
         }
 
 
@@ -540,15 +547,70 @@ class Frames {
     //-------------------------------------------//
 
     class FindFriend extends AbsFrame{
+        JDialog dialog;
+        JPanel panSearch;
+        JTextField textField;
+        JButton button;
+        JTable table;
+        JScrollPane scrollPane;
 
         @Override
         public void initial() {
+            Client.execute(new String[]{"getUsers","",""});
+            try {
+                TimeUnit.MILLISECONDS.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                setInfo(e.toString(), Color.RED);
+            }
+            dialog = new JDialog(MainFrame.frame, "Добавить друга", true);
+            panSearch = new JPanel();
+            textField = new JTextField(50);
+            button = new JButton("Поиск");
 
+            dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+            textField.setForeground(Color.WHITE);
+            textField.setBackground(Color.GRAY);
+            panSearch.setBackground(Color.DARK_GRAY);
+            table.setBackground(Color.GRAY);
+
+            dialog.setLayout(new GridBagLayout());
+            panSearch.setLayout(new GridBagLayout());
+
+            dialog.getContentPane().setBackground(Color.DARK_GRAY);
+
+            ArrayList<Account> users = Client.usersInSearch;
+            TableModel model = new SearchUsersTabel(users);
+            table = new JTable(model);
+            scrollPane = new JScrollPane(table);
+
+            GridBagLayoutManager(dialog, panSearch, GridBagConstraints.HORIZONTAL, 0, 0, 1);
+            GridBagLayoutManager(dialog, scrollPane, GridBagConstraints.CENTER, 0, 1, 1);
+
+            GridBagLayoutManager(panSearch, textField, GridBagConstraints.HORIZONTAL, 0, 0 ,1);
+            GridBagLayoutManager(panSearch, button, GridBagConstraints.CENTER, 1, 0, 1);
+
+            dialog.pack();
+            dialog.setSize(dialog.getWidth()+30,dialog.getHeight()+10);
+
+
+
+
+            JTable table = new JTable(model);
+            table.setSize(new Dimension(dialog.getWidth()-10, table.getHeight()));
+
+            dialog.setLocationRelativeTo(null);
+
+            button.addActionListener(e -> {
+                table.setGridColor(Color.GRAY);
+            });
         }
 
         @Override
         public void showFrame() {
-
+            initial();
+            dialog.setVisible(true);
         }
 
         @Override
@@ -563,7 +625,90 @@ class Frames {
 
         @Override
         public void setInfo(String message, Color color) {
+            final JFrame frMess = new JFrame("СООБЩЕНИЕ!");
+            final JPanel panel = new JPanel();
+            final JPanel panel1 = new JPanel();
+            final JLabel text = new JLabel(message);
+            final JButton butOK = new JButton("Закрыть");
+            text.setForeground(color);
+            frMess.add(panel, BorderLayout.NORTH);
+            frMess.add(panel1, BorderLayout.SOUTH);
+            panel.add(text, BorderLayout.WEST);
+            panel1.add(butOK, BorderLayout.EAST);
+            frMess.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            butOK.addActionListener(e -> frMess.dispose());
+            frMess.pack();
+            frMess.setSize(frMess.getWidth()+30, frMess.getHeight()+10);
+            frMess.setLocationRelativeTo(null);
 
+            frMess.setVisible(true);
+        }
+
+        class SearchUsersTabel implements TableModel {
+            private Set<TableModelListener> listeners = new HashSet<>();
+            ArrayList<Account> users = null;
+
+            public SearchUsersTabel(ArrayList<Account> users){
+                this.users = users;
+            }
+
+            @Override
+            public int getRowCount() {
+                return users.size();
+            }
+
+            @Override
+            public int getColumnCount() {
+                return 3;
+            }
+
+            @Override
+            public String getColumnName(int columnIndex) {
+                switch (columnIndex) {
+                    case 0:
+                        return "Логин";
+                    case 1:
+                        return "Статус";
+                }
+                return "";
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                return null;
+            }
+
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return false;
+            }
+
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex) {
+                switch (columnIndex) {
+                    case 0:
+                        return users.get(rowIndex).login;
+                    case 1:
+                        return (users.get(rowIndex).isOnline) ? "Онлаин" : "Оффлаин";
+
+                }
+                return "";
+            }
+
+            @Override
+            public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+
+            }
+
+            @Override
+            public void addTableModelListener(TableModelListener l) {
+
+            }
+
+            @Override
+            public void removeTableModelListener(TableModelListener l) {
+                listeners.remove(l);
+            }
         }
     }
 
@@ -572,7 +717,7 @@ class Frames {
     private class AboutFrame{
 
         void showFrame() {
-            JFrame frame = new JFrame("О NEOnline");
+            JDialog dialog = new JDialog(MainMenuFrame.frame, "О NEOnline", true);
             JLabel label = new JLabel("NEOnline");
             JLabel empty= new JLabel(" ");
             JLabel text = new JLabel("Лучший бесплатный мессенджер!");
@@ -581,10 +726,10 @@ class Frames {
             JLabel labAlex = new JLabel("ALEX - Александр Василенко    (https://vk.com/aleksandr_vasilenko)");
             JButton butCl = new JButton("Закрыть");
 
-            frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            frame.setLayout(new GridBagLayout());
+             dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+             dialog.setLayout(new GridBagLayout());
 
-            frame.getContentPane().setBackground(Color.DARK_GRAY);
+             dialog.getContentPane().setBackground(Color.DARK_GRAY);
             text.setForeground(Color.WHITE);
             label.setFont(new Font(FONT_style, Font.BOLD, 20));
             label.setForeground(MAIN_COLOR);
@@ -592,21 +737,21 @@ class Frames {
             labAlex.setForeground(new Color(255, 100, 25));
             labZver.setForeground(new Color(255, 100, 25));
 
-            GridBagLayoutManager(frame, label, GridBagConstraints.CENTER, 0, 0, 2);
-            GridBagLayoutManager(frame, empty, GridBagConstraints.HORIZONTAL, 0, 1, 2);
-            GridBagLayoutManager(frame, text, GridBagConstraints.CENTER, 0, 2, 2);
-            GridBagLayoutManager(frame, empty, GridBagConstraints.HORIZONTAL, 0, 3, 2);
-            GridBagLayoutManager(frame, creatorsLab, GridBagConstraints.CENTER, 0, 4, 2);
-            GridBagLayoutManager(frame, labZver, GridBagConstraints.HORIZONTAL, 0, 6, 2);
-            GridBagLayoutManager(frame, labAlex, GridBagConstraints.HORIZONTAL, 0, 7, 2);
-            GridBagLayoutManager(frame, empty, GridBagConstraints.HORIZONTAL, 0, 8, 2);
-            GridBagLayoutManager(frame, butCl, GridBagConstraints.PAGE_END, 1, 9, 1);
+            GridBagLayoutManager(dialog, label, GridBagConstraints.CENTER, 0, 0, 2);
+            GridBagLayoutManager(dialog, empty, GridBagConstraints.HORIZONTAL, 0, 1, 2);
+            GridBagLayoutManager(dialog, text, GridBagConstraints.CENTER, 0, 2, 2);
+            GridBagLayoutManager(dialog, empty, GridBagConstraints.HORIZONTAL, 0, 3, 2);
+            GridBagLayoutManager(dialog, creatorsLab, GridBagConstraints.CENTER, 0, 4, 2);
+            GridBagLayoutManager(dialog, labZver, GridBagConstraints.HORIZONTAL, 0, 6, 2);
+            GridBagLayoutManager(dialog, labAlex, GridBagConstraints.HORIZONTAL, 0, 7, 2);
+            GridBagLayoutManager(dialog, empty, GridBagConstraints.HORIZONTAL, 0, 8, 2);
+            GridBagLayoutManager(dialog, butCl, GridBagConstraints.PAGE_END, 1, 9, 1);
 
-            frame.setSize(522, 199);
-            frame.setResizable(false);
-            frame.setLocationRelativeTo(null);
-            butCl.addActionListener(e -> frame.dispose());
-            frame.setVisible(true);
+            dialog.setSize(522, 199);
+            dialog.setResizable(false);
+            dialog.setLocationRelativeTo(null);
+            butCl.addActionListener(e -> dialog.dispose());
+            dialog.setVisible(true);
         }
     }
 
@@ -677,14 +822,14 @@ class Frames {
         c.gridy = gridY;
         frame.add(component, c);
     }
-//    private void GridBagLayoutManager(Container parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
-//        GridBagConstraints c = new GridBagConstraints();
-//        c.fill = fill;
-//        c.gridwidth = gridWidth;
-//        c.gridx = gridX;
-//        c.gridy = gridY;
-//        parent.add(component, c);
-//    }
+    private void GridBagLayoutManager(Container parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = fill;
+        c.gridwidth = gridWidth;
+        c.gridx = gridX;
+        c.gridy = gridY;
+        parent.add(component, c);
+    }
 
     void startGUI(){
         MainMenuFrame.showFrame();

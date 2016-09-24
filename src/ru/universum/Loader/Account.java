@@ -1,8 +1,8 @@
 package ru.universum.Loader;
 
-        import Server.WorkingServ;
-        import java.util.ArrayList;
-        import java.util.List;
+import Server.WorkingServ;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Account {
     public boolean isOnline = false;
