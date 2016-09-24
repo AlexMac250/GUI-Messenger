@@ -21,7 +21,9 @@ public class Command {
     @Override
     public String toString() {
         if(args!=null){
-            return toDo + '$' + from + '$' + args[0] + '$' + args[1];
+            if(args.length==2) {
+                return toDo + '$' + from + '$' + args[0] + '$' + args[1];
+            }else return toDo + '$' + args[0] + '$' + args[1] + '$' + args[2];
         }else {
         return toDo + '$' + from + '$' + arg;
         }

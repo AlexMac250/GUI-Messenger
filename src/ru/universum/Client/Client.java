@@ -216,7 +216,7 @@ public class Client {
                 break;
 
             case "user" :
-                usersInSearch.add(new Account(command[2],Integer.parseInt(command[3])));
+                usersInSearch.add(new Account(command[1],Integer.parseInt(command[2]),Boolean.parseBoolean(command[3])));
                 System.out.println(usersInSearch.get(usersInSearch.size()-1).login + " " + usersInSearch.get(usersInSearch.size()-1).id);
                 break;
 

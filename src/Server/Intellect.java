@@ -87,7 +87,7 @@ class Intellect extends Thread{
                 for(Account account : Server.accs){
                     if(i<=Server.accs.size()-1) {
                         if (GettingUsers != 20) {
-                            serv.send(new Command("user", new String[]{account.login, String.valueOf(acc.id)}));
+                            serv.send(new Command("user", new String[]{account.login, String.valueOf(account.id) , String.valueOf(account.isOnline)}));
                             i++;
                         }else{
                             break;
@@ -102,7 +102,7 @@ class Intellect extends Thread{
                 for(i = GettingUsers;i<=GettingUsers+20;i++){
                     if(i<=Server.accs.size()-1) {
                         Account account = Server.accs.get(i);
-                        serv.send(new Command("user", new String[]{account.login, String.valueOf(acc.id)}));
+                        serv.send(new Command("user", new String[]{account.login, String.valueOf(account.id) , String.valueOf(account.isOnline)}));
                     }else{
                         break;
                     }
@@ -110,9 +110,9 @@ class Intellect extends Thread{
                 GettingUsers+=20;
                 break;
             case "findByNick" :
-                for(Account acc :Server.accs){
-                    if(acc.login.equals(command[1])){
-                        serv.send(new Command("user", new String[]{acc.login,String.valueOf(acc.id)}));
+                for(Account account :Server.accs){
+                    if(account.login.equals(command[1])){
+                        serv.send(new Command("user", new String[]{account.login, String.valueOf(account.id) , String.valueOf(account.isOnline)}));
                     }
                 }
                 break;
