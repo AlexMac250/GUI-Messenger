@@ -99,6 +99,8 @@ public class WorkingServ extends Thread {
     private void askToFriend(int idOf){
         if(Server.accs.get(idOf).isOnline){
             Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend" ,new String[]{String.valueOf(acc.id),acc.login}));
+        }else{
+            Server.accs.get(idOf).writeOffline(new Message("askToFriend" , String.valueOf(acc.id), acc.login, false));
         }
     }
 
@@ -148,6 +150,9 @@ public class WorkingServ extends Thread {
                 break;
             case "addFriend":
                 askToFriend(Integer.parseInt(command[1]));
+                break;
+            case "user" :
+                send(new Command(command[0],new String[]{command[1],command[2]}));
                 break;
         }
     }

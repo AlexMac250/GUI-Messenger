@@ -191,7 +191,7 @@ public class Client {
             //доделай сам
             case "askToFriend" :
                 Frames.new AddFriend(new Friend(Integer.parseInt(command[2]), command[3]));
-                console.log("Accept friend :" +command[3] + " ?");
+                //console.log("Accept friend :" +command[3] + " ?");
                 break;
 
             case "registered" :
@@ -210,7 +210,7 @@ public class Client {
                 send(new Message(command[0],"","",NODATE));
                 break;
 
-            //при 2+ запросе
+            //при 2м+ запросе
             case "get20More" :
                 send(new Message(command[0],"","",NODATE));
                 break;
@@ -221,7 +221,7 @@ public class Client {
                 break;
 
             case "findByNick" :
-                    send(new Message(command[0],command[1],"",NODATE));
+                send(new Message(command[0],command[1],"",NODATE));
                 break;
         }
     }
