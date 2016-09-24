@@ -163,7 +163,7 @@ public class Client {
 
             //если ошибка при добавлении в друзья
             case "friended" :
-                console.log("Error friend");
+                //ЗДЕСЬ СДЕЛАЙ ВЫВОД ТОГО ЧТО ЕГО ПРЕДЛОЖЕНИЕ В ДРУЗЬЯ ПРОИГНОРИЛ ПОЛЬЗОВАТЕЛЬ С НИКОМ command[1]
                 break;
 
             case "online" :

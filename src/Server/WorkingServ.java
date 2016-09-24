@@ -93,7 +93,7 @@ public class WorkingServ extends Thread {
                 send(new Command("online",String.valueOf(friend.id)));
             }
         } else
-            send(new Command("friended", "false"));
+            send(new Command("friended", Server.accs.get(acc.id).login));
     }
 
     private void askToFriend(int idOf){
