@@ -82,7 +82,7 @@ public class Server{
                 if(!res){//если res = true , то проверка идет дальше до конца списка
                     break;
                 }
-                if (acc.login==login){
+                if (acc.login.equals(login)){
                     res = false;//если логин совпадает с существующим
                 }else{
                     res = true;//если нет

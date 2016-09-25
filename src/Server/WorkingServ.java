@@ -144,8 +144,10 @@ public class WorkingServ extends Thread {
                 }
                 break;
             case "register":
-                Server.register(command[1], command[2]);
-                send(new Command("registered", "true"));
+                if(Server.register(command[1], command[2])){
+                    send(new Command("registered", "true"));
+                }
+                send(new Command("registered", "false"));
                 break;
             case "addFriend":
                 askToFriend(Integer.parseInt(command[1]));
