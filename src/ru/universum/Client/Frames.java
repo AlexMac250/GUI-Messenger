@@ -211,7 +211,7 @@ class Frames {
 
                 currentFriend = null;
                 frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
-                frame.setSize(683, 340);
+                frame.setSize(755, 395);
                 frame.setResizable(true);                                // FIXME: 20.09.16 resizable
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
@@ -408,6 +408,7 @@ class Frames {
         }
 
         private void send(){
+            System.out.println(frame.getSize());
             if (textField.getText().length()>0) {
                 insertText(MessageBox, "\n--- "+Client.account.login+" ["+"?DATE?"+"] ----------------------\n", heading);
                 insertText(MessageBox, textField.getText()+"\n", normal);
