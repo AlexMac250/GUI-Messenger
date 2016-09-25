@@ -1,5 +1,6 @@
 package ru.universum.Client;
 
+import com.sun.istack.internal.NotNull;
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Friend;
 import ru.universum.Loader.Message;
@@ -77,6 +78,10 @@ public class Client {
         } else {
             Frames.RegisterFrame.setInfo("Ошибка регистрации", Color.RED);
         }
+    }
+
+    public static ArrayList<Account> getUsersInSearch(){
+        return usersInSearch;
     }
 
     public static void resOfFriend(String ans, int id){

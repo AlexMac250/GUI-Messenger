@@ -618,26 +618,11 @@ class Frames {
             butSearch.addActionListener(e -> setInfo("Пока не поддерживается! :(", Color.BLACK));
 
             butSend.addActionListener(e -> {
-                ArrayList<Account> usersInSearch = Client.usersInSearch;
-                for (int i = 0; i < usersInSearch.size(); i++) {
-                    Account acc = usersInSearch.get(i);
-                    if (!Objects.equals(acc.login, fieldSend.getText())) {
-                        if (Objects.equals(fieldSend.getText(), Client.account.login)) {
-                            Client.execute(new String[]{"addFriend", String.valueOf(acc.id), fieldSend.getText()});
-                            break;
-                        } else {
-                            setInfo("Нельзя добавить в друзья самого себя!", Color.RED);
-                            break;
-                        }
-                    } else {
-                        setInfo("Человек не зарегистрирован! (" + fieldSend.getText() + ")", Color.RED);
-                        break;
-                    }
-                }
-
+                sendAddFriend();
             });
 
             butUpdate.addActionListener(e -> {
+
                 Client.usersInSearch = new ArrayList<>();
                 Client.execute(new String[]{"getUsers","",""});
                 dispose();
@@ -681,6 +666,23 @@ class Frames {
             frMess.setLocationRelativeTo(null);
 
             frMess.setVisible(true);
+        }
+
+        //------------//
+
+        private void sendAddFriend() {
+            ArrayList<Account> accounts = new ArrayList<>();
+            accounts.addAll(Client.usersInSearch);
+            for (Account acc : accounts) {
+                if (acc.login.equals(fieldSend.getText()))
+                    if (!Client.account.login.equals(fieldSend.getText())) {
+                        Client.execute(new String[]{"addFriend", String.valueOf(acc.id), fieldSend.getText()});
+                        break;
+                    } else {
+                        setInfo("Нельзя добавить в друзья самого себя!", Color.RED);
+                        break;
+                    }
+            }
         }
 
         class SearchUsersTabel implements TableModel {
