@@ -216,7 +216,7 @@ class Frames {
 
                 currentFriend = null;
                 frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
-                frame.setSize(755, 500);
+                if (System.getProperty("os.name").equals("Mac OS X")) frame.setSize(680, 345); else frame.setSize(755, 500);
                 frame.setResizable(true);                                // FIXME: 20.09.16 resizable
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
