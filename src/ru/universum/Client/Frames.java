@@ -41,11 +41,7 @@ class Frames {
 
         @Override
         public void initial() {
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            WindowUtilities.setNativeLookAndFeel();
             frame = new JFrame("NEOnline");
             butLogin = new JButton("Войти");
             butRegister = new JButton("Регистрация");
@@ -931,5 +927,46 @@ class Frames {
     }
     void startGUI(){
         MainMenuFrame.showFrame();
+    }
+
+    public static class WindowUtilities {
+
+        /** Tell system to use native look and feel, as in previous
+         *  releases. Metal (Java) LAF is the default otherwise.
+         */
+
+
+        //is used in current application
+        public static void setNativeLookAndFeel() {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch(Exception e) {
+                System.out.println("Error setting native LAF: " + e);
+            }
+        }
+
+        public static void setJavaLookAndFeel() {
+            try {
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            } catch(Exception e) {
+                System.out.println("Error setting Java LAF: " + e);
+            }
+        }
+
+        public static void setMotifLookAndFeel() {
+            try {
+                UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+            } catch(Exception e) {
+                System.out.println("Error setting Motif LAF: " + e);
+            }
+        }
+
+        public static void setSystemLookAndFeel(){
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
+                System.out.println("Error setting System LAF: " + e);
+            }
+        }
     }
 }
