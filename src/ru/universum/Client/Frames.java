@@ -211,7 +211,7 @@ class Frames {
 
                 currentFriend = null;
                 frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
-                frame.setSize(755, 395);
+                frame.setSize(755, 500);
                 frame.setResizable(true);                                // FIXME: 20.09.16 resizable
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
