@@ -96,10 +96,14 @@ public class WorkingServ extends Thread {
     }
 
     private void askToFriend(int idOf){
-        if(Server.accs.get(idOf).isOnline){
-            Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend" ,new String[]{String.valueOf(acc.id),acc.login}));
+        if(!acc.friends.contains(new Friend(Server.accs.get(idOf).id,Server.accs.get(idOf).login))) {
+            if (Server.accs.get(idOf).isOnline) {
+                Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend", new String[]{String.valueOf(acc.id), acc.login}));
+            } else {
+                Server.accs.get(idOf).oflineMes.add(new Message("askToFriend", "", String.valueOf(acc.id), acc.login));
+            }
         }else{
-            Server.accs.get(idOf).oflineMes.add(new Message("askToFriend" , "", String.valueOf(acc.id), acc.login));
+            send(new Command("noFriended",Server.accs.get(idOf).login));
         }
     }
 
