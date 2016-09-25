@@ -2,7 +2,7 @@ package ru.universum.Client;
 
 import java.awt.*;
 
-abstract class AbsFrame {
+abstract class AbstractFrame {
     abstract public void initial();
     abstract public void showFrame();
     abstract public void hideFrame();

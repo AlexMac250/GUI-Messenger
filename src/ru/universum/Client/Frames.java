@@ -10,7 +10,6 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 class Frames {
@@ -25,11 +24,13 @@ class Frames {
     RegisterFrame RegisterFrame = new RegisterFrame();
     private AboutFrame AboutFrame = new AboutFrame();
     MainFrame MainFrame = new MainFrame();
+    SettingsFrame SettingsFrame = new SettingsFrame();
 
-    private class MainMenuFrame extends AbsFrame {
+    private class MainMenuFrame extends AbstractFrame {
         private JFrame frame;
         private JButton butLogin;
         private JButton butRegister;
+        private JButton butSettings;
         private JButton butAbout;
         private JLabel label;
         private JLabel info;
@@ -43,7 +44,8 @@ class Frames {
             frame = new JFrame("NEOnline");
             butLogin = new JButton("Войти");
             butRegister = new JButton("Регистрация");
-            butAbout = new JButton("О NEOnline");
+            butSettings = new JButton("Настройки");
+            butAbout = new JButton("О программе");
             label = new JLabel("NEOnline");
             info = new JLabel("");
 
@@ -52,18 +54,21 @@ class Frames {
 
             frame.getContentPane().setBackground(Color.DARK_GRAY);
             label.setForeground(MAIN_COLOR);
+            label.setFont(new Font(FONT_style, Font.BOLD, 15));
 
             GridBagLayoutManager(frame, label, GridBagConstraints.NORTH, 0, 0, 1);
             GridBagLayoutManager(frame, butLogin, GridBagConstraints.HORIZONTAL, 0, 1 ,1);
             GridBagLayoutManager(frame, butRegister, GridBagConstraints.HORIZONTAL, 0, 2, 1);
-            GridBagLayoutManager(frame, butAbout, GridBagConstraints.HORIZONTAL, 0, 3, 1);
+            GridBagLayoutManager(frame, butSettings, GridBagConstraints.HORIZONTAL, 0, 3, 1);
+            GridBagLayoutManager(frame, butAbout, GridBagConstraints.HORIZONTAL, 0, 4, 1);
 
-            frame.setSize(150, 150);
-            frame.setResizable(false);
+            frame.setSize(160, 185);
+            frame.setResizable(true);
             frame.setLocationRelativeTo(null);
 
             butLogin.addActionListener(e -> LoginFrame.showFrame());
             butRegister.addActionListener(e -> RegisterFrame.showFrame());
+            butSettings.addActionListener(e -> SettingsFrame.showFrame()); // FIXME: 25.09.16 CODE SETTINGS
             butAbout.addActionListener(e -> AboutFrame.showFrame());
         }
 
@@ -91,7 +96,7 @@ class Frames {
 
     //-------------------------------------------//
     @SuppressWarnings("ALL")
-    class LoginFrame extends AbsFrame {
+    class LoginFrame extends AbstractFrame {
         JDialog dialog;
         private JTextField loginField;
         private JPasswordField passwordField;
@@ -180,7 +185,7 @@ class Frames {
 
     //-------------------------------------------//
 
-    class MainFrame extends AbsFrame{
+    class MainFrame extends AbstractFrame {
         Style heading = null; // стиль заголовка
         Style normal  = null; // стиль текста
         private  final  String[][]  TEXT = {
@@ -427,7 +432,7 @@ class Frames {
     //-------------------------------------------//
 
     @SuppressWarnings("ALL")
-    class RegisterFrame extends AbsFrame{
+    class RegisterFrame extends AbstractFrame {
 
         JDialog dialog;
         JLabel label;
@@ -543,7 +548,7 @@ class Frames {
 
     //-------------------------------------------//
 
-    private class FindFriend extends AbsFrame{
+    private class FindFriend extends AbstractFrame {
         JDialog dialog;
         JLabel labSearch;
         JLabel labSend;
@@ -751,6 +756,49 @@ class Frames {
             public void removeTableModelListener(TableModelListener l) {
                 listeners.remove(l);
             }
+        }
+    }
+
+    //-------------------------------------------//
+
+    class SettingsFrame extends AbstractFrame {
+        JDialog dialog;
+        @Override
+        public void initial() {
+            dialog = new JDialog(MainMenuFrame.frame, "Настройки", true);
+            dialog.setLayout(new GridBagLayout());
+            dialog.setResizable(false);
+            dialog.getContentPane().setBackground(Color.DARK_GRAY);
+            JLabel info = new JLabel("COMING SOON!");
+            info.setFont(new Font(FONT_style, Font.BOLD, 70));
+            info.setForeground(MAIN_COLOR);
+            JButton butClose = new JButton("Закрыть");
+            GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 0, 1);
+            GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 1, 1);
+            butClose.addActionListener(e -> dialog.dispose());
+            dialog.pack();
+            dialog.setLocationRelativeTo(null);
+        }
+
+        @Override
+        public void showFrame() {
+            initial();
+            dialog.setVisible(true);
+        }
+
+        @Override
+        public void hideFrame() {
+
+        }
+
+        @Override
+        public void dispose() {
+
+        }
+
+        @Override
+        public void setInfo(String message, Color color) {
+
         }
     }
 
