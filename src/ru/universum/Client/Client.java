@@ -1,6 +1,6 @@
 package ru.universum.Client;
 
-import com.sun.istack.internal.NotNull;
+
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Friend;
 import ru.universum.Loader.Message;
@@ -22,19 +22,21 @@ public class Client {
     static DataInputStream is;
     static DataOutputStream os;
     static Console console = new Console("Client");
+
     static final boolean NODATE = false;
     static final boolean DATED = true;
     static final String HOSTNAME = "localhost";
-    //текущий аккаунт; заполняется после логина
+
     static Account account = new Account();
-    //статус логина
+
     static boolean statusLogged = false;
-    //статус подключения
     static boolean statusConnected = false;
     static boolean statusRegistered = false;
+
     static Frames Frames = new Frames();
     //есть только id и login
-    static ArrayList<Account> usersInSearch = new ArrayList<>();
+    static ArrayList<Account> usersInSearch = new ArrayList<>();//есть только id и login
+
     public static void main(String[] args) {
         Frames.startGUI();
         new BASH().run();
@@ -178,6 +180,7 @@ public class Client {
                         fr.isOnline = true;
                         Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
+                        Frames.MainFrame.getFrame().repaint();
                         break;
                     }
                 }
@@ -189,10 +192,11 @@ public class Client {
                         fr.isOnline = false;
                         Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
+                        Frames.MainFrame.getFrame().repaint();
                         break;
                     }
                 }
-                    break;
+                break;
 
             //доделай сам
             case "askToFriend" :
@@ -222,7 +226,7 @@ public class Client {
                 break;
 
             case "user" :
-                usersInSearch.add(new Account(command[1]+(command[1].equals(account.login) ? " (Вы)" : ""),Integer.parseInt(command[2]),Boolean.parseBoolean(command[3])));
+                usersInSearch.add(new Account(command[1]/*+(command[1].equals(account.login) ? " (Вы)" : "")*/,Integer.parseInt(command[2]),Boolean.parseBoolean(command[3])));
                 System.out.println(usersInSearch.get(usersInSearch.size()-1).login + " " + usersInSearch.get(usersInSearch.size()-1).id);
                 break;
 
