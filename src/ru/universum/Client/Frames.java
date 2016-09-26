@@ -11,6 +11,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 class Frames {
     private final String STYLE_heading = "heading";
@@ -206,7 +207,7 @@ class Frames {
         private JTextField textField;
         private JScrollPane scrollFriends;
         private JScrollPane scrollMessage;
-        Friend currentFriend;
+        Friend currentFriend = null;
 
         MainFrame() {
         }
@@ -383,6 +384,7 @@ class Frames {
                 button.setText(login);
                 currentFriend = Client.account.friends.get(i);
                 JCheckBox checkBoxOnline = new JCheckBox("", currentFriend.isOnline);
+                checkBoxOnline.setBackground(Color.GRAY);
                 checkBoxOnline.setEnabled(false);
 
                 if (checkBoxOnline.isSelected()) checkBoxOnline.setToolTipText("Online");
@@ -414,12 +416,24 @@ class Frames {
         }
 
         private void send(){
-            System.out.println(frame.getSize());
-            if (textField.getText().length()>0) {
-                insertText(MessageBox, "\n--- "+Client.account.login+" ["+"?DATE?"+"] ----------------------\n", heading);
-                insertText(MessageBox, textField.getText()+"\n", normal);
-                Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
-                textField.setText("");
+            if (currentFriend != null) {
+                if (textField.getText().length() > 0) {
+                    insertText(MessageBox, "\n--- " + Client.account.login + " [" + "?DATE?" + "] ----------------------\n", heading);
+                    insertText(MessageBox, textField.getText() + "\n", normal);
+                    Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
+                    textField.setText("");
+                }
+            } else {
+                for (int i = 0; i < 3; i++) {
+                    try {
+                        panFriends.setBackground(Color.DARK_GRAY);
+                        TimeUnit.MILLISECONDS.sleep(500);
+                        panFriends.setBackground(Color.GRAY);
+                        TimeUnit.MILLISECONDS.sleep(500);
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
             }
         }
 
@@ -762,7 +776,7 @@ class Frames {
 
     //-------------------------------------------//
 
-    class SettingsFrame extends AbstractFrame {
+    private class SettingsFrame extends AbstractFrame {
         JDialog dialog;
         @Override
         public void initial() {
@@ -929,7 +943,7 @@ class Frames {
         MainMenuFrame.showFrame();
     }
 
-    public static class WindowUtilities {
+    private static class WindowUtilities {
 
         /** Tell system to use native look and feel, as in previous
          *  releases. Metal (Java) LAF is the default otherwise.
@@ -937,7 +951,7 @@ class Frames {
 
 
         //is used in current application
-        public static void setNativeLookAndFeel() {
+        static void setNativeLookAndFeel() {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch(Exception e) {
@@ -945,7 +959,7 @@ class Frames {
             }
         }
 
-        public static void setJavaLookAndFeel() {
+        static void setJavaLookAndFeel() {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             } catch(Exception e) {
@@ -953,19 +967,11 @@ class Frames {
             }
         }
 
-        public static void setMotifLookAndFeel() {
+        static void setMotifLookAndFeel() {
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             } catch(Exception e) {
                 System.out.println("Error setting Motif LAF: " + e);
-            }
-        }
-
-        public static void setSystemLookAndFeel(){
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
-                System.out.println("Error setting System LAF: " + e);
             }
         }
     }
