@@ -2,6 +2,7 @@ package ru.universum.Client;
 
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Friend;
+import sun.security.x509.AVA;
 
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 class Frames {
     private final String STYLE_heading = "heading";
@@ -189,14 +191,14 @@ class Frames {
 
     class MainFrame extends AbstractFrame {
         Style heading = null; // стиль заголовка
-        Style normal  = null; // стиль текста
-        private  final  String[][]  TEXT = {
+        Style normal = null; // стиль текста
+        private final String[][] TEXT = {
                 {"                                                                                                                    ", "heading"},
-                {"\r\n                                               "                                           , "normal" },
-                {"\nВыберете диалог"                                                                             , "heading" },
-                {"\r\n                                               "                                           , "normal" },
-                {"\n", "normal" }, {"\n", "normal" }, {"\n", "normal" }, {"\n", "normal" },{"\n", "normal" }, {"\n", "normal" }, {"\n", "normal" }, {"\n", "normal" },{"\n", "normal" }, {"\n", "normal" }, {"\n", "normal" }, {"\n", "normal" }, {"\n", "normal" }};
-                // FIXME: 30.08.16 ПОФИКСИТЬ КОСТЫЛЬ
+                {"\r\n                                               ", "normal"},
+                {"\nВыберете диалог", "heading"},
+                {"\r\n                                               ", "normal"},
+                {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}};
+        // FIXME: 30.08.16 ПОФИКСИТЬ КОСТЫЛЬ
         private JFrame frame;
         private Container contentPain;
         JPanel panFriends;
@@ -208,6 +210,7 @@ class Frames {
         private JScrollPane scrollFriends;
         private JScrollPane scrollMessage;
         Friend currentFriend = null;
+        private JScrollPane scrollPane;
 
         MainFrame() {
         }
@@ -218,9 +221,8 @@ class Frames {
 
                 currentFriend = null;
                 frame = new JFrame("NEOnline - Сообщения (v0.1 alpha 1)");
-               // if (System.getProperty("os.name").equals("Mac OS X"))
-                    frame.setSize(683, 340);
-                //else frame.setSize(755, 500);
+                if (System.getProperty("os.name").equals("Mac OS X")) frame.setSize(683, 340);
+                else frame.setSize(755, 500);
                 frame.setResizable(true);                                // FIXME: 20.09.16 resizable
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
@@ -257,7 +259,7 @@ class Frames {
                 textField.addActionListener(e -> send());
                 butSendMessage.addActionListener(e -> send());
 
-            } catch (Exception e){
+            } catch (Exception e) {
                 setInfo(e.toString(), Color.RED);
             }
         }
@@ -296,7 +298,7 @@ class Frames {
             frMess.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             butOK.addActionListener(e -> frMess.dispose());
             frMess.pack();
-            frMess.setSize(frMess.getWidth()+30, frMess.getHeight()+10);
+            frMess.setSize(frMess.getWidth() + 30, frMess.getHeight() + 10);
             frMess.setLocationRelativeTo(null);
 
             frMess.setVisible(true);
@@ -346,20 +348,20 @@ class Frames {
 
         }
 
-        private void buildPanMessages(){
+        private void buildPanMessages() {
             panMainContent.setLayout(new GridBagLayout());
             GridBagLayoutManager(panMainContent, scrollMessage, GridBagConstraints.CENTER, 0, 0, 2);
             GridBagLayoutManager(panMainContent, textField, GridBagConstraints.HORIZONTAL, 0, 1, 1);
             GridBagLayoutManager(panMainContent, butSendMessage, GridBagConstraints.CENTER, 1, 1, 1);
         }
 
-        void loadFriends(){
+        void loadFriends() {
             panFriends.setLayout(new GridBagLayout());
 
             scrollFriends.createVerticalScrollBar();
             scrollFriends.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-            scrollFriends.setSize(scrollFriends.getWidth(), contentPain.getHeight()-2);
+            scrollFriends.setSize(scrollFriends.getWidth(), contentPain.getHeight() - 2);
             //scrollFriends.setMaximumSize(new Dimension(136, 391));
             panFriends.setBackground(Color.GRAY);
 
@@ -392,32 +394,33 @@ class Frames {
                 if (checkBoxOnline.isSelected()) checkBoxOnline.setToolTipText("Online");
                 else checkBoxOnline.setToolTipText("Offline");
 
-                GridBagLayoutManager(panFriends, checkBoxOnline, GridBagConstraints.CENTER, 0, i+1, 1);
-                GridBagLayoutManager(panFriends, button, GridBagConstraints.HORIZONTAL, 1, i+1, 1);
-                if (COUNTFRIENDS > 13) GridBagLayoutManager(panFriends, new JLabel("    "), GridBagConstraints.HORIZONTAL, 2, i+1, 1);
+                GridBagLayoutManager(panFriends, checkBoxOnline, GridBagConstraints.CENTER, 0, i + 1, 1);
+                GridBagLayoutManager(panFriends, button, GridBagConstraints.HORIZONTAL, 1, i + 1, 1);
+                if (COUNTFRIENDS > 13)
+                    GridBagLayoutManager(panFriends, new JLabel("    "), GridBagConstraints.HORIZONTAL, 2, i + 1, 1);
 
                 int finalI = i;
                 button.addActionListener(e -> {
                     setDialog(Client.account.friends.get(finalI));
                     MessageBox.setText("");
-                    insertText(MessageBox, "Диалог с "+currentFriend.login,heading);
-                    System.out.println("Opened dialog with "+currentFriend.login);
+                    insertText(MessageBox, "Диалог с " + currentFriend.login, heading);
+                    System.out.println("Opened dialog with " + currentFriend.login);
                 });
             }
             JButton button = new JButton("+");
             button.setForeground(MAIN_COLOR);
-            button.setFont(new Font(FONT_style, Font.BOLD, button.getFont().getSize()+6));
-            GridBagLayoutManager(panFriends, button,GridBagConstraints.HORIZONTAL, 0, COUNTFRIENDS+1, 2);
+            button.setFont(new Font(FONT_style, Font.BOLD, button.getFont().getSize() + 6));
+            GridBagLayoutManager(panFriends, button, GridBagConstraints.HORIZONTAL, 0, COUNTFRIENDS + 1, 2);
 
             button.addActionListener(e -> new FindFriend().showFrame());
 
         }
 
-        void setDialog(Friend friend){
+        void setDialog(Friend friend) {
             currentFriend = friend;
         }
 
-        private void send(){
+        private void send() {
             if (currentFriend != null) {
                 if (textField.getText().length() > 0) {
                     insertText(MessageBox, "\n--- " + Client.account.login + " [" + "?DATE?" + "] ----------------------\n", heading);
@@ -432,7 +435,7 @@ class Frames {
                         TimeUnit.MILLISECONDS.sleep(500);
                         panFriends.setBackground(Color.GRAY);
                         TimeUnit.MILLISECONDS.sleep(500);
-                    } catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -440,10 +443,13 @@ class Frames {
         }
 
         @SuppressWarnings("ALL")   // FIXME: 24.09.16 delete WrningBloker
-        private void buildMenuBar(){
+        private void buildMenuBar() {
 
         }
 
+        public JFrame getFrame() {
+            return frame;
+        }
     }
 
     //-------------------------------------------//
@@ -577,6 +583,8 @@ class Frames {
         JButton butSend;
         JButton butUpdate;
         JScrollPane scrollPane;
+        JTable table;
+        TableModel model;
 
         @Override
         public void initial() {
@@ -594,8 +602,8 @@ class Frames {
             butUpdate = new JButton("Обновить");
 
             ArrayList<Account> users = Client.usersInSearch;
-            TableModel model = new SearchUsersTabel(users);
-            JTable table = new JTable(model);
+            model = new SearchUsersTabel(users);
+            table = new JTable(model);
             scrollPane = new JScrollPane(table);
 
             dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -638,11 +646,9 @@ class Frames {
 
             dialog.setLocationRelativeTo(null);
 
-            butSearch.addActionListener(e -> setInfo("Пока не поддерживается! :(", Color.BLACK));
+            butSearch.addActionListener(e -> findUsers(fieldSearch.getText()));
 
-            butSend.addActionListener(e -> {
-                sendAddFriend();
-            });
+            butSend.addActionListener(e -> sendAddFriend());
 
             butUpdate.addActionListener(e -> {
 
@@ -708,6 +714,25 @@ class Frames {
             }
         }
 
+        private void findUsers(String login){
+            dialog.remove(table);
+            dialog.remove(scrollPane);
+            Client.usersInSearch = new ArrayList<>();
+            Client.execute(new String[]{"getUsers","",""});
+            ArrayList<Account> accounts = new ArrayList<>();
+            for (Account acc : Client.usersInSearch) {
+                if (acc.login.equals(login)) {
+                    accounts.add(acc);
+                    break;
+                }
+            }
+            accounts.addAll(Client.usersInSearch.stream().filter(acc -> acc.login.contains(login.substring(0, Math.round(login.length() / 2))) & !acc.login.equals(login)).collect(Collectors.toList()));
+            model = new SearchUsersTabel(accounts);
+            table = new JTable(model);
+            scrollPane = new JScrollPane(table);
+            GridBagLayoutManager(dialog, scrollPane, GridBagConstraints.CENTER, 1, 1, 1);
+        }
+
         class SearchUsersTabel implements TableModel {
             private Set<TableModelListener> listeners = new HashSet<>();
             ArrayList<Account> users = null;
@@ -739,7 +764,13 @@ class Frames {
 
             @Override
             public Class<?> getColumnClass(int columnIndex) {
-                return String.class;
+                switch (columnIndex){
+                    case 0:
+                        return String.class;
+                    case 1:
+                        return String.class;
+                }
+                return null;
             }
 
             @Override
@@ -754,6 +785,24 @@ class Frames {
                         return users.get(rowIndex).login;
                     case 1:
                         return (users.get(rowIndex).isOnline) ? "Онлаин" : "Оффлаин";
+                    case 2:
+                        JButton but = new JButton("Отправить запрос");
+                        but.setForeground(MAIN_COLOR);
+                        but.addActionListener(e -> {
+                            ArrayList<Account> accounts = new ArrayList<>();
+                            accounts.addAll(Client.usersInSearch);
+                            for (Account acc : accounts) {
+                                if (acc.login.equals(fieldSend.getText()))
+                                    if (!Client.account.login.equals(fieldSend.getText())) {
+                                        Client.execute(new String[]{"addFriend", String.valueOf(acc.id), fieldSend.getText()});
+                                        break;
+                                    } else {
+                                        setInfo("Нельзя добавить в друзья самого себя!", Color.RED);
+                                        break;
+                                    }
+                            }
+                        });
+                        return but;
 
                 }
                 return "";
