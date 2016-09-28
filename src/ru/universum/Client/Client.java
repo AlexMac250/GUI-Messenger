@@ -1,6 +1,7 @@
 package ru.universum.Client;
 
 
+import Server.*;
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Friend;
 import ru.universum.Loader.Message;
@@ -10,13 +11,14 @@ import java.awt.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 @SuppressWarnings("ALL")
 public class Client {
-    static List<ClientMessage> messages = new ArrayList<>();
+
+    static Map <Integer , Dialog> dialogs = new HashMap<>();
+    //FIXME update to Dialogs
+
     static Socket socket;
     static int port;
     static DataInputStream is;
@@ -123,11 +125,12 @@ public class Client {
 
             case "message" :
                 //принял входящее сообщеине
-                messages.add(new ClientMessage(command[1] , command[2], command[3]));
+                dialogs.get(Integer.parseInt(command[1])).addMes(new ClientMessage(command[1], command[2], command[3]));
                 writeMessage(command[1], command[2], command[3]);
-                System.out.println(messages.get(messages.size()-1));
+                System.out.println(dialogs.get(Integer.parseInt(command[1])).getLast());
                 break;
                 //заполняет френдов с сервера.
+
             case "friend" :
                 addFriend(command);
                 break;
@@ -243,6 +246,7 @@ public class Client {
     public static void addFriend(String[] args){
         if(!Objects.equals(args[2], "null")){
             account.friends.add(new Friend(Integer.parseInt(args[2]),args[3]));
+            dialogs.put(Integer.parseInt(args[2]),new Dialog(account.friends.get(account.friends.size()-1)));
         }else{
             console.log("No friends");
         }
