@@ -29,7 +29,7 @@ public class WorkingServ extends Thread {
         start();
     }
 
-    private void close() throws IOException {
+    void close() throws IOException {
         if(acc !=null) {
             send(new Command("connection", "closed"));
         }
@@ -179,6 +179,7 @@ public class WorkingServ extends Thread {
             System.err.println("Error while sending");
         }
     }
+
     @Override
     public void run() {
         try {
@@ -194,11 +195,9 @@ public class WorkingServ extends Thread {
             intellect.join();
             close();
         }catch (Exception e){
-            e.printStackTrace();
             try {
                 close();
             } catch (IOException ignored) {
-                e.printStackTrace();
             }
             interrupt();
             e.printStackTrace();

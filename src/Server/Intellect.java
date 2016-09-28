@@ -116,8 +116,15 @@ class Intellect extends Thread{
                     }
                 }
                 break;
+
+            case "close" :
+                try {
+                    serv.close();
+                } catch (IOException ignored) {}
+                break;
         }
     }
+
     @Override
     public void run() {
         while (!interrupted()){
@@ -126,7 +133,7 @@ class Intellect extends Thread{
                 serv.console.log("Got command " + message);
                 execute(descript(message));
             } catch (IOException e) {
-                System.err.println("Error in server " + "# " + (serv.port-40000));
+                System.err.println("User disconnected " + "# " + (serv.port-40000));
                 interrupt();
             }
         }
