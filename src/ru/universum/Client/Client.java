@@ -1,5 +1,6 @@
 package ru.universum.Client;
 
+
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Friend;
 import ru.universum.Loader.Message;
@@ -10,16 +11,12 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static Server.Server.getIp;
-
 @SuppressWarnings("ALL")
 public class Client {
-
-    static Map <Integer , Dialog> dialogs = new HashMap<>();
-    //FIXME update to Dialogs
-
+    static final String version = "version 0.5 alpha 1";
+    static List<ClientMessage> messages = new ArrayList<>();
     static Socket socket;
     static int port;
     static DataInputStream is;
@@ -28,8 +25,7 @@ public class Client {
 
     static final boolean NODATE = false;
     static final boolean DATED = true;
-    static final String HOSTNAME = "localhost";
-    static final String IP = "95.154.89.186";
+    static final String HOSTNAME = "95.154.89.186";
 
     static Account account = new Account();
 
@@ -41,6 +37,9 @@ public class Client {
     //есть только id и login
     static ArrayList<Account> usersInSearch = new ArrayList<>();//есть только id и login
 
+    static Map<Integer , Dialog> dialogs = new HashMap<>();
+    //FIXME update to Dialogs
+
     public static void main(String[] args) {
         Frames.startGUI();
         new BASH().run();
@@ -49,14 +48,14 @@ public class Client {
     public static void connect(){
         try {
             Frames.LoginFrame.setInfo("Входим...", Color.ORANGE);
-            socket = new Socket(InetAddress.getByName(IP), 2905);
+            socket = new Socket(InetAddress.getByName(HOSTNAME), 2905);
             is = new DataInputStream(socket.getInputStream());
             port = is.readInt();
             console.log("got port");
             socket.close();
             is.close();
             TimeUnit.MILLISECONDS.sleep(150);
-            socket = new Socket(InetAddress.getByName(IP), port);
+            socket = new Socket(InetAddress.getByName(HOSTNAME), port);
             console.log("Connected to port " + port);
             statusConnected = true;
             os = new DataOutputStream(socket.getOutputStream());
@@ -104,8 +103,18 @@ public class Client {
             }
         }
         MFrame.currentFriend = friend;
-        MFrame.insertText(MFrame.MessageBox, "\n"+friend.login+" ["+date+"]----------------------\n", MFrame.heading);
-        MFrame.insertText(MFrame.MessageBox, message+"\n", MFrame.normal);
+        boolean isTab = false;
+        for (int i = 0; i < MFrame.tabbedPane.getTabCount(); i++) {
+            if (MFrame.tabbedPane.getComponent(i).getName().equals(friend.login)){
+                MFrame.tabbedPane.setSelectedIndex(i);
+                isTab = true;
+                break;
+            }
+        }
+        if (!isTab){
+            MFrame.createTab(friend);
+        }
+
     }
 
     public static void execute(String[] command){
@@ -127,12 +136,11 @@ public class Client {
 
             case "message" :
                 //принял входящее сообщеине
-                dialogs.get(Integer.parseInt(command[1])).addMes(new ClientMessage(command[1], command[2], command[3]));
+                messages.add(new ClientMessage(command[1] , command[2], command[3]));
                 writeMessage(command[1], command[2], command[3]);
-                System.out.println(dialogs.get(Integer.parseInt(command[1])).getLast());
+                System.out.println(messages.get(messages.size()-1));
                 break;
-                //заполняет френдов с сервера.
-
+            //заполняет френдов с сервера.
             case "friend" :
                 addFriend(command);
                 break;
@@ -186,8 +194,6 @@ public class Client {
                         Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
                         Frames.MainFrame.getFrame().repaint();
-                        Frames.MainFrame.getFrame().setVisible(false);
-                        Frames.MainFrame.getFrame().setVisible(true);
                         break;
                     }
                 }
@@ -200,8 +206,6 @@ public class Client {
                         Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
                         Frames.MainFrame.getFrame().repaint();
-                        Frames.MainFrame.getFrame().setVisible(false);
-                        Frames.MainFrame.getFrame().setVisible(true);
                         break;
                     }
                 }
