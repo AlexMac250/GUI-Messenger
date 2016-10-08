@@ -183,7 +183,7 @@ class Frames {
         Style normal = null; // стиль текста
         JTabbedPane tabbedPane;
         ArrayList<Tab> tabs = new ArrayList<>();
-        //        private final String[][] TEXT = {
+//            private final String[][] TEXT = {
 //                {"                                                                                                                    ", "heading"},
 //                {"\r\n                                               ", "normal"},
 //                {"\nВыберете друга", "heading"},
