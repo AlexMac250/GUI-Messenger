@@ -1,7 +1,5 @@
 package ru.universum.Client;
 
-
-import Server.*;
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Friend;
 import ru.universum.Loader.Message;
@@ -13,6 +11,9 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+
+import static Server.Server.getIp;
+
 @SuppressWarnings("ALL")
 public class Client {
 
@@ -28,6 +29,7 @@ public class Client {
     static final boolean NODATE = false;
     static final boolean DATED = true;
     static final String HOSTNAME = "localhost";
+    static final String IP = "fe80:0:0:0:ad58:65f3:a9d7:fda3";
 
     static Account account = new Account();
 
@@ -47,14 +49,14 @@ public class Client {
     public static void connect(){
         try {
             Frames.LoginFrame.setInfo("Входим...", Color.ORANGE);
-            socket = new Socket(InetAddress.getByName(HOSTNAME), 2905);
+            socket = new Socket(InetAddress.getByName(IP), 2905);
             is = new DataInputStream(socket.getInputStream());
             port = is.readInt();
             console.log("got port");
             socket.close();
             is.close();
             TimeUnit.MILLISECONDS.sleep(150);
-            socket = new Socket(InetAddress.getByName(HOSTNAME), port);
+            socket = new Socket(InetAddress.getByName(IP), port);
             console.log("Connected to port " + port);
             statusConnected = true;
             os = new DataOutputStream(socket.getOutputStream());

@@ -45,7 +45,7 @@ public class ServerComReader extends Thread{
 
             case "showInfo" :
                 if(isAdminLogged) {
-                    console.log("Meta-int about server :" + '\n'
+                    console.log("Meta-inf about server :" + '\n'
                             + "Connections : " + (Server.connections-40000) + '\n'
                             + "Users in base : " + Account.idGL);
                 }
@@ -71,6 +71,15 @@ public class ServerComReader extends Thread{
 
     @Override
     public void run() {
+        System.out.println("Do you want start server automatically or enter IP?(1/2)");
+        if(scanner.nextLine().equals("2")){
+            System.out.println("Enter ip(Be careful about correctness");
+            Server.ip = scanner.nextLine();
+            interrupt();
+        }else{
+          //  Server.ip = Server.getIp();
+            interrupt();
+        }
         while (!interrupted()){
             //ТУТ БУДЕШЬ ВМЕСТО СКАННЕРА ВСТАВЛЯТЬ СВОЮ ШАЛУПОНЬ
             message = scanner.nextLine();

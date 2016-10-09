@@ -1,6 +1,5 @@
 package ru.universum.Client;
 
-import ru.universum.Client.ClientMessage;
 import ru.universum.Loader.Friend;
 
 import java.util.ArrayList;

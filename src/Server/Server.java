@@ -4,14 +4,13 @@ import ru.universum.Loader.Account;
 import ru.universum.Loader.FileLoader;
 import ru.universum.Loader.Friend;
 import ru.universum.Printer.Console;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import java.io.*;
+import java.net.*;
+import java.text.Format;
+import java.util.*;
+import java.util.logging.*;
+
 @SuppressWarnings("ALL")
 public class Server{
     static ServerSocket mainSocket;
@@ -23,6 +22,7 @@ public class Server{
     static boolean isClosed = false;
     static int portlocal = 0;
     static DataOutputStream os;
+    static String ip = null;
 
     public static List<WorkingServ> getActive() {
         return active;
@@ -118,15 +118,40 @@ public class Server{
         isClosed = true ;
     }
 
+    public static byte[] getIp(){
+        byte[] ip = null;
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for(NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());{
+                    for(InetAddress ipAddress : addrs){
+                        if(!ipAddress.isLoopbackAddress()){
+                            ip = ipAddress.getAddress();
+                        }
+                    }
+                }
+            }
+        }catch (Exception e) {
+        }
+//        for(byte b : ip){
+//           System.out.println(b);
+//        }
+        return ip;
+    }
+
     public static void main(String[] args) {
         System.out.println(accs.toString());
         Account.idGL = accs.size()-1;
         //Читает команды для сервера , внутри переделай
-        ServerComReader reader = new ServerComReader();
-        reader.start();
-        try {
-            mainSocket = new ServerSocket(2905, 0, InetAddress.getByName("localhost"));
-            console.log("started");
+      //  ServerComReader reader = new ServerComReader();
+      //  reader.start();
+      //  try {
+      //      reader.join();
+      //  } catch (InterruptedException e) {
+      //  }
+          try {
+            mainSocket = new ServerSocket(2905, 0, InetAddress.getByAddress(getIp()));
+            console.log("started on " + InetAddress.getByAddress(getIp()));
             while (!isClosed) {
                 try {
                     new Server(mainSocket.accept());
@@ -136,11 +161,6 @@ public class Server{
             }
         } catch (Exception e) {
             CLOSE();
-            e.printStackTrace();
-        }
-        try {
-            mainSocket.close();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
