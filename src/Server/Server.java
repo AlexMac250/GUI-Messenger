@@ -150,7 +150,7 @@ public class Server{
       //  } catch (InterruptedException e) {
       //  }
           try {
-            mainSocket = new ServerSocket(2905, 0, InetAddress.getByAddress(getIp()));
+            mainSocket = new ServerSocket(2905);
             console.log("started on " + InetAddress.getByAddress(getIp()));
             while (!isClosed) {
                 try {

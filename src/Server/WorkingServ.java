@@ -184,7 +184,7 @@ public class WorkingServ extends Thread {
     public void run() {
         try {
             console.log("Started");
-            serverSocket = new ServerSocket(port, 0, InetAddress.getByAddress(Server.getIp()));
+            serverSocket = new ServerSocket(port);
             socketmain = serverSocket.accept();
             Server.connections++;
             console.log("Socket accepted");

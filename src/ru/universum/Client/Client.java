@@ -29,7 +29,7 @@ public class Client {
     static final boolean NODATE = false;
     static final boolean DATED = true;
     static final String HOSTNAME = "localhost";
-    static final String IP = "fe80:0:0:0:ad58:65f3:a9d7:fda3";
+    static final String IP = "95.154.89.186";
 
     static Account account = new Account();
 
