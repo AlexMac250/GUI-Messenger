@@ -21,6 +21,7 @@ class Frames {
     private final String FONT_style    = "Trebuchet MS";
     private final Color MAIN_COLOR = new Color(69, 151, 249);
 
+    private JLabel emptyLabel = new JLabel(" ");
     private MainMenuFrame MainMenuFrame = new MainMenuFrame();
     LoginFrame LoginFrame = new LoginFrame();
     RegisterFrame RegisterFrame = new RegisterFrame();
@@ -57,13 +58,17 @@ class Frames {
 
             frame.getContentPane().setBackground(Color.DARK_GRAY);
             label.setForeground(MAIN_COLOR);
-            label.setFont(new Font(FONT_style, Font.BOLD, 15));
+            label.setFont(new Font(FONT_style, Font.BOLD, 20));
 
             GridBagLayoutManager(frame, label, GridBagConstraints.NORTH, 0, 0, 1);
-            GridBagLayoutManager(frame, butLogin, GridBagConstraints.HORIZONTAL, 0, 1 ,1);
-            GridBagLayoutManager(frame, butRegister, GridBagConstraints.HORIZONTAL, 0, 2, 1);
-            GridBagLayoutManager(frame, butSettings, GridBagConstraints.HORIZONTAL, 0, 3, 1);
-            GridBagLayoutManager(frame, butAbout, GridBagConstraints.HORIZONTAL, 0, 4, 1);
+            GridBagLayoutManager(frame, getEmptyLabel(2), GridBagConstraints.HORIZONTAL, 0, 1, 1);
+            GridBagLayoutManager(frame, butLogin, GridBagConstraints.HORIZONTAL, 0, 2, 1);
+            GridBagLayoutManager(frame, getEmptyLabel(2), GridBagConstraints.HORIZONTAL, 0, 3, 1);
+            GridBagLayoutManager(frame, butRegister, GridBagConstraints.HORIZONTAL, 0, 4, 1);
+            GridBagLayoutManager(frame, getEmptyLabel(2), GridBagConstraints.HORIZONTAL, 0, 5, 1);
+            GridBagLayoutManager(frame, butSettings, GridBagConstraints.HORIZONTAL, 0, 6, 1);
+            GridBagLayoutManager(frame, getEmptyLabel(2), GridBagConstraints.HORIZONTAL, 0, 7, 1);
+            GridBagLayoutManager(frame, butAbout, GridBagConstraints.HORIZONTAL, 0, 8, 1);
 
             frame.setSize(160, 185);
             frame.setResizable(true);
@@ -132,10 +137,12 @@ class Frames {
             dialog.setLayout(new GridBagLayout());
             GridBagLayoutManager(dialog, label, GridBagConstraints.CENTER, 0, 0, 2);
             GridBagLayoutManager(dialog, loginField, GridBagConstraints.HORIZONTAL, 0, 1, 2);
-            GridBagLayoutManager(dialog, passwordField, GridBagConstraints.HORIZONTAL, 0, 2, 2);
-            GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 3, 2);
-            GridBagLayoutManager(dialog, checkBox, GridBagConstraints.CENTER, 0, 4, 1);
-            GridBagLayoutManager(dialog, butLogin, GridBagConstraints.CENTER, 1, 4, 1);
+            GridBagLayoutManager(dialog, getEmptyLabel(3), GridBagConstraints.HORIZONTAL, 0, 2, 2);
+            GridBagLayoutManager(dialog, passwordField, GridBagConstraints.HORIZONTAL, 0, 3, 2);
+            GridBagLayoutManager(dialog, getEmptyLabel(3), GridBagConstraints.HORIZONTAL, 0, 4, 2);
+            GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 5, 2);
+            GridBagLayoutManager(dialog, checkBox, GridBagConstraints.CENTER, 0, 6, 1);
+            GridBagLayoutManager(dialog, butLogin, GridBagConstraints.CENTER, 1, 6, 1);
 
             dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
             dialog.setAlwaysOnTop(true);
@@ -432,7 +439,7 @@ class Frames {
 
         }
 
-        @SuppressWarnings("ALL")   // FIXME: 24.09.16 delete WrningBloker
+        @SuppressWarnings("ALL")   // FIXME: 24.09.16 delete WarningBloker
         private void buildMenuBar() {
 
         }
@@ -561,12 +568,15 @@ class Frames {
             GridBagLayoutManager(dialog, label, GridBagConstraints.CENTER, 0, 0, 2);
             GridBagLayoutManager(dialog, labLogin, GridBagConstraints.EAST, 0, 1, 1);
             GridBagLayoutManager(dialog, loginField, GridBagConstraints.HORIZONTAL, 1, 1, 1);
-            GridBagLayoutManager(dialog, labPassword, GridBagConstraints.EAST, 0, 2, 1);
-            GridBagLayoutManager(dialog, passwordField,GridBagConstraints.HORIZONTAL, 1, 2, 1);
-            GridBagLayoutManager(dialog, labRPassword, GridBagConstraints.EAST, 0, 3, 1);
-            GridBagLayoutManager(dialog, passwordField2, GridBagConstraints.HORIZONTAL, 1, 3, 1);
-            GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 4, 2);
-            GridBagLayoutManager(dialog, registerBut, GridBagConstraints.HORIZONTAL, 0, 5, 2);
+            GridBagLayoutManager(dialog, getEmptyLabel(2), GridBagConstraints.HORIZONTAL, 0, 2, 2);
+            GridBagLayoutManager(dialog, labPassword, GridBagConstraints.EAST, 0, 3, 1);
+            GridBagLayoutManager(dialog, passwordField, GridBagConstraints.HORIZONTAL, 1, 3, 1);
+            GridBagLayoutManager(dialog, getEmptyLabel(2), GridBagConstraints.HORIZONTAL, 0, 4, 2);
+            GridBagLayoutManager(dialog, labRPassword, GridBagConstraints.EAST, 0, 5, 1);
+            GridBagLayoutManager(dialog, passwordField2, GridBagConstraints.HORIZONTAL, 1, 5, 1);
+            GridBagLayoutManager(dialog, getEmptyLabel(3), GridBagConstraints.HORIZONTAL, 0, 6, 2);
+            GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 7, 2);
+            GridBagLayoutManager(dialog, registerBut, GridBagConstraints.HORIZONTAL, 0, 8, 2);
         }
 
 
@@ -879,6 +889,8 @@ class Frames {
             dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             dialog.setLayout(new GridBagLayout());
 
+            labZver.setFocusable(true);
+
             dialog.getContentPane().setBackground(Color.DARK_GRAY);
             text.setForeground(Color.WHITE);
             label.setFont(new Font(FONT_style, Font.BOLD, 20));
@@ -961,6 +973,7 @@ class Frames {
         c.gridx = gridX;
         c.gridy = gridY;
         frame.add(component, c);
+
     }
     private static void GridBagLayoutManager(JComponent parent, JComponent component, int fill, int gridX, int gridY, int gridWidth){
         GridBagConstraints c = new GridBagConstraints();
@@ -987,7 +1000,14 @@ class Frames {
         c.gridy = gridY;
         parent.add(component, c);
     }
+
+    private static JLabel getEmptyLabel(int size) {
+        JLabel emptyLabel = new JLabel(" ");
+        emptyLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, size));
+        return emptyLabel;
+    }
     void startGUI(){
+
         MainMenuFrame.showFrame();
     }
 
