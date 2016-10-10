@@ -136,9 +136,9 @@ public class Client {
 
             case "message" :
                 //принял входящее сообщеине
-                messages.add(new ClientMessage(command[1] , command[2], command[3]));
+                dialogs.get(Integer.parseInt(command[1])).addMes(new ClientMessage(command[1], command[2], command[3]));
                 writeMessage(command[1], command[2], command[3]);
-                System.out.println(messages.get(messages.size()-1));
+               // System.out.println(messages.get(messages.size()-1));
                 break;
             //заполняет френдов с сервера.
             case "friend" :
