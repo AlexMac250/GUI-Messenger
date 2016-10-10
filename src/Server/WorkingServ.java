@@ -29,13 +29,15 @@ public class WorkingServ extends Thread {
         start();
     }
 
-    void close() throws IOException {
+    void close(){
         if(acc !=null) {
             send(new Command("connection", "closed"));
         }
         sendOffline();
-        socketmain.close();
-        serverSocket.close();
+        try {
+            socketmain.close();
+            serverSocket.close();
+        } catch (IOException ignored) {}
         console.log("Closed");
         Server.connections--;
         int local = 0;
@@ -129,10 +131,7 @@ public class WorkingServ extends Thread {
         switch (command[0]) {
             //останавливает работу сервера
             case "stop":
-                try {
                     close();
-                } catch (IOException ignored) {
-                }
                 break;
             //отправляет сообщение
             case "send":
@@ -194,12 +193,7 @@ public class WorkingServ extends Thread {
             intellect.join();
             close();
         }catch (Exception e){
-            try {
                 close();
-            } catch (IOException ignored) {
-            }
-            interrupt();
-            e.printStackTrace();
         }
     }
 }

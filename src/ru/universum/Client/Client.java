@@ -274,7 +274,6 @@ public class Client {
         }
         return s;
     }
-
     //работает , не трогать
     public static void send(Message message){
         try {

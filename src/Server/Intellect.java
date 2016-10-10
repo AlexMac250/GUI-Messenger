@@ -118,9 +118,7 @@ class Intellect extends Thread{
                 break;
 
             case "close" :
-                try {
                     serv.close();
-                } catch (IOException ignored) {}
                 break;
         }
     }
