@@ -116,40 +116,31 @@ public class Server{
         isClosed = true ;
     }
 
-    public static byte[] getIp(){
-        byte[] ip = null;
+    public static String getIp(){
         try {
-            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for(NetworkInterface intf : interfaces) {
-                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());{
-                    for(InetAddress ipAddress : addrs){
-                        if(!ipAddress.isLoopbackAddress()){
-                            ip = ipAddress.getAddress();
-                        }
-                    }
-                }
-            }
+            URL whatismyip = new URL("http://checkip.amazonaws.com");
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    whatismyip.openStream()));
+            ip = in.readLine();
+            System.out.println(ip);
         }catch (Exception e) {
         }
-//        for(byte b : ip){
-//           System.out.println(b);
-//        }
         return ip;
     }
 
     public static void main(String[] args) {
         System.out.println(accs.toString());
         Account.idGL = accs.size()-1;
-        //Читает команды для сервера , внутри переделай
-      //  ServerComReader reader = new ServerComReader();
-      //  reader.start();
-      //  try {
-      //      reader.join();
-      //  } catch (InterruptedException e) {
-      //  }
+            //Читает команды для сервера , внутри переделай
+            ServerComReader reader = new ServerComReader();
+            reader.start();
+            try {
+                reader.join();
+            } catch (InterruptedException e) {
+            }
           try {
             mainSocket = new ServerSocket(2905);
-            console.log("started on " + InetAddress.getByAddress(getIp()));
+            console.log("started on " + InetAddress.getByName(getIp()));
             while (!isClosed) {
                 try {
                     new Server(mainSocket.accept());
