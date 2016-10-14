@@ -73,7 +73,7 @@ public class ServerComReader extends Thread{
     public void run() {
         System.out.println("Do you want start server automatically or enter IP?(1/2)");
         if(scanner.nextLine().equals("2")){
-            System.out.println("Enter ip(Be careful about correctness");
+            System.out.println("Enter ip(Be careful about correctness)");
             Server.ip = scanner.nextLine();
             interrupt();
         }else{

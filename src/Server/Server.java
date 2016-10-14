@@ -139,7 +139,7 @@ public class Server{
             } catch (InterruptedException e) {
             }
           try {
-            mainSocket = new ServerSocket(2905);
+            mainSocket = new ServerSocket(2905,0,InetAddress.getByName(ip));
             console.log("started on " + InetAddress.getByName(getIp()));
             while (!isClosed) {
                 try {
