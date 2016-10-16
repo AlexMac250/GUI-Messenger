@@ -837,19 +837,48 @@ class Frames {
 
     private class SettingsFrame extends AbstractFrame {
         JDialog dialog;
+        JButton butNativeJLeF;
+        JButton butStandartJLeF;
+        JButton butMotifJLeF;
         @Override
         public void initial() {
             dialog = new JDialog(MainMenuFrame.frame, "Настройки", true);
             dialog.setLayout(new GridBagLayout());
             dialog.setResizable(false);
             dialog.getContentPane().setBackground(Color.DARK_GRAY);
-            JLabel info = new JLabel("COMING SOON!");
-            info.setFont(new Font(FONT_style, Font.BOLD, 70));
+            JLabel info = new JLabel("Стили оформления окна");
+            info.setFont(new Font(FONT_style, Font.BOLD, 20));
             info.setForeground(MAIN_COLOR);
             JButton butClose = new JButton("Закрыть");
+            butNativeJLeF = new JButton("Системный стиль");
+            butStandartJLeF = new JButton("Java стиль");
+            butMotifJLeF = new JButton("Motif стиль");
             GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 0, 1);
-            GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 1, 1);
-            butClose.addActionListener(e -> dialog.dispose());
+            GridBagLayoutManager(dialog, butNativeJLeF, GridBagConstraints.HORIZONTAL, 0, 1, 1);
+            GridBagLayoutManager(dialog, butStandartJLeF, GridBagConstraints.HORIZONTAL, 0, 2, 1);
+            GridBagLayoutManager(dialog, butMotifJLeF, GridBagConstraints.HORIZONTAL, 0, 3, 1);
+            GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 4, 1);
+            butNativeJLeF.addActionListener(e -> {
+                WindowUtilities.setNativeLookAndFeel();
+                dialog.setVisible(false);
+                dialog.setVisible(true);
+            });
+            butStandartJLeF.addActionListener(e -> {
+                WindowUtilities.setJavaLookAndFeel();
+                dialog.setVisible(false);
+                dialog.setVisible(true);
+            });
+            butMotifJLeF.addActionListener(e -> {
+                WindowUtilities.setMotifLookAndFeel();
+                dialog.setVisible(false);
+                dialog.setVisible(true);
+            });
+            butClose.addActionListener(e -> {
+                MainMenuFrame.frame.setVisible(false);
+                dialog.dispose();
+                MainMenuFrame.frame.setVisible(true);
+            });
+
             dialog.pack();
             dialog.setLocationRelativeTo(null);
         }
@@ -1023,7 +1052,7 @@ class Frames {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             } catch(Exception e) {
-                System.out.println("Error setting native LAF: " + e);
+                System.err.println("Error setting native LAF: " + e);
             }
         }
 
@@ -1031,7 +1060,7 @@ class Frames {
             try {
                 UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
             } catch(Exception e) {
-                System.out.println("Error setting Java LAF: " + e);
+                System.err.println("Error setting Java LAF: " + e);
             }
         }
 
@@ -1039,7 +1068,7 @@ class Frames {
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             } catch(Exception e) {
-                System.out.println("Error setting Motif LAF: " + e);
+                System.err.println("Error setting Motif LAF: " + e);
             }
         }
     }
