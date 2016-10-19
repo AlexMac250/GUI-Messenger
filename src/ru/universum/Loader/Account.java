@@ -11,7 +11,7 @@ public class Account {
     public String password = "";
     public String name = "";
     public ArrayList<Friend> friends = new ArrayList<>();
-    public static Integer idGL = 0;
+    public static long idGL = 0;
     public List<Message> oflineMes = new ArrayList<>();
     private WorkingServ workingServ;
 

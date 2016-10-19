@@ -88,8 +88,8 @@ public class Server{
             }
         }else res = true;
         if(res==true){
-            FileLoader.writeInBase(new Account(Account.idGL , login , password , new ArrayList<>()));
-            accs.add(new Account(Account.idGL , login , password , new ArrayList<>()));
+            FileLoader.writeInBase(new Account((int)Account.idGL , login , password , new ArrayList<>()));
+            accs.add(new Account((int)Account.idGL , login , password , new ArrayList<>()));
         }
         return res;
     }
@@ -116,7 +116,7 @@ public class Server{
         isClosed = true ;
     }
 
-    public static String getIp(){
+    public static void getIp(){
         try {
             URL whatismyip = new URL("http://checkip.amazonaws.com");
             BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -124,23 +124,20 @@ public class Server{
             ip = in.readLine();
             System.out.println(ip);
         }catch (Exception e) {
+            System.err.println("No connection->SysAdmin-Debil");
         }
-        return ip;
     }
 
     public static void main(String[] args) {
         System.out.println(accs.toString());
         Account.idGL = accs.size()-1;
-            //Читает команды для сервера , внутри переделай
-            ServerComReader reader = new ServerComReader();
-            reader.start();
-            try {
-                reader.join();
-            } catch (InterruptedException e) {
-            }
+        //Читает команды для сервера , внутри переделай
+        ServerComReader reader = new ServerComReader();
+        reader.start();
+        Server.getIp();
           try {
             mainSocket = new ServerSocket(2905,0,InetAddress.getByName(ip));
-            console.log("started on " + InetAddress.getByName(getIp()));
+            console.log("started on " + InetAddress.getByName(ip));
             while (!isClosed) {
                 try {
                     new Server(mainSocket.accept());

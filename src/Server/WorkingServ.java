@@ -16,7 +16,7 @@ import java.util.*;
 public class WorkingServ extends Thread {
     Account acc;
     int port;
-    private Socket socketmain;
+    private Socket socketMain;
     private ServerSocket serverSocket;
     DataOutputStream dataOutputStream;
     private Intellect intellect;
@@ -35,7 +35,7 @@ public class WorkingServ extends Thread {
         }
         sendOffline();
         try {
-            socketmain.close();
+            socketMain.close();
             serverSocket.close();
         } catch (IOException ignored) {}
         console.log("Closed");
@@ -184,11 +184,11 @@ public class WorkingServ extends Thread {
         try {
             console.log("Started");
             serverSocket = new ServerSocket(port,0,InetAddress.getByName(Server.ip));
-            socketmain = serverSocket.accept();
+            socketMain = serverSocket.accept();
             Server.connections++;
             console.log("Socket accepted");
-            dataOutputStream = new DataOutputStream(socketmain.getOutputStream());
-            is = new DataInputStream(socketmain.getInputStream());
+            dataOutputStream = new DataOutputStream(socketMain.getOutputStream());
+            is = new DataInputStream(socketMain.getInputStream());
             intellect = new Intellect(this);
             intellect.join();
             close();
