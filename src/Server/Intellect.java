@@ -12,7 +12,7 @@ import java.util.List;
 
 
 @SuppressWarnings("ALL")
-class Intellect extends Thread{
+public class Intellect extends Thread{
     private int GettingUsers = 0;
     private DataOutputStream os;
     private DataInputStream is;

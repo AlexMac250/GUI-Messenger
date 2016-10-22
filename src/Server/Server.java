@@ -114,6 +114,10 @@ public class Server{
             w.execute(close);
         }
         isClosed = true ;
+        try {
+            if(mainSocket!=null)
+            mainSocket.close();
+        } catch (IOException e) {}
     }
 
     public static void getIp(){
@@ -128,13 +132,22 @@ public class Server{
         }
     }
 
-    public static void main(String[] args) {
+    public static void startNew(){
+        if(!isClosed){
+            CLOSE();
+        }
+        connections = 40000;
+        active = new ArrayList<>();
+        accs = FileLoader.Import();
+        freePorts = new ArrayList<>();
+        isClosed = false;
+        portlocal = 0;
+        start();
+    }
+    public static void start() {
         System.out.println(accs.toString());
         Account.idGL = accs.size()-1;
         //Читает команды для сервера , внутри переделай
-        ServerComReader reader = new ServerComReader();
-        reader.start();
-        Server.getIp();
           try {
             mainSocket = new ServerSocket(2905,0,InetAddress.getByName(ip));
             console.log("started on " + InetAddress.getByName(ip));
@@ -145,6 +158,7 @@ public class Server{
                     console.log("Connection lost");
                 }
             }
+              console.log("<<<Server stopped>>>");
         } catch (Exception e) {
             CLOSE();
             e.printStackTrace();

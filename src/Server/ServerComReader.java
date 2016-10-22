@@ -3,6 +3,7 @@ package Server;
 import ru.universum.Loader.Account;
 import ru.universum.Printer.Console;
 
+import java.util.Objects;
 import java.util.Scanner;
 
 public class ServerComReader extends Thread{
@@ -15,19 +16,22 @@ public class ServerComReader extends Thread{
         switch (command[0]){
 
             case "stop" :
-                if(isAdminLogged) {
+                while(isAdminLogged) {
                     Server.console.log("Are u sure y/n");
                     message = scanner.next();
-                    if (message.equals("y") | message.equals("Y")) {
+                    if (message.equals("y")) {
                         Server.CLOSE();
+                        break;
+                    }else{
+                        if(!message.equals("n"))
+                        System.out.println("Error symbol");
                     }
                 }
                 break;
 
             case "login" :
                 if(command[1].equals("admin")){
-                    if(!Server.logIn("admin",command[2]).equals(null)){
-                        Server.accs.get(0).isOnline = true;
+                    if(!Server.logIn("admin",command[2]).equals(null)& !isAdminLogged){
                         isAdminLogged = true;
                         console.log("Admin logged in");
                     }else{
@@ -39,7 +43,6 @@ public class ServerComReader extends Thread{
             case "out" :
                 if(isAdminLogged) {
                     isAdminLogged = false;
-                    Server.accs.get(0).isOnline = false;
                 }
                 break;
 
@@ -48,6 +51,20 @@ public class ServerComReader extends Thread{
                     console.log("Meta-inf about server :" + '\n'
                             + "Connections : " + (Server.connections-40000) + '\n'
                             + "Users in base : " + Account.idGL);
+                }
+                break;
+
+            case "startNew" :
+                Server.startNew();
+                break;
+
+
+            case "ip" :
+                Server.ip = command[1];
+                console.log("Restart server?(y/n)");
+                message = scanner.next();
+                if(Objects.equals(message, "y")) {
+                    Server.startNew();
                 }
                 break;
         }
@@ -74,6 +91,7 @@ public class ServerComReader extends Thread{
         while (!interrupted()){
             //ТУТ БУДЕШЬ ВМЕСТО СКАННЕРА ВСТАВЛЯТЬ СВОЮ ШАЛУПОНЬ
             message = scanner.nextLine();
+            message = message.toLowerCase();
             execute(descript(message));
         }
     }
