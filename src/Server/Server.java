@@ -124,7 +124,7 @@ public class Server{
             ip = in.readLine();
             System.out.println(ip);
         }catch (Exception e) {
-            System.err.println("No connection->SysAdmin-Debil");
+            System.err.println("No connection-> SysAdmin=\"Debil\"");
         }
     }
 
