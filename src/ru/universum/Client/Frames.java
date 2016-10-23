@@ -21,7 +21,6 @@ class Frames {
     private final String FONT_style    = "Trebuchet MS";
     private final Color MAIN_COLOR = new Color(69, 151, 249);
 
-    private JLabel emptyLabel = new JLabel(" ");
     private MainMenuFrame MainMenuFrame = new MainMenuFrame();
     LoginFrame LoginFrame = new LoginFrame();
     RegisterFrame RegisterFrame = new RegisterFrame();
@@ -204,8 +203,7 @@ class Frames {
         private JScrollPane scrollFriends;
         Friend currentFriend = null;
 
-        MainFrame() {
-        }
+        MainFrame() {}
 
         @Override
         public void initial() {
@@ -369,8 +367,7 @@ class Frames {
 
         }*/
 
-        private void buildPanMessages() {
-        }
+        private void buildPanMessages() {}
 
         void loadFriends() {
             panFriends.setLayout(new GridBagLayout());
@@ -440,11 +437,9 @@ class Frames {
         }
 
         @SuppressWarnings("ALL")   // FIXME: 24.09.16 delete WarningBloker
-        private void buildMenuBar() {
+        private void buildMenuBar() {}
 
-        }
-
-        public JFrame getFrame() {
+        JFrame getFrame() {
             return frame;
         }
 
@@ -456,7 +451,7 @@ class Frames {
             String tabName;
             Dialog dialog;
 
-            public Tab(JScrollPane messageBox, JTextField textField, JButton button, String tabName, Dialog dialog) {
+            Tab(JScrollPane messageBox, JTextField textField, JButton button, String tabName, Dialog dialog) {
                 MessageBox = messageBox;
                 this.textField = textField;
                 this.button = button;
@@ -859,24 +854,22 @@ class Frames {
             GridBagLayoutManager(dialog, butMotifJLeF, GridBagConstraints.HORIZONTAL, 0, 3, 1);
             GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 4, 1);
             butNativeJLeF.addActionListener(e -> {
+                dialog.dispose();
                 WindowUtilities.setNativeLookAndFeel();
-                dialog.setVisible(false);
-                dialog.setVisible(true);
+                showFrame();
             });
             butStandartJLeF.addActionListener(e -> {
+                dialog.dispose();
                 WindowUtilities.setJavaLookAndFeel();
-                dialog.setVisible(false);
-                dialog.setVisible(true);
+                showFrame();
             });
             butMotifJLeF.addActionListener(e -> {
+                dialog.dispose();
                 WindowUtilities.setMotifLookAndFeel();
-                dialog.setVisible(false);
-                dialog.setVisible(true);
+                showFrame();
             });
             butClose.addActionListener(e -> {
-                MainMenuFrame.frame.setVisible(false);
                 dialog.dispose();
-                MainMenuFrame.frame.setVisible(true);
             });
 
             dialog.pack();
@@ -1036,7 +1029,6 @@ class Frames {
         return emptyLabel;
     }
     void startGUI(){
-
         MainMenuFrame.showFrame();
     }
 

@@ -51,6 +51,10 @@ public class BASH extends Thread{
                 Client.execute(line);
                 break;
 
+            case "editIP":
+                Client.HOSTNAME = line[1];
+                break;
+
             default:
                 System.err.println("Command \""+ line[0]+"\" not found!");
                 break;
