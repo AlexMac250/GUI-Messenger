@@ -154,19 +154,20 @@ public class Server{
         reader.start();
         Account.idGL = accs.size()-1;
           try {
-            mainSocket = new ServerSocket(2905,0,InetAddress.getByName(ip));
+            mainSocket = new ServerSocket(2905, 0, InetAddress.getByName(ip));
             console.log("started on " + InetAddress.getByName(ip));
             while (!isClosed) {
                 try {
                     new Server(mainSocket.accept());
                 }catch (Exception e){
                     console.log("Connection lost");
+                    break;
                 }
             }
               console.log("<<<Server stopped>>>");
         } catch (Exception e) {
               CLOSE();
-              System.err.println("Error IP > Restart server with another IP");
+              System.err.println("[EXCEPTION] "+e+"\n >> Restart server with another IP << ");
         }
     }
 }

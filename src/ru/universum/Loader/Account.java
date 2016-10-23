@@ -35,7 +35,7 @@ public class Account {
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", friends=" + friends +
-                '}';
+                "}\n";
     }
 
     public Account(){
