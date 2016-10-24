@@ -21,6 +21,7 @@ public class Server{
     static int portlocal = 0;
     static DataOutputStream os;
     static String ip = null;
+    static ServerComReader reader;
 
     public static List<WorkingServ> getActive() {
         return active;
@@ -117,7 +118,8 @@ public class Server{
         try {
             if(mainSocket!=null)
             mainSocket.close();
-        } catch (IOException e) {}
+        } catch (Exception e) {}
+        System.err.println("<<<Server stopped>>>");
     }
 
     public static void getIp(){
@@ -136,6 +138,9 @@ public class Server{
         if(!isClosed){
             CLOSE();
         }
+        reader.interrupt();
+        reader = new ServerComReader();
+        reader.start();
         connections = 40000;
         active = new ArrayList<>();
         accs = FileLoader.Import();
@@ -144,10 +149,12 @@ public class Server{
         portlocal = 0;
         start();
     }
+
     public static void start() {
         System.out.println(accs.toString());
+        reader = new ServerComReader();
+        reader.start();
         Account.idGL = accs.size()-1;
-        //Читает команды для сервера , внутри переделай
           try {
             mainSocket = new ServerSocket(2905,0,InetAddress.getByName(ip));
             console.log("started on " + InetAddress.getByName(ip));
@@ -160,8 +167,8 @@ public class Server{
             }
               console.log("<<<Server stopped>>>");
         } catch (Exception e) {
-            CLOSE();
-            e.printStackTrace();
+              CLOSE();
+              System.err.println("Error IP > Restart server with another IP");
         }
     }
 }
