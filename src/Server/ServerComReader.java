@@ -12,7 +12,7 @@ public class ServerComReader extends Thread{
     String message = "";
     Scanner scanner = new Scanner(System.in);
     private boolean isAdminLogged = false;
-    Console console = new Console("Server console");
+    Console console = new Console("Server-Console");
     boolean isExecuting = false;
     public void execute(String[] command){
         switch (command[0]){
