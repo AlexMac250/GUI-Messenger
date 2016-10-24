@@ -139,8 +139,6 @@ public class Server{
             CLOSE();
         }
         reader.interrupt();
-        reader = new ServerComReader();
-        reader.start();
         connections = 40000;
         active = new ArrayList<>();
         accs = FileLoader.Import();
