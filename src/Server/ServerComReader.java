@@ -71,7 +71,7 @@ public class ServerComReader extends Thread{
                 if(isAdminLogged) {
                     console.log("Meta-inf about server :" + '\n'
                             + "Connections : " + (Server.connections-40000) + '\n'
-                            + "Users in base : " + Account.idGL
+                            + "Users in base : " + Account.idGL + '\n'
                             + "IP-ADDRESS OF SERVER - "+ Server.ip );
                 }else {
                     System.err.println("Not enough permissions >>> login as Admin");
