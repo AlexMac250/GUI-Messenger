@@ -21,7 +21,7 @@ public class ServerComReader extends Thread{
                 isExecuting = true;
                 while (isAdminLogged){
                     if (!Server.isClosed) {
-                        Server.console.log("Are u sure?(y/n)");
+                        Server.console.log("Are u sure? (y/n)", "m");
                         message = scanner.next();
                         message = message.toLowerCase();
                         if (message.equals("y") & !Server.isClosed) {
@@ -49,9 +49,9 @@ public class ServerComReader extends Thread{
                     Account acc = Server.logIn("admin" , command[2]);
                     if(acc != null& !isAdminLogged){
                         isAdminLogged = true;
-                        console.log("Admin logged in");
+                        console.log("Admin logged in", "m");
                     }else{
-                        console.log("Error logging in console");
+                        console.log("Error logging in console", "err");
                     }
                 }
                 isExecuting = false;
@@ -72,7 +72,7 @@ public class ServerComReader extends Thread{
                     console.log("Meta-inf about server :" + '\n'
                             + "Connections : " + (Server.connections-40000) + '\n'
                             + "Users in base : " + Account.idGL+1 + '\n'
-                            + "IP-ADDRESS OF SERVER - "+ Server.ip );
+                            + "IP-ADDRESS OF SERVER - "+ Server.ip, "");
                 }else {
                     System.err.println("Not enough permissions >>> login as Admin");
                 }
@@ -147,7 +147,7 @@ public class ServerComReader extends Thread{
                 break;
 
             default :
-                console.log("Enter \"help\" for more information");
+                console.log("Enter \"help\" for more information", "m");
 
         }
     }
