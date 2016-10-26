@@ -10,7 +10,9 @@ import java.net.*;
 import java.util.*;
 
 @SuppressWarnings("ALL")
+ //FIXME убрать нахер этот блокировщик варнингов. Говно это все
 public class Server{
+    static int attempt = 1;
     static ServerSocket mainSocket;
     static Integer connections = 40000;
     static Console console = new Console("server");
@@ -20,7 +22,7 @@ public class Server{
     static boolean isClosed = false;
     static int portlocal = 0;
     static DataOutputStream os;
-    static String ip = null;
+    static String ip = "localhost";;
     static ServerComReader reader;
 
     public static List<WorkingServ> getActive() {
@@ -52,7 +54,7 @@ public class Server{
                 FileLoader.rewriteInBase(acc,needToRewrite);
                 needToRewrite = true;
             }
-            console.log("Base rewritten");
+            console.log("Base rewritten", "m");
         }
         return res;
     }
@@ -98,7 +100,7 @@ public class Server{
     public static synchronized Account logIn(String login , String password){
         Account a = null;
         for (Account acc: accs) {
-            if(Objects.equals(acc.login, login) && Objects.equals(acc.password, password)){
+            if(Objects.equals(acc.login, login) && Objects.equals(acc.password, password)){//FIXME PASSWORD TO MD5!
                 if(!acc.isOnline) {
                     a = acc;
                     acc.isOnline = true;
@@ -119,7 +121,7 @@ public class Server{
             if(mainSocket!=null)
             mainSocket.close();
         } catch (Exception e) {}
-        System.err.println("<<<Server stopped>>>");
+        console.log("Server stopped", "w");
     }
 
     public static void getIp(){
@@ -128,9 +130,9 @@ public class Server{
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     whatismyip.openStream()));
             ip = in.readLine();
-            System.out.println(ip);
+            console.log("Resultin IP: \""+ip+"\"", "m");
         }catch (Exception e) {
-            System.err.println("No connection-> SysAdmin=\"Debil\"");
+            console.log("No connection! SysAdmin -- \"Debil\" (\"Дебил\")", "w");
         }
     }
 
@@ -149,25 +151,35 @@ public class Server{
     }
 
     public static void start() {
-        System.out.println(accs.toString());
-        reader = new ServerComReader();
-        reader.start();
+
+
         Account.idGL = accs.size()-1;
           try {
-            mainSocket = new ServerSocket(2905, 0, InetAddress.getByName(ip));
-            console.log("started on " + InetAddress.getByName(ip));
-            while (!isClosed) {
-                try {
-                    new Server(mainSocket.accept());
-                }catch (Exception e){
-                    console.log("Connection lost");
-                    break;
-                }
-            }
-              console.log("<<<Server stopped>>>");
-        } catch (Exception e) {
+              console.log("ATTEMPT "+attempt, "m");
+              mainSocket = new ServerSocket(2905, 0, InetAddress.getByName(ip));
+              reader = new ServerComReader();
+              reader.start();
+              console.log("started on " + InetAddress.getByName(ip), "m");
+              while (!isClosed) {
+                  try {
+                      new Server(mainSocket.accept());
+                  }catch (Exception e){
+                      console.log("Connection lost", "w");
+                      break;
+                  }
+              }
+              console.log("Server stopped", "w");
+          } catch (Exception e) {
               CLOSE();
-              System.err.println("[EXCEPTION] "+e+"\n >> Restart server with another IP << ");
+              if (attempt < 10) {
+                  System.err.println("[WARNING] "+e);
+                  attempt++;
+                  getIp();
+                  startNew();
+              }
+              System.out.println("[MESSAGE] Restart server with another IP");
+              reader = new ServerComReader();
+              reader.start();
         }
     }
 }

@@ -51,12 +51,12 @@ public class Client {
             socket = new Socket(InetAddress.getByName(HOSTNAME), 2905);
             is = new DataInputStream(socket.getInputStream());
             port = is.readInt();
-            console.log("got port");
+            console.log("got port", "m");
             socket.close();
             is.close();
             TimeUnit.MILLISECONDS.sleep(150);
             socket = new Socket(InetAddress.getByName(HOSTNAME), port);
-            console.log("Connected to port " + port);
+            console.log("Connected to port " + port, "m");
             statusConnected = true;
             os = new DataOutputStream(socket.getOutputStream());
             is = new DataInputStream(socket.getInputStream());
@@ -66,7 +66,7 @@ public class Client {
         } catch (Exception e) {
             Frames.LoginFrame.setInfo("Нет соединения", Color.RED);
             Frames.RegisterFrame.setInfo("Нет соединения", Color.RED);
-            console.log("No connection");
+            console.log("No connection", "exc");
             e.printStackTrace();
         }
     }
@@ -169,7 +169,7 @@ public class Client {
                 Frames.MainFrame.setInfo("Соединение потеряно!", Color.RED);
                 statusLogged = false;
                 statusConnected = true;
-                console.log("Connection refused");
+                console.log("Connection refused", "err");
                 try {
                     socket.close();
                 } catch (IOException ignored) {
@@ -254,7 +254,7 @@ public class Client {
             account.friends.add(new Friend(Integer.parseInt(args[2]),args[3]));
             dialogs.put(Integer.parseInt(args[2]),new Dialog(account.friends.get(account.friends.size()-1)));
         }else{
-            console.log("No friends");
+            console.log("No friends", "m");
         }
     }
 
@@ -285,7 +285,7 @@ public class Client {
             os.writeUTF(message.toString());
             os.flush();
         } catch (IOException e) {
-            console.log("Lost connection");
+            console.log("Lost connection", "exc");
             statusConnected = false;
             statusLogged = true;
         }

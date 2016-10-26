@@ -19,7 +19,7 @@ public class InputReader extends Thread {
         while (!interrupted()){
             try {
                 message = in.readUTF();
-                Client.console.log("Got command " + message);
+                Client.console.log("Got command " + message, "m");
                 throwCommand();
             }catch (Exception e){
                 e.printStackTrace();

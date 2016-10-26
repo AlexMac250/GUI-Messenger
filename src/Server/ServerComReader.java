@@ -16,12 +16,11 @@ public class ServerComReader extends Thread{
     boolean isExecuting = false;
     public void execute(String[] command){
         switch (command[0]){
-
             case "stop" :
                 isExecuting = true;
                 while (isAdminLogged){
                     if (!Server.isClosed) {
-                        Server.console.log("Are u sure?(y/n)");
+                        Server.console.log("Are u sure?(y/n)", "");
                         message = scanner.next();
                         message = message.toLowerCase();
                         if (message.equals("y") & !Server.isClosed) {
@@ -49,9 +48,9 @@ public class ServerComReader extends Thread{
                     Account acc = Server.logIn("admin" , command[2]);
                     if(acc != null& !isAdminLogged){
                         isAdminLogged = true;
-                        console.log("Admin logged in");
+                        console.log("Admin logged in", "");
                     }else{
-                        console.log("Error logging in console");
+                        console.log("Error logging in console", "err");
                     }
                 }
                 isExecuting = false;
@@ -72,7 +71,7 @@ public class ServerComReader extends Thread{
                     console.log("Meta-inf about server :" + '\n'
                             + "Connections : " + (Server.connections-40000) + '\n'
                             + "Users in base : " + Account.idGL+1 + '\n'
-                            + "IP-ADDRESS OF SERVER - "+ Server.ip );
+                            + "IP-ADDRESS OF SERVER - "+ Server.ip, "");
                 }else {
                     System.err.println("Not enough permissions >>> login as Admin");
                 }
@@ -95,10 +94,12 @@ public class ServerComReader extends Thread{
                             TimeUnit.SECONDS.sleep(1);
                         } catch (InterruptedException e) {}
                     }
+                    Server.attempt = 0;
                 try {
                     if (System.getProperty("os.name").equals("Windows")) new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                    if (System.getProperty("os.name").equals("Linux")) new ProcessBuilder("terminal", "clear").inheritIO().start().waitFor();
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                    console.log(""+e, "exc");
+                }
                 Server.startNew();
                 }
                 break;
@@ -116,7 +117,7 @@ public class ServerComReader extends Thread{
                             "Command \"restart\" - restarting server with default fields (excepting Base) \n" +
                             "Command \"ip\" [0.0.0.0] - changes ip of Server and then restarts it on new address \n" +
                             "Command \"exit\" - shutdown program"+
-                            "--------------------------------- \n");
+                            "\n--------------------------------- \n");
                 }
                 isExecuting = false;
                 break;
@@ -124,6 +125,7 @@ public class ServerComReader extends Thread{
             case "exit" :
                 if(isAdminLogged){
                     if (Server.isClosed){
+                        Server.console.log("Are u sure?(y/n)", "");
                         message = scanner.next();
                         message = message.toLowerCase();
                         if (message.equals("y") & !Server.isClosed) {
@@ -146,7 +148,7 @@ public class ServerComReader extends Thread{
                 break;
 
             default :
-                console.log("Enter \"help\" for more information");
+                console.log("Enter \"help\" for more information", "m");
 
         }
     }
@@ -176,7 +178,7 @@ public class ServerComReader extends Thread{
                 interrupt();
             }
         while (!isExecuting) {
-            System.out.print("Command >>>");
+            System.out.print("[ENTER COMMAND] >> ");
             message = scanner.nextLine();
             message = message.toLowerCase();
             execute(descript(message));

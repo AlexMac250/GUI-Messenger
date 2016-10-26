@@ -128,7 +128,7 @@ public class Intellect extends Thread{
         while (!interrupted()){
             try {
                 String message = is.readUTF();
-                serv.console.log("Got command " + message);
+                serv.console.log("Got command " + message, "m");
                 execute(descript(message));
             } catch (IOException e) {
                 System.err.println("User disconnected " + "# " + (serv.port-40000));

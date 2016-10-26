@@ -15,8 +15,8 @@ public class Waiter extends Thread {
                 Client.main(null);
                 res = true;
             } catch (Exception e) {
-                Client.console.log("No connection");
-                Client.console.log("Waiting for connection");
+                Client.console.log("No connection","exc");
+                Client.console.log("Waiting for connection", "m");
             }
         }
     }

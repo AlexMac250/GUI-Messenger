@@ -38,7 +38,7 @@ public class WorkingServ extends Thread {
             socketMain.close();
             serverSocket.close();
         } catch (IOException ignored) {}
-        console.log("Closed");
+        console.log("Closed", "m");
         Server.connections--;
         int local = 0;
         for (Object ignored : Server.getActive()) {
@@ -61,12 +61,12 @@ public class WorkingServ extends Thread {
         if(acc != null){
             acc.setWorkingServ(this);
             send(new Command("logged" , "true"));
-            console.log("Acc " + acc.login + " logged");
+            console.log("Acc " + acc.login + " logged", "m");
             sendFriends();
             send(new Command("account" , new String[]{acc.login,String.valueOf(acc.id)}));
         }
         else{
-            console.log("Fail login");
+            console.log("Fail login","m");
             send(new Command("logged","false"));
         }
     }
@@ -182,11 +182,11 @@ public class WorkingServ extends Thread {
     @Override
     public void run() {
         try {
-            console.log("Started");
+            console.log("Started", "m");
             serverSocket = new ServerSocket(port,0,InetAddress.getByName(Server.ip));
             socketMain = serverSocket.accept();
             Server.connections++;
-            console.log("Socket accepted");
+            console.log("Socket accepted", "m");
             dataOutputStream = new DataOutputStream(socketMain.getOutputStream());
             is = new DataInputStream(socketMain.getInputStream());
             intellect = new Intellect(this);
