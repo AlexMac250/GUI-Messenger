@@ -97,7 +97,8 @@ public class ServerComReader extends Thread{
                         } catch (InterruptedException e) {}
                     }
                 try {
-                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                    if (System.getProperty("os.name").equals("Windows")) new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                    if (System.getProperty("os.name").equals("Linux")) new ProcessBuilder("terminal", "clear").inheritIO().start().waitFor();
                 } catch (Exception e) {}
                 Server.startNew();
                 }
@@ -113,11 +114,36 @@ public class ServerComReader extends Thread{
                             "Command \"stop\" - stops server if this one is working \n" +
                             "Command \"out\" - logging out \n" +
                             "Command \"showinfo\" - shows meta-inf about server \n" +
-                            "Command \"restart\" - restarting server with default fields(excepting Base) \n" +
+                            "Command \"restart\" - restarting server with default fields (excepting Base) \n" +
                             "Command \"ip\" [0.0.0.0] - changes ip of Server and then restarts it on new address \n" +
+                            "Command \"exit\" - shutdown program"+
                             "--------------------------------- \n");
                 }
                 isExecuting = false;
+                break;
+
+            case "exit" :
+                if(isAdminLogged){
+                    if (Server.isClosed){
+                        message = scanner.next();
+                        message = message.toLowerCase();
+                        if (message.equals("y") & !Server.isClosed) {
+                            System.exit(0);
+                            break;
+                        } else {
+                            if (message.equals("n")) {
+                                break;
+                            } else {
+                                System.out.println("Error symbol");
+                            }
+                        }
+                    } else {
+                        System.err.println(" >> Server is running! << ");
+                    }
+
+                } else {
+                    System.err.println("Not enough permissions >>> login as Admin");
+                }
                 break;
 
             default :
