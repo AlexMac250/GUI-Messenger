@@ -116,7 +116,7 @@ public class ServerComReader extends Thread{
                             "Command \"restart\" - restarting server with default fields (excepting Base) \n" +
                             "Command \"ip\" [0.0.0.0] - changes ip of Server and then restarts it on new address \n" +
                             "Command \"exit\" - shutdown program"+
-                            "--------------------------------- \n");
+                            "\n--------------------------------- \n");
                 }
                 isExecuting = false;
                 break;
@@ -174,6 +174,7 @@ public class ServerComReader extends Thread{
             try {
                 TimeUnit.MILLISECONDS.sleep(200);
             } catch (InterruptedException e) {
+                console.log(""+e,"exc");
                 interrupt();
             }
         while (!isExecuting) {
@@ -184,6 +185,7 @@ public class ServerComReader extends Thread{
                 try {
                 TimeUnit.MILLISECONDS.sleep(10);
                 } catch (InterruptedException e) {
+                    console.log(""+e,"exc");
                 interrupt();
                 }
             }

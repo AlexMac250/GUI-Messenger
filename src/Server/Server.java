@@ -22,7 +22,7 @@ public class Server{
     static boolean isClosed = false;
     static int portlocal = 0;
     static DataOutputStream os;
-    static String ip = "localhost";;
+    static String ip = "";
     static ServerComReader reader;
 
     public static List<WorkingServ> getActive() {
@@ -155,6 +155,8 @@ public class Server{
     public static void start() {
 
 
+        reader = new ServerComReader();
+        reader.start();
         Account.idGL = accs.size()-1;
           try {
               console.log("ATTEMPT "+attempt, "m");
@@ -180,9 +182,9 @@ public class Server{
                   getIp();
                   startNew();
               }
-              System.out.println("[MESSAGE] Restart server with another IP");
               reader = new ServerComReader();
               reader.start();
+              System.out.println("[MESSAGE] Restart server with another IP");
         }
     }
 }
