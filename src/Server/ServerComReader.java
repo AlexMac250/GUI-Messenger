@@ -82,13 +82,12 @@ public class ServerComReader extends Thread{
             case "restart" :
                 isExecuting = true;
                 Server.startNew();
-                isExecuting = false;
                 break;
 
             case "ip" :
                 isExecuting = true;
                 if(isAdminLogged) {
-                    Server.ip = command[1];
+                    Server.ip = command[1].getBytes();
                     for(int i = 0 ; i<3 ; i++){
                         try {
                             System.out.println("Server restarts in " + (3-i));
@@ -178,7 +177,7 @@ public class ServerComReader extends Thread{
                 interrupt();
             }
         while (!isExecuting) {
-            System.out.print("Command >>>");
+            System.out.print("[ENTER COMMAND]: ");
             message = scanner.nextLine();
             message = message.toLowerCase();
             execute(descript(message));

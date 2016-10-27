@@ -10,6 +10,7 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -307,7 +308,7 @@ class Frames {
             textField.addActionListener(e -> {
                 System.out.println(MessageBox.getSize());
                 if (textField.getText().length() > 0) {
-                    insertText(MessageBox, "\n--- " + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm") + "] ----------------------\n", heading);
+                    insertText(MessageBox, "\n--- " + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "] ----------------------\n", heading);
                     insertText(MessageBox, textField.getText() + "\n", normal);
                     Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
                     textField.setText("");
@@ -315,11 +316,11 @@ class Frames {
             });
             butSendMessage.addActionListener(e -> send());
             Dialog FDialog = null;
-            for (int i = 0; i < Client.dialogs.size(); i++) {
-                if (Client.dialogs.get(i).with.login.equals(friend.login)){
-                    FDialog = Client.dialogs.get(i);
-                }
-            }
+//            for (int i = 0; i < Client.dialogs.size(); i++) {
+//                if (Client.dialogs.get(i).with.login.equals(friend.login)){
+//                    FDialog = Client.dialogs.get(i);
+//                }
+//            }
 
             tabs.add(new Tab(scrollMessage, textField, butSendMessage, friend.login, FDialog));
             tabbedPane.addTab(friend.login, panel);
