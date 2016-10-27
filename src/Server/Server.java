@@ -22,7 +22,7 @@ public class Server{
     static boolean isClosed = false;
     static int portlocal = 0;
     static DataOutputStream os;
-    static String ip = "localhost";;
+    static byte[] ip;
     static ServerComReader reader;
 
     public static List<WorkingServ> getActive() {
