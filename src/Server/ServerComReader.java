@@ -125,11 +125,11 @@ public class ServerComReader extends Thread{
             case "exit" :
                 if(isAdminLogged){
                     if (Server.isClosed){
+                        System.out.print("Command(y/n)>>");
                         message = scanner.next();
                         message = message.toLowerCase();
-                        if (message.equals("y") & !Server.isClosed) {
+                        if (message.equals("y") &Server.isClosed) {
                             System.exit(0);
-                            break;
                         } else {
                             if (message.equals("n")) {
                                 break;

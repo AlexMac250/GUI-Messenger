@@ -25,7 +25,7 @@ public class Client {
 
     static final boolean NODATE = false;
     static final boolean DATED = true;
-    static final String HOSTNAME = "185.57.31.169";
+    static String HOSTNAME = "185.57.31.169";
 
     static Account account = new Account();
 
