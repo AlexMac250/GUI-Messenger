@@ -127,6 +127,7 @@ public class Server{
         }
     }
     public static void getIp(){
+
         try {
             URL whatismyip = new URL("http://checkip.amazonaws.com");
             BufferedReader in = new BufferedReader(new InputStreamReader(
