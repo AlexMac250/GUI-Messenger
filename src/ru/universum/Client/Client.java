@@ -33,6 +33,7 @@ public class Client {
     static boolean statusConnected = false;
     static boolean statusRegistered = false;
 
+
     static Frames Frames = new Frames();
     //есть только id и login
     static ArrayList<Account> usersInSearch = new ArrayList<>();//есть только id и login
