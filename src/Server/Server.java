@@ -110,20 +110,22 @@ public class Server{
         return a;
     }
 
-    public static void CLOSE(){
-        for(WorkingServ w : active){
-            String[] close = new String[1];
-            close[0] = "close";
-            w.execute(close);
+    public static void CLOSE() {
+        if (!isClosed) {
+            for (WorkingServ w : active) {
+                String[] close = new String[1];
+                close[0] = "close";
+                w.execute(close);
+            }
+            isClosed = true;
+            try {
+                if (mainSocket != null)
+                    mainSocket.close();
+            } catch (Exception e) {
+            }
+            console.log("Server stopped", "w");
         }
-        isClosed = true ;
-        try {
-            if(mainSocket!=null)
-            mainSocket.close();
-        } catch (Exception e) {}
-        console.log("Server stopped", "w");
     }
-
     public static void getIp(){
         try {
             URL whatismyip = new URL("http://checkip.amazonaws.com");
@@ -164,11 +166,12 @@ public class Server{
                   try {
                       new Server(mainSocket.accept());
                   }catch (Exception e){
+                      CLOSE();
                       console.log("Connection lost", "w");
                       break;
                   }
               }
-              console.log("Server stopped", "w");
+             // console.log("Server stopped", "w");
           } catch (Exception e) {
               CLOSE();
               if (attempt < 10) {
