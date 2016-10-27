@@ -12,7 +12,6 @@ import java.util.*;
 @SuppressWarnings("ALL")
  //FIXME убрать нахер этот блокировщик варнингов. Говно это все
 public class Server{
-    static int attempt = 1;
     static ServerSocket mainSocket;
     static Integer connections = 40000;
     static Console console = new Console("server");
@@ -22,8 +21,8 @@ public class Server{
     static boolean isClosed = false;
     static int portlocal = 0;
     static DataOutputStream os;
-    static String ip = "localhost";;
-    static ServerComReader reader;
+    static byte[] ip;
+    static ServerComReader reader = new ServerComReader();
 
     public static List<WorkingServ> getActive() {
         return active;
@@ -128,13 +127,18 @@ public class Server{
     }
     public static void getIp(){
         try {
-            URL whatismyip = new URL("http://checkip.amazonaws.com");
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    whatismyip.openStream()));
-            ip = in.readLine();
-            console.log("Resultin IP: \""+ip+"\"", "m");
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for(NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for(InetAddress ipAddress : addrs){
+                    if(!ipAddress.isLoopbackAddress() & !ipAddress.isLinkLocalAddress()){
+                        ip = ipAddress.getAddress();
+                    }
+                }
+            }
         }catch (Exception e) {
             console.log("No connection! SysAdmin -- \"Debil\" (\"Дебил\")", "w");
+            ip = "localhost".getBytes();
         }
     }
 
@@ -149,19 +153,20 @@ public class Server{
         freePorts = new ArrayList<>();
         isClosed = false;
         portlocal = 0;
+        reader = new ServerComReader();
+        reader.start();
         start();
     }
 
     public static void start() {
-
-
         Account.idGL = accs.size()-1;
           try {
-              console.log("ATTEMPT "+attempt, "m");
-              mainSocket = new ServerSocket(2905, 0, InetAddress.getByName(ip));
-              reader = new ServerComReader();
-              reader.start();
-              console.log("started on " + InetAddress.getByName(ip), "m");
+              mainSocket = new ServerSocket(2905,0,InetAddress.getByAddress(ip));
+              console.log("started on " + mainSocket.getInetAddress().getHostAddress(), "m");
+          } catch (Exception e1) {
+              CLOSE();
+              System.out.println("[MESSAGE] Restart server with another IP");
+          }
               while (!isClosed) {
                   try {
                       new Server(mainSocket.accept());
@@ -171,18 +176,6 @@ public class Server{
                       break;
                   }
               }
-             // console.log("Server stopped", "w");
-          } catch (Exception e) {
-              CLOSE();
-              if (attempt < 10) {
-                  System.err.println("[WARNING] "+e);
-                  attempt++;
-                  getIp();
-                  startNew();
-              }
-              System.out.println("[MESSAGE] Restart server with another IP");
-              reader = new ServerComReader();
-              reader.start();
-        }
+
     }
 }
