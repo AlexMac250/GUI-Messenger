@@ -126,7 +126,6 @@ public class Server{
         }
     }
     public static void getIp(){
-
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for(NetworkInterface intf : interfaces) {
