@@ -305,6 +305,7 @@ class Frames {
             GridBagLayoutManager(panel, textField, GridBagConstraints.HORIZONTAL, 0, 1, 1);
             GridBagLayoutManager(panel, butSendMessage, GridBagConstraints.CENTER, 1, 1, 1);
 
+
             textField.addActionListener(e -> {
                 System.out.println(MessageBox.getSize());
                 if (textField.getText().length() > 0) {
