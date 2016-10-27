@@ -211,7 +211,8 @@ class Frames {
             try {
                 currentFriend = null;
                 frame = new JFrame("NEOnline - Сообщения ("+Client.version+")");
-                frame.setSize(755, 500);
+
+                frame.setSize(755, 500);//596, 386
                 frame.setResizable(true);                                // FIXME: 20.09.16 resizable
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
@@ -219,7 +220,7 @@ class Frames {
                 scrollFriends = new JScrollPane(panFriends);
                 tabbedPane = new JTabbedPane();
                 tabbedPane.setBackground(Color.DARK_GRAY);
-                //createTab(null);
+                createTab(null);
 
                 panMainContent.setBackground(Color.DARK_GRAY);
                 contentPain.setBackground(Color.DARK_GRAY);
@@ -275,56 +276,77 @@ class Frames {
 
         //-----//
 
-        void createTab(Friend friend){
-            JPanel panel = new JPanel();
-            panel.setLayout(new GridBagLayout());
-            JTextPane MessageBox = new JTextPane();
-            JPanel panMessages = new JPanel();
-            JPanel panSendMessage = new JPanel();
-            JButton butSendMessage = new JButton("Отправить");
-            JTextField textField = new JTextField(30);
-            JScrollPane scrollMessage = new JScrollPane();
+        void createTab(Friend friend) {
+            try {
+                JPanel panel = new JPanel();
+                panel.setLayout(new GridBagLayout());
+                JTextPane MessageBox = new JTextPane();
+                JPanel panMessages = new JPanel();
+                JPanel panSendMessage = new JPanel();
+                JButton butSendMessage = new JButton("Отправить");
+                JTextField textField = new JTextField(45);
+                JScrollPane scrollMessage = new JScrollPane();
 
-            panMessages.setLayout(null);
-            MessageBox.setBounds(0, 0, 490, 280);
-            panMessages.add(MessageBox);
-            panMessages.setPreferredSize(new Dimension(468, 272));
-            createStyles(MessageBox);
-            MessageBox.setBackground(Color.GRAY);
-            MessageBox.setForeground(Color.WHITE);
-            scrollMessage.setBackground(Color.DARK_GRAY);
-            panSendMessage.setBackground(Color.DARK_GRAY);
+                if (friend == null) {
+                    JLabel lab = new JLabel(Client.account.friends.size() >= 1 ? "Выберете друга" : "У вас нет друзей :(");
+                    lab.setFont(new Font(FONT_style, Font.BOLD, 40));
+                    lab.setForeground(MAIN_COLOR);
+                    GridBagLayoutManager(panel, lab, GridBagConstraints.CENTER, 0, 0, 1);
+                    panel.setPreferredSize(new Dimension(468, 272));
+                    panel.setBackground(Color.DARK_GRAY);
+                    tabs.add(new Tab(scrollMessage, textField, butSendMessage, "Привет!", null));
+                } else {
 
-            scrollMessage.createVerticalScrollBar();
-            scrollMessage.getViewport().add(panMessages);
-            scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-            scrollMessage.setAutoscrolls(true);
+                    panMessages.setLayout(null);
+                    MessageBox.setBounds(0, 0, 490, 280);
+                    panMessages.add(MessageBox);
+                    panMessages.setPreferredSize(new Dimension(468, 272));
+                    createStyles(MessageBox);
+                    MessageBox.setBackground(Color.GRAY);
+                    MessageBox.setForeground(Color.WHITE);
+                    scrollMessage.setBackground(Color.DARK_GRAY);
+                    panSendMessage.setBackground(Color.DARK_GRAY);
 
-            panel.setLayout(new GridBagLayout());
-            GridBagLayoutManager(panel, scrollMessage, GridBagConstraints.CENTER, 0, 0, 2);
-            GridBagLayoutManager(panel, textField, GridBagConstraints.HORIZONTAL, 0, 1, 1);
-            GridBagLayoutManager(panel, butSendMessage, GridBagConstraints.CENTER, 1, 1, 1);
+                    scrollMessage.createVerticalScrollBar();
+                    scrollMessage.getViewport().add(panMessages);
+                    scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                    scrollMessage.setAutoscrolls(true);
 
+                    panel.setLayout(new GridBagLayout());
+                    GridBagLayoutManager(panel, scrollMessage, GridBagConstraints.CENTER, 0, 0, 2);
+                    GridBagLayoutManager(panel, textField, GridBagConstraints.HORIZONTAL, 0, 1, 1);
+                    GridBagLayoutManager(panel, butSendMessage, GridBagConstraints.HORIZONTAL, 1, 1, 1);
 
-            textField.addActionListener(e -> {
-                System.out.println(MessageBox.getSize());
-                if (textField.getText().length() > 0) {
-                    insertText(MessageBox, "\n--- " + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "] ----------------------\n", heading);
-                    insertText(MessageBox, textField.getText() + "\n", normal);
-                    Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
-                    textField.setText("");
+                    textField.addActionListener(e -> {
+                        System.out.println(frame.getSize());
+                        if (textField.getText().length() > 0) {
+                            insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "]\n", heading);
+                            insertText(MessageBox, textField.getText() + "\n", normal);
+                            Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
+                            textField.setText("");
+                        }
+                    });
+                    butSendMessage.addActionListener(e ->{
+                        if (textField.getText().length() > 0) {
+                            insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "\n", heading);
+                            insertText(MessageBox, textField.getText() + "\n", normal);
+                            Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
+                            textField.setText("");
+                        }
+                    });
+                    Dialog FDialog = null;
+//                    for (int i = 0; i < Client.dialogs.size(); i++) {
+//                        if (Client.dialogs.get(i).with.login.equals(friend.login)) {
+//                            FDialog = Client.dialogs.get(i);
+//                        }
+//                    }
+                    tabs.add(new Tab(scrollMessage, textField, butSendMessage, friend.login, FDialog));
                 }
-            });
-            butSendMessage.addActionListener(e -> send());
-            Dialog FDialog = null;
-//            for (int i = 0; i < Client.dialogs.size(); i++) {
-//                if (Client.dialogs.get(i).with.login.equals(friend.login)){
-//                    FDialog = Client.dialogs.get(i);
-//                }
-//            }
 
-            tabs.add(new Tab(scrollMessage, textField, butSendMessage, friend.login, FDialog));
-            tabbedPane.addTab(friend.login, panel);
+                tabbedPane.addTab(friend == null ? "Привет!" : friend.login, panel);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         private void createStyles(JTextPane editor) {
@@ -369,7 +391,6 @@ class Frames {
 
         }*/
 
-        private void buildPanMessages() {}
 
         void loadFriends() {
             panFriends.setLayout(new GridBagLayout());
@@ -432,10 +453,6 @@ class Frames {
 
         void setDialog(Friend friend) {
             currentFriend = friend;
-        }
-
-        private void send() {
-
         }
 
         @SuppressWarnings("ALL")   // FIXME: 24.09.16 delete WarningBloker
@@ -1062,7 +1079,7 @@ class Frames {
             try {
                 UIManager.setLookAndFeel("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
             } catch(Exception e) {
-                System.err.println("Error setting Motif LAF: " + e);
+                System.out.println("Error setting Motif LAF: " + e);
             }
         }
     }
