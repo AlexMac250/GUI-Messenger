@@ -163,7 +163,7 @@ public class ServerComReader extends Thread{
         }
         return s;
     }
-
+//test
     @Override
     public void run() {
         try {
