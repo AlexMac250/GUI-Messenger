@@ -127,7 +127,7 @@ public class ServerComReader extends Thread{
                         Server.console.log("Are u sure?(y/n)", "");
                         message = scanner.next();
                         message = message.toLowerCase();
-                        if (message.equals("y") & !Server.isClosed) {
+                        if (message.equals("y")) {
                             System.exit(0);
                             break;
                         } else {
@@ -174,7 +174,6 @@ public class ServerComReader extends Thread{
             try {
                 TimeUnit.MILLISECONDS.sleep(400);
             } catch (InterruptedException e) {
-                console.log(""+e,"exc");
                 interrupt();
             }
         while (!isExecuting) {
@@ -185,7 +184,6 @@ public class ServerComReader extends Thread{
                 try {
                 TimeUnit.MILLISECONDS.sleep(10);
                 } catch (InterruptedException e) {
-                    console.log(""+e,"exc");
                 interrupt();
                 }
             }
