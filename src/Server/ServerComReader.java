@@ -166,12 +166,13 @@ public class ServerComReader extends Thread{
 
     @Override
     public void run() {
+        try {
+            TimeUnit.MILLISECONDS.sleep(400);
+        } catch (InterruptedException e) {
+            interrupt();
+        }
+        System.out.println("Enter \"help\" for more info");
         while (!interrupted()){
-            try {
-                TimeUnit.MILLISECONDS.sleep(400);
-            } catch (InterruptedException e) {
-                interrupt();
-            }
         while (!isExecuting) {
             System.out.print("[ENTER COMMAND]: ");
             message = scanner.nextLine();
