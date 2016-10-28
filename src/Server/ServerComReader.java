@@ -15,6 +15,7 @@ public class ServerComReader extends Thread{
     private boolean isAdminLogged = false;
     Console console = new Console("Server-Console");
     boolean isExecuting = false;
+
     public void execute(String[] command){
         switch (command[0]){
 
