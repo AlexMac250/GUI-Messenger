@@ -145,10 +145,6 @@ public class ServerComReader extends Thread{
                     System.err.println("Not enough permissions >>> login as Admin");
                 }
                 break;
-
-            default :
-                console.log("Enter \"help\" for more information", "m");
-
         }
     }
 
