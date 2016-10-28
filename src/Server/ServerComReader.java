@@ -4,6 +4,7 @@ import ru.universum.Loader.Account;
 import ru.universum.Printer.Console;
 
 import java.sql.Time;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -69,10 +70,10 @@ public class ServerComReader extends Thread{
 
             case "showinfo" :
                 if(isAdminLogged) {
-                    console.log("Meta-inf about server :" + '\n'
+                    System.out.println("\nMeta-inf about server :" + '\n'
                             + "Connections : " + (Server.connections-40000) + '\n'
                             + "Users in base : " + (Account.idGL+1) + '\n'
-                            + "IP-ADDRESS OF SERVER - "+ Server.ip, "");
+                            + "IP-ADDRESS OF SERVER - "+ Server.mainSocket.getInetAddress().getHostAddress() +'\n');
                 }else {
                     System.err.println("Not enough permissions >>> login as Admin");
                 }
@@ -171,7 +172,7 @@ public class ServerComReader extends Thread{
     public void run() {
         while (!interrupted()){
             try {
-                TimeUnit.MILLISECONDS.sleep(200);
+                TimeUnit.MILLISECONDS.sleep(400);
             } catch (InterruptedException e) {
                 console.log(""+e,"exc");
                 interrupt();

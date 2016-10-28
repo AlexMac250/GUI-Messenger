@@ -132,8 +132,9 @@ public class Server{
             for(NetworkInterface intf : interfaces) {
                 List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
                 for(InetAddress ipAddress : addrs){
-                    if(!ipAddress.isLoopbackAddress() & !ipAddress.isLinkLocalAddress()){
+                    if(!ipAddress.isLoopbackAddress() & !ipAddress.getHostAddress().contains("192.168")){
                         ip = ipAddress.getAddress();
+                        break;
                     }
                 }
             }
