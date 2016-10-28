@@ -245,6 +245,8 @@ class Frames {
             initial();
             loadFriends();
             frame.setVisible(true);
+            frame.setVisible(false);
+            frame.setVisible(true);
         }
 
         @Override

@@ -195,6 +195,8 @@ public class Client {
                         Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
                         Frames.MainFrame.getFrame().repaint();
+                        Frames.MainFrame.getFrame().setVisible(false);
+                        Frames.MainFrame.getFrame().setVisible(true);
                         break;
                     }
                 }
@@ -207,6 +209,8 @@ public class Client {
                         Frames.MainFrame.panFriends.removeAll();
                         Frames.MainFrame.loadFriends();
                         Frames.MainFrame.getFrame().repaint();
+                        Frames.MainFrame.getFrame().setVisible(false);
+                        Frames.MainFrame.getFrame().setVisible(true);
                         break;
                     }
                 }
