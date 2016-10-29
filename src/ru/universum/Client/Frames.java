@@ -320,18 +320,18 @@ class Frames {
                     butSendMessage.addActionListener(e -> sendMessage(textField, MessageBox));
 
                     Dialog FDialog = null; //FIXME!!!
-//                    try {
-//                        if (Client.dialogs.size() > 0) {
-//                            for (int i = 0; i < Client.dialogs.size(); i++) {
-//                                if (Client.dialogs.get(i).dialogWith.login.equals(friend.login)) {
-//                                    FDialog = Client.dialogs.get(i);
-//                                }
-//                            }
-//                            tabs.add(new Tab(scrollMessage, textField, butSendMessage, friend.login, FDialog));
-//                        }
-//                    } catch (Exception e){
-//                        console.log(""+e, "exc");
-//                    }
+                    try {
+                        if (Client.dialogs.size() > 0) {
+                            for (int i = 0; i < Client.dialogs.size(); i++) {
+                                if (Client.dialogs.get(i).dialogWith.login.equals(friend.login)) {
+                                    FDialog = Client.dialogs.get(i);
+                                }
+                            }
+                            tabs.add(new Tab(scrollMessage, textField, butSendMessage, friend.login, FDialog));
+                        }
+                    } catch (Exception e){
+                        console.log(""+e, "exc");
+                    }
                 }
 
                 tabbedPane.addTab(friend == null ? "Привет!" : friend.login, panel);

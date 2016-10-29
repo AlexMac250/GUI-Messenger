@@ -2,7 +2,7 @@ package ru.universum.Loader;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@SuppressWarnings("ALL")
 public class FileLoader {
     static File file = new File(System.getProperty("user.home")+"/"+"Accounts(NEOnline).txt");
 

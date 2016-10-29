@@ -4,10 +4,10 @@ import ru.universum.Loader.Friend;
 
 import java.util.Scanner;
 
-public class BASH extends Thread{
+class BASH extends Thread{
 
-    Frames Frames = new Frames();
-    Scanner scan = new Scanner(System.in);
+    private Frames Frames = new Frames();
+    private Scanner scan = new Scanner(System.in);
     @Override
     public void run() {
         System.out.println("BASH v1.0");
@@ -61,7 +61,7 @@ public class BASH extends Thread{
                         Client.execute(line);
                     } else {
                         if (ans.equals("n")){
-                            System.out.println("Okay, bro! ;-)");
+                            System.out.println("Okay, bro! ;)");
                         }
                     }
                 }
@@ -74,7 +74,7 @@ public class BASH extends Thread{
                 break;
 
             case "egg":
-                System.out.println("||\\  || ||̄ ̄ ̄ ̄  \n||\\\\ || ||____\n|| \\\\|| ||̄ ̄ ̄ ̄ \n||  \\|| ||____");
+                System.out.println("\n||\\  || ||̄ ̄ ̄ ̄  //̄ ̄ ̄ ̄ \\\\\n||\\\\ || ||____ ||    ||\n|| \\\\|| ||̄ ̄ ̄ ̄  ||    ||\n||  \\|| ||____ \\\\____//nline\n\nHave a nice day, bro! ;)\n");
                 break;
 
             case "ipconfig":
@@ -92,7 +92,7 @@ public class BASH extends Thread{
         System.out.print(">> ");
     }
 
-    public static String[] decrypt(String message){
+    private static String[] decrypt(String message){
         String[] s = new String[4];
         char[] c = message.toCharArray();
         int i = 0;

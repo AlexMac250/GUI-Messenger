@@ -1,4 +1,4 @@
-package ru.universum.Client;
+package ru.universum.Loader;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

@@ -4,10 +4,10 @@ import ru.universum.Loader.Command;
 import ru.universum.Loader.Friend;
 import ru.universum.Loader.Message;
 
-public class Answer {
-    int idOf = 0;
-    String answer = "";
-    WorkingServ serv;
+class Answer {
+    private int idOf = 0;
+    private String answer = "";
+    private WorkingServ serv;
 
     public Answer(int idOf, String answer, WorkingServ serv) {
         this.serv = serv;

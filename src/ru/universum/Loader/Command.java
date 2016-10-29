@@ -3,10 +3,10 @@ package ru.universum.Loader;
 import java.util.List;
 
 public class Command {
-    String toDo;
-    final String from = "server";
-    String[] args;
-    String arg;
+    private String toDo;
+    private final String from = "server";
+    private String[] args;
+    private String arg;
 
     public Command(String toDo, String[] args) {
         this.toDo = toDo;

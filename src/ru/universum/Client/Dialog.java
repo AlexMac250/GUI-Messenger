@@ -4,14 +4,14 @@ import ru.universum.Loader.Friend;
 
 import java.util.ArrayList;
 import java.util.List;
+@SuppressWarnings("ALL")
+class Dialog {
 
-public class Dialog {
-
-    public Dialog(Friend dialogWith) {
+    Dialog(Friend dialogWith) {
         this.dialogWith = dialogWith;
     }
 
-    public void addMes(ClientMessage clientMessage){
+    void addMes(ClientMessage clientMessage){
         messages.add(clientMessage);
     }
 
