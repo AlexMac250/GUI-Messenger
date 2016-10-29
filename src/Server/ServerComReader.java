@@ -1,10 +1,13 @@
 package Server;
 
+import ru.universum.Client.Security;
 import ru.universum.Loader.Account;
 import ru.universum.Printer.Console;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.sql.Time;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -45,19 +48,19 @@ public class ServerComReader extends Thread{
             isExecuting = false;
             break;
 
-        case "login" :
-            isExecuting = true;
-            if(command[1].equals("admin")){
-                Account acc = Server.logIn("admin" , command[2]);
-                if(acc != null& !isAdminLogged){
-                    isAdminLogged = true;
-                    console.log("Admin logged in", "m");
-                }else{
-                    console.log("Error logging in console", "err");
+            case "login" :
+                isExecuting = true;
+                if(command[1].equals("admin")){
+                    Account acc = Server.logIn("admin" , Security.getMD5(command[2].toCharArray()));
+                    if(acc != null& !isAdminLogged){
+                        isAdminLogged = true;
+                        console.log("Admin logged in", "m");
+                    }else{
+                        console.log("Error logging in console", "err");
+                    }
                 }
-            }
-            isExecuting = false;
-            break;
+                isExecuting = false;
+                break;
 
         case "out" :
             isExecuting = true;
