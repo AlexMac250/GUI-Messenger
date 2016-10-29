@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogCase {
-    private static boolean isShowingLogs = false;
+    private static boolean isShowingLogs = System.getProperty("os.name").equals("Linux");
     static List<Log> logs = new ArrayList<>();
 
     public static void offLogs(){
@@ -21,7 +21,7 @@ public class LogCase {
             else System.out.println(log.toString());
     }
 
-    public static void showLogs (){
+    public static void showLogs(){
         for (Log log : logs){
             System.out.println(log);
         }
@@ -36,7 +36,7 @@ public class LogCase {
             } else {
                 howMuch = logs.size()- 1 - howMuch;
             }
-            onWhichLog = logs.size()-1-howMuch;
+            onWhichLog = logs.size() - 1 - howMuch;
             System.out.println(logs.get(onWhichLog).toString());
             }
         }
