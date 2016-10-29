@@ -25,7 +25,7 @@ public class Client {
 
     static final boolean NODATE = false;
     static final boolean DATED = true;
-    static String HOSTNAME = "fe80:0:0:0:d861:357:c136:b99a";
+    static String HOSTNAME = "25.55.87.69";
 
     static Account account = new Account();
 
@@ -244,8 +244,13 @@ public class Client {
                 break;
 
             case "user" :
-                usersInSearch.add(new Account(command[1]/*+(command[1].equals(account.login) ? " (Вы)" : "")*/,Integer.parseInt(command[2]),Boolean.parseBoolean(command[3])));
-                System.out.println(usersInSearch.get(usersInSearch.size()-1).login + " " + usersInSearch.get(usersInSearch.size()-1).id);
+                if(!command[1].equals("null")) {
+                    usersInSearch.add(new Account(command[1]/*+(command[1].equals(account.login) ? " (Вы)" : "")*/, Integer.parseInt(command[2]), Boolean.parseBoolean(command[3])));
+                    System.out.println(usersInSearch.get(usersInSearch.size() - 1).login + " " + usersInSearch.get(usersInSearch.size() - 1).id);
+                }
+                else{
+                    //FIXME если не нашел юзера то тут надо это обыграть
+                }
                 break;
 
             case "findByNick" :

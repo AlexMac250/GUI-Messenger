@@ -56,6 +56,7 @@ public class Intellect extends Thread{
 
     private void execute(String[] command){
         int i = 0;
+
         switch (command[0]){
             case "send":
                 if(Server.accs.get(Integer.parseInt(command[1])).isOnline){
@@ -69,19 +70,24 @@ public class Intellect extends Thread{
                     sendOffline(new Message("message", command[1] , command[2], command[3]) , to);
                 }
                 break;
+
             case "login":
                 serv.execute(command);
                 acc = serv.acc;
                 break;
+
             case "register" :
                 serv.execute(command);
                 break;
+
             case "addFriend" :
                 serv.execute(command);
                 break;
+
             case "resOfFriend" :
                 answers.add(new Answer(Integer.parseInt(command[1]),command[2],serv));
                 break;
+
             case "getUsers":
                 GettingUsers = 0;
                 for(Account account : Server.accs){
@@ -98,6 +104,7 @@ public class Intellect extends Thread{
                     }
                 }
                 break;
+
             case "get20More" :
                 for(i = GettingUsers;i<=GettingUsers+20;i++){
                     if(i<=Server.accs.size()-1) {
@@ -109,10 +116,13 @@ public class Intellect extends Thread{
                 }
                 GettingUsers+=20;
                 break;
-            case "findByNick" :
+
+            case "findByNick":
                 for(Account account :Server.accs){
                     if(account.login.equals(command[1])){
                         serv.send(new Command("user", new String[]{account.login, String.valueOf(account.id) , String.valueOf(account.isOnline)}));
+                    }else{
+                        serv.send(new Command("user","null"));
                     }
                 }
                 break;

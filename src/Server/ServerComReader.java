@@ -3,19 +3,18 @@ package Server;
 import ru.universum.Loader.Account;
 import ru.universum.Printer.Console;
 
-import java.sql.Time;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class ServerComReader extends Thread{
-    String message = "";
-    Scanner scanner = new Scanner(System.in);
+class ServerComReader extends Thread{
+    private String message = "";
+    private Scanner scanner = new Scanner(System.in);
     private boolean isAdminLogged = false;
-    Console console = new Console("Server-Console");
-    boolean isExecuting = false;
-    public void execute(String[] command){
+    private Console console = new Console("Server-Console");
+    private boolean isExecuting = false;
+
+    private void execute(String[] command){
         switch (command[0]){
 
             case "stop" :
@@ -93,12 +92,12 @@ public class ServerComReader extends Thread{
                         try {
                             System.out.println("Server restarts in " + (3-i));
                             TimeUnit.SECONDS.sleep(1);
-                        } catch (InterruptedException e) {}
+                        } catch (InterruptedException e) {interrupt();}
                     }
                 try {
                     if (System.getProperty("os.name").equals("Windows")) new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
                     if (System.getProperty("os.name").equals("Linux")) new ProcessBuilder("terminal", "clear").inheritIO().start().waitFor();
-                } catch (Exception e) {}
+                } catch (Exception ignored) {}
                 Server.startNew();
                 }
                 break;
@@ -148,7 +147,7 @@ public class ServerComReader extends Thread{
         }
     }
 
-    public String[] descript(String message){
+    private String[] descript(String message){
         String[] s = new String[4];
         char[] c = message.toCharArray();
         int i = 0;
@@ -175,6 +174,7 @@ public class ServerComReader extends Thread{
         while (!interrupted()){
         while (!isExecuting) {
             System.out.print("[ENTER COMMAND]: ");
+
             message = scanner.nextLine();
             message = message.toLowerCase();
             execute(descript(message));
