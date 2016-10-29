@@ -40,6 +40,10 @@ public class Console {
                 System.err.println("[EXCEPTION] ("+getDateNow()+") "+str+": "+message);
                 break;
 
+            default:
+                System.err.println("["+type+"] ("+getDateNow()+") "+str+": "+message);
+                break;
+
         }
     }
 }

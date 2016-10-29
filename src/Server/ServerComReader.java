@@ -3,6 +3,8 @@ package Server;
 import ru.universum.Loader.Account;
 import ru.universum.Printer.Console;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.sql.Time;
 import java.util.Arrays;
 import java.util.Objects;
@@ -89,7 +91,11 @@ public class ServerComReader extends Thread{
             case "ip" :
                 isExecuting = true;
                 if(isAdminLogged) {
-                    Server.ip = command[1].getBytes();
+                    try {
+                        Server.ADDRESS = InetAddress.getByName(command[1]);
+                    } catch (UnknownHostException e) {
+                        console.log(""+e, "exc");
+                    }
                     for(int i = 0 ; i<3 ; i++){
                         try {
                             System.out.println("Server restarts in " + (3-i));

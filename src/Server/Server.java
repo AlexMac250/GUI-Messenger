@@ -1,5 +1,6 @@
 package Server;
 
+import ru.universum.Client.Security;
 import ru.universum.Loader.Account;
 import ru.universum.Loader.FileLoader;
 import ru.universum.Loader.Friend;
@@ -21,7 +22,7 @@ public class Server{
     static boolean isClosed = false;
     static int portlocal = 0;
     static DataOutputStream os;
-    static byte[] ip;
+    static InetAddress ADDRESS;
     static ServerComReader reader = new ServerComReader();
 
     public static List<WorkingServ> getActive() {
@@ -125,22 +126,32 @@ public class Server{
             console.log("Server stopped", "w");
         }
     }
-    public static void getIp(){
 
+    public static void setAddress() {
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
             for(NetworkInterface intf : interfaces) {
+                System.out.println("("+intf.getName()+"):---");
                 List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
                 for(InetAddress ipAddress : addrs){
-                    if(!ipAddress.isLoopbackAddress() & !ipAddress.getHostAddress().contains("192.168")){
-                        ip = ipAddress.getAddress();
+                    if(!ipAddress.isLoopbackAddress() & !ipAddress.isLinkLocalAddress()){
+                        ADDRESS = ipAddress;
                         break;
                     }
+                    System.out.println("IP: "+ipAddress.getHostAddress());
                 }
+                System.out.println("---");
             }
         }catch (Exception e) {
-            console.log("No connection! SysAdmin -- \"Debil\" (\"Дебил\")", "w");
-            ip = "localhost".getBytes();
+            console.log(""+e, "exc");
+        }
+    }
+
+    public static void setAddress(String addr){
+        try {
+            ADDRESS = InetAddress.getByName(addr);
+        } catch (UnknownHostException e) {
+            console.log(""+e, "exc");
         }
     }
 
@@ -163,7 +174,7 @@ public class Server{
     public static void start() {
         Account.idGL = accs.size()-1;
           try {
-              mainSocket = new ServerSocket(2905,0,InetAddress.getByAddress(ip));
+              mainSocket = new ServerSocket(2905, 0, ADDRESS);
               console.log("started on " + mainSocket.getInetAddress().getHostAddress(), "m");
           } catch (Exception e1) {
               CLOSE();

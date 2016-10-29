@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 class Frames {
+    @SuppressWarnings("ALL")
     private final String STYLE_heading = "heading";
     @SuppressWarnings("ALL")
     private final String STYLE_normal  = "normal";
@@ -27,7 +28,7 @@ class Frames {
     RegisterFrame RegisterFrame = new RegisterFrame();
     private AboutFrame AboutFrame = new AboutFrame();
     MainFrame MainFrame = new MainFrame();
-    SettingsFrame SettingsFrame = new SettingsFrame();
+    private SettingsFrame SettingsFrame = new SettingsFrame();
 
     private class MainMenuFrame extends AbstractFrame {
         private JFrame frame;
@@ -76,7 +77,7 @@ class Frames {
 
             butLogin.addActionListener(e -> LoginFrame.showFrame());
             butRegister.addActionListener(e -> RegisterFrame.showFrame());
-            butSettings.addActionListener(e -> SettingsFrame.showFrame()); // FIXME: 25.09.16 CODE SETTINGS
+            butSettings.addActionListener(e -> SettingsFrame.showFrame());
             butAbout.addActionListener(e -> AboutFrame.showFrame());
         }
 
@@ -190,13 +191,6 @@ class Frames {
         Style normal = null; // стиль текста
         JTabbedPane tabbedPane;
         ArrayList<Tab> tabs = new ArrayList<>();
-//            private final String[][] TEXT = {
-//                {"                                                                                                                    ", "heading"},
-//                {"\r\n                                               ", "normal"},
-//                {"\nВыберете друга", "heading"},
-//                {"\r\n                                               ", "normal"},
-//                {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}, {"\n", "normal"}};
-//        // FIXME: 30.08.16 ПОФИКСИТЬ КОСТЫЛЬ
         private JFrame frame;
         private Container contentPain;
         JPanel panFriends;
@@ -211,8 +205,8 @@ class Frames {
             try {
                 currentFriend = null;
                 frame = new JFrame("NEOnline - Сообщения ("+Client.version+")");
-
-                frame.setSize(755, 500);//596, 386
+                if (System.getProperty("os.name").equals("Linux")) frame.setSize(799, 368);
+                else if (System.getProperty("os.name").equals("Windows")) frame.setSize(596, 386); //755, 500
                 frame.setResizable(true);                                // FIXME: 20.09.16 resizable
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
@@ -856,44 +850,60 @@ class Frames {
         JButton butNativeJLeF;
         JButton butStandartJLeF;
         JButton butMotifJLeF;
+        JToolBar toolBar;
+
         @Override
         public void initial() {
             dialog = new JDialog(MainMenuFrame.frame, "Настройки", true);
             dialog.setLayout(new GridBagLayout());
-            dialog.setResizable(false);
+            dialog.setResizable(true);
             dialog.getContentPane().setBackground(Color.DARK_GRAY);
+            toolBar = new JToolBar("Стиль оформления");
+            toolBar.setLayout(new GridBagLayout());
+            toolBar.setBackground(Color.DARK_GRAY);
             JLabel info = new JLabel("Стили оформления окна");
             info.setFont(new Font(FONT_style, Font.BOLD, 20));
             info.setForeground(MAIN_COLOR);
-            JButton butClose = new JButton("Закрыть");
+            JButton butClose = new JButton("Применить");
             butNativeJLeF = new JButton("Системный стиль");
             butStandartJLeF = new JButton("Java стиль");
             butMotifJLeF = new JButton("Motif стиль");
-            GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 0, 1);
-            GridBagLayoutManager(dialog, butNativeJLeF, GridBagConstraints.HORIZONTAL, 0, 1, 1);
-            GridBagLayoutManager(dialog, butStandartJLeF, GridBagConstraints.HORIZONTAL, 0, 2, 1);
-            GridBagLayoutManager(dialog, butMotifJLeF, GridBagConstraints.HORIZONTAL, 0, 3, 1);
-            GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 4, 1);
+            GridBagLayoutManager(dialog, toolBar, GridBagConstraints.CENTER, 0, 0, 1);
+            GridBagLayoutManager(toolBar, butNativeJLeF, GridBagConstraints.HORIZONTAL, 0, 0, 1);
+            GridBagLayoutManager(toolBar, butStandartJLeF, GridBagConstraints.HORIZONTAL, 0, 1, 1);
+            GridBagLayoutManager(toolBar, butMotifJLeF, GridBagConstraints.HORIZONTAL, 0, 2, 1);
+            GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 1, 1);
+
+
+
             butNativeJLeF.addActionListener(e -> {
                 dialog.dispose();
                 WindowUtilities.setNativeLookAndFeel();
                 showFrame();
             });
+
             butStandartJLeF.addActionListener(e -> {
                 dialog.dispose();
                 WindowUtilities.setJavaLookAndFeel();
                 showFrame();
             });
+
             butMotifJLeF.addActionListener(e -> {
                 dialog.dispose();
                 WindowUtilities.setMotifLookAndFeel();
                 showFrame();
             });
+
             butClose.addActionListener(e -> {
-                dialog.dispose();
+                LoginFrame.dispose();
+                RegisterFrame.dispose();
+                SettingsFrame.dispose();
+                MainMenuFrame.dispose();
+                startGUI();
             });
 
             dialog.pack();
+            dialog.setSize(dialog.getWidth()+40, dialog.getHeight()+30);
             dialog.setLocationRelativeTo(null);
         }
 

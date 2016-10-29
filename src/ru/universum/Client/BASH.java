@@ -35,10 +35,12 @@ public class BASH extends Thread{
 
             case "connect":
                 Client.connect();
+                break;
 
             case "login":
                 Client.login(line[1], line[2]);
                 break;
+
             case "addFriend":
                 Client.execute(new String[]{line[0],line[1], line[2]});
                 break;
@@ -48,11 +50,39 @@ public class BASH extends Thread{
                 break;
 
             case "findByNick":
-                Client.execute(line);
+                if (Client.statusConnected) Client.execute(line);
+                else {
+                    System.err.println("Not connected!");
+                    System.out.println("Connect? (y/n)");
+                    System.out.print("> ");
+                    String ans = new Scanner(System.in).next();
+                    if (ans.equals("y")){
+                        Client.connect();
+                        Client.execute(line);
+                    } else {
+                        if (ans.equals("n")){
+                            System.out.println("Okay, bro! ;-)");
+                        }
+                    }
+                }
+
                 break;
 
             case "editIP":
                 Client.HOSTNAME = line[1];
+                System.out.println("Modified IP: "+line[1]);
+                break;
+
+            case "egg":
+                System.out.println("||\\  || ||̄ ̄ ̄ ̄  \n||\\\\ || ||____\n|| \\\\|| ||̄ ̄ ̄ ̄ \n||  \\|| ||____");
+                break;
+
+            case "ipconfig":
+                System.out.println("IP configuration:");
+                System.out.println((Client.HOSTNAME.contains(":") ? "IPv6: " : "IPv4: ")+Client.HOSTNAME);
+                System.out.println("MainPort: 2905");
+                System.out.println("PrivatePort: "+Client.port);
+                System.out.println();
                 break;
 
             default:
