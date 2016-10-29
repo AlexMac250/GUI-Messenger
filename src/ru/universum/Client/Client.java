@@ -257,7 +257,7 @@ public class Client {
     public static void addFriend(String[] args){
         if(!Objects.equals(args[2], "null")){
             account.friends.add(new Friend(Integer.parseInt(args[2]),args[3]));
-            dialogs.put(Integer.parseInt(args[2]),new Dialog(account.friends.get(account.friends.size()-1)));
+            dialogs.put(Integer.parseInt(args[2]), new Dialog(account.friends.get(account.friends.size()-1)));
         }else{
             console.log("No friends", "m");
         }
