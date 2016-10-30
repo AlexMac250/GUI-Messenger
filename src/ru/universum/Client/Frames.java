@@ -2,6 +2,7 @@ package ru.universum.Client;
 
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Friend;
+import ru.universum.Printer.Console;
 
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
@@ -22,6 +23,8 @@ class Frames {
     private final String STYLE_normal  = "normal";
     private final String FONT_style    = "Trebuchet MS";
     private final Color MAIN_COLOR = new Color(69, 151, 249);
+
+    private Console console = new Console("Frames");
 
     private MainMenuFrame MainMenuFrame = new MainMenuFrame();
     LoginFrame LoginFrame = new LoginFrame();
@@ -313,30 +316,22 @@ class Frames {
                     GridBagLayoutManager(panel, textField, GridBagConstraints.HORIZONTAL, 0, 1, 1);
                     GridBagLayoutManager(panel, butSendMessage, GridBagConstraints.HORIZONTAL, 1, 1, 1);
 
-                    textField.addActionListener(e -> {
-                        System.out.println(frame.getSize());
-                        if (textField.getText().length() > 0) {
-                            insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "]\n", heading);
-                            insertText(MessageBox, textField.getText() + "\n", normal);
-                            Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
-                            textField.setText("");
+                    textField.addActionListener(e -> sendMessage(textField, MessageBox));
+                    butSendMessage.addActionListener(e -> sendMessage(textField, MessageBox));
+
+                    Dialog FDialog = null; //FIXME!!!
+                    try {
+                        if (Client.dialogs.size() > 0) {
+                            for (int i = 0; i < Client.dialogs.size(); i++) {
+                                if (Client.dialogs.get(i).dialogWith.login.equals(friend.login)) {
+                                    FDialog = Client.dialogs.get(i);
+                                }
+                            }
+                            tabs.add(new Tab(scrollMessage, textField, butSendMessage, friend.login, FDialog));
                         }
-                    });
-                    butSendMessage.addActionListener(e ->{
-                        if (textField.getText().length() > 0) {
-                            insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "\n", heading);
-                            insertText(MessageBox, textField.getText() + "\n", normal);
-                            Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
-                            textField.setText("");
-                        }
-                    });
-                    Dialog FDialog = null;
-//                    for (int i = 0; i < Client.dialogs.size(); i++) {
-//                        if (Client.dialogs.get(i).with.login.equals(friend.login)) {
-//                            FDialog = Client.dialogs.get(i);
-//                        }
-//                    }
-                    tabs.add(new Tab(scrollMessage, textField, butSendMessage, friend.login, FDialog));
+                    } catch (Exception e){
+                        console.log(""+e, "exc");
+                    }
                 }
 
                 tabbedPane.addTab(friend == null ? "Привет!" : friend.login, panel);
@@ -447,6 +442,15 @@ class Frames {
 
         }
 
+        void sendMessage(JTextField textField, JTextPane MessageBox){
+            if (textField.getText().length() > 0) {
+                insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "\n", heading);
+                insertText(MessageBox, textField.getText() + "\n", normal);
+                Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
+                textField.setText("");
+            }
+        }
+
         void setDialog(Friend friend) {
             currentFriend = friend;
         }
@@ -548,7 +552,7 @@ class Frames {
             });
 
 
-            registerBut.addActionListener(e -> {        // FIXME: 30.08.16 ДОБАВИТЬ MD5 ШИФРОВАНИЕ
+            registerBut.addActionListener(e -> {
                         if (Security.getMD5(passwordField.getPassword()).equals(Security.getMD5(passwordField2.getPassword()))){
                             if (!Client.statusConnected)Client.connect();
                             Client.register(loginField.getText(), Security.getMD5(passwordField.getPassword()));
@@ -752,6 +756,7 @@ class Frames {
         }
 
         class SearchUsersTabel implements TableModel {
+            @SuppressWarnings("ALL")
             private Set<TableModelListener> listeners = new HashSet<>();
             ArrayList<Account> users = null;
 

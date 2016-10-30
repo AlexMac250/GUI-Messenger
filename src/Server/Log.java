@@ -1,7 +1,5 @@
 package Server;
 
-import java.util.Date;
-
 public class Log {
     String message;
 

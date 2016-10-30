@@ -77,7 +77,7 @@ public class ServerComReader extends Thread{
                 System.out.println("\nMeta-inf about server :" + '\n'
                         + "Connections : " + (Server.connections-40000) + '\n'
                         + "Users in base : " + (Account.idGL+1) + '\n'
-                        + "IP-ADDRESS OF SERVER - "+ Server.mainSocket.getInetAddress().getHostAddress() +'\n');
+                        + "IP-ADDRESS OF SERVER - "+ Server.ADDRESS.getHostAddress()+'\n');
             }else {
                 System.err.println("Not enough permissions >>> login as Admin");
             }
@@ -107,7 +107,6 @@ public class ServerComReader extends Thread{
                 }
                 try {
                     if (System.getProperty("os.name").equals("Windows")) new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-                    if (System.getProperty("os.name").equals("Linux")) new ProcessBuilder("terminal", "clear").inheritIO().start().waitFor();
                 } catch (Exception e) {interrupt();}
                 Server.startNew();
             }
@@ -168,6 +167,9 @@ public class ServerComReader extends Thread{
                     LogCase.showLastOf(Integer.parseInt(command[2]));
                     break;
             }
+            break;
+        case "ifaces":
+            System.out.println(Server.ifases);
             break;
         }
     }

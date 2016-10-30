@@ -7,8 +7,8 @@ import java.util.List;
 
 public class Dialog {
 
-    public Dialog(Friend with) {
-        this.with = with;
+    public Dialog(Friend dialogWith) {
+        this.dialogWith = dialogWith;
     }
 
     public void addMes(ClientMessage clientMessage){
@@ -19,6 +19,6 @@ public class Dialog {
         return messages.get(messages.size()-1);
     }
 
-    Friend with;
+    Friend dialogWith;
     List<ClientMessage> messages = new ArrayList<>();
 }

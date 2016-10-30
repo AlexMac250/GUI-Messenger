@@ -9,28 +9,29 @@ import java.net.*;
 import java.util.*;
 
 public class Server{
-     static ServerSocket mainSocket;
-     static Integer connections = 40000;
-     static ServerConsole console = new ServerConsole();
-     private static List<WorkingServ> active = new ArrayList<>();
-     static List<Account> accs = FileLoader.Import();
-     private static List<Integer> freePorts = new ArrayList<>();
-     static boolean isClosed = false;
-     private static int portlocal = 0;
-     static InetAddress ADDRESS;
-     static ServerComReader reader = new ServerComReader();
+    static ServerSocket mainSocket;
+    static Integer connections = 40000;
+    static ServerConsole console = new ServerConsole();
+    private static List<WorkingServ> active = new ArrayList<>();
+    static List<Account> accs = FileLoader.Import();
+    private static List<Integer> freePorts = new ArrayList<>();
+    static boolean isClosed = false;
+    private static int localport = 0;
+    static InetAddress ADDRESS;
+    static String ifases = null;
+    static ServerComReader reader = new ServerComReader();
 
     static List<WorkingServ> getActive() {
         return active;
     }
 
     private Server(Socket socket) throws IOException {
-        portlocal = getPort();
+        localport = getPort();
         DataOutputStream os = new DataOutputStream(socket.getOutputStream());
-        os.writeInt(portlocal);
+        os.writeInt(localport);
         os.close();
         socket.close();
-        active.add(new WorkingServ(portlocal));
+        active.add(new WorkingServ(localport));
     }
 
     static synchronized boolean addFriend(int id, Friend friend){
@@ -58,13 +59,13 @@ public class Server{
 
     private static synchronized int getPort(){
         if(freePorts.size()!=0){
-            portlocal = freePorts.get(0);
+            localport = freePorts.get(0);
             freePorts.remove(0);
         }
         else{
-            portlocal = connections;
+            localport = connections;
         }
-        return portlocal;
+        return localport;
     }
 
     static synchronized void closeConnection(int idOF){
@@ -93,7 +94,7 @@ public class Server{
     static synchronized Account logIn(String login, String password){
         Account a = null;
         for (Account acc: accs) {
-            if(Objects.equals(acc.login, login) && Objects.equals(acc.password, password)){//FIXME PASSWORD TO MD5!
+            if(Objects.equals(acc.login, login) && Objects.equals(acc.password, password)){
                 if(!acc.isOnline) {
                     a = acc;
                     acc.isOnline = true;
@@ -120,21 +121,32 @@ public class Server{
     }
 
     public static void setAddress() {
+        ifases = "\nINTERFACES:\n";
         try {
-        List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-        for(NetworkInterface intf : interfaces) {
-            List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-            for(InetAddress ipAddress : addrs){
-                if(!ipAddress.isLoopbackAddress() & !ipAddress.isLinkLocalAddress()){
-                    ADDRESS = ipAddress;
-                    break;
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for(NetworkInterface intf : interfaces) {
+                ifases += "\n("+intf.getName()+"):\n";
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for(InetAddress ipAddress : addrs){
+                    ifases += ipAddress.getHostAddress()+"\n";
+                    if(!ipAddress.isLoopbackAddress() & !ipAddress.isLinkLocalAddress()){
+                        ADDRESS = ipAddress;
+                        break;
+                    }
                 }
             }
-        }
-    }catch (Exception e) {console.log(""+e, "exc");
+        }catch (Exception e) {
+            console.log(""+e, "exc");
         }
     }
-
+    @SuppressWarnings("ALL")
+    public static void setAddress(String address) {
+        try {
+            ADDRESS = InetAddress.getByName(address);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
 
     static void startNew(){
         if(!isClosed){
@@ -146,7 +158,7 @@ public class Server{
         accs = FileLoader.Import();
         freePorts = new ArrayList<>();
         isClosed = false;
-        portlocal = 0;
+        localport = 0;
         reader = new ServerComReader();
         reader.start();
         start();
@@ -155,10 +167,11 @@ public class Server{
     static void start() {
         Account.idGL = accs.size()-1;
           try {
-              mainSocket = new ServerSocket(2905,0,ADDRESS);
-              console.log("started on " + mainSocket.getInetAddress().getHostAddress(), "m");
-          } catch (Exception e1) {
+              mainSocket = new ServerSocket(2905, 0, ADDRESS);
+              console.log("Started on " + mainSocket.getInetAddress().getHostAddress(), "m");
+          } catch (Exception e) {
               CLOSE();
+              console.log(""+e,"exc");
               System.out.println("[MESSAGE] Restart server with another IP");
           }
               while (!isClosed) {
@@ -167,8 +180,10 @@ public class Server{
                   }catch (Exception e){
                       CLOSE();
                       console.log("Connection lost", "w");
+                      console.log(""+e, "exc");
                       break;
                   }
               }
+
     }
 }
