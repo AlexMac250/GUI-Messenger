@@ -16,9 +16,11 @@ public class LogCase {
     }
 
     public static void putLog(Log log){
-        if(!isShowingLogs)
-            logs.add(log);
-            else System.out.println(log.toString());
+        if(!isShowingLogs) logs.add(log);
+            else {
+            System.out.println(log.toString());
+            System.out.print("[ENTER COMMAND]");
+        }
     }
 
     public static void showLogs (){

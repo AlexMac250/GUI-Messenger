@@ -52,12 +52,12 @@ public class Client {
             socket = new Socket(InetAddress.getByName(HOSTNAME), 2905);
             is = new DataInputStream(socket.getInputStream());
             port = is.readInt();
-            console.log("got port", "m");
+            System.out.println("got port");
             socket.close();
             is.close();
             TimeUnit.MILLISECONDS.sleep(150);
             socket = new Socket(InetAddress.getByName(HOSTNAME), port);
-            console.log("Connected to port " + port, "m");
+            System.out.println("Connected to port " + port);
             statusConnected = true;
             os = new DataOutputStream(socket.getOutputStream());
             is = new DataInputStream(socket.getInputStream());
