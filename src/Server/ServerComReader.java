@@ -3,18 +3,22 @@ package Server;
 import ru.universum.Loader.Account;
 import ru.universum.Printer.Console;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.sql.Time;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-class ServerComReader extends Thread{
-    private String message = "";
-    private Scanner scanner = new Scanner(System.in);
+public class ServerComReader extends Thread{
+    String message = "";
+    Scanner scanner = new Scanner(System.in);
     private boolean isAdminLogged = false;
-    private Console console = new Console("Server-Console");
-    private boolean isExecuting = false;
+    Console console = new Console("Server-Console");
+    boolean isExecuting = false;
 
-    private void execute(String[] command){
+    public void execute(String[] command){
         switch (command[0]){
 
             case "stop" :
@@ -87,17 +91,21 @@ class ServerComReader extends Thread{
             case "ip" :
                 isExecuting = true;
                 if(isAdminLogged) {
-                    Server.ip = command[1].getBytes();
+                    try {
+                        Server.ADDRESS = InetAddress.getByName(command[1]);
+                    } catch (UnknownHostException e) {
+                        console.log(""+e, "exc");
+                    }
                     for(int i = 0 ; i<3 ; i++){
                         try {
                             System.out.println("Server restarts in " + (3-i));
                             TimeUnit.SECONDS.sleep(1);
-                        } catch (InterruptedException e) {interrupt();}
+                        } catch (InterruptedException e) {}
                     }
                 try {
                     if (System.getProperty("os.name").equals("Windows")) new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
                     if (System.getProperty("os.name").equals("Linux")) new ProcessBuilder("terminal", "clear").inheritIO().start().waitFor();
-                } catch (Exception ignored) {}
+                } catch (Exception e) {}
                 Server.startNew();
                 }
                 break;
@@ -144,23 +152,10 @@ class ServerComReader extends Thread{
                     System.err.println("Not enough permissions >>> login as Admin");
                 }
                 break;
-            case "logs" :
-                switch (command[1]){
-                    case "off":
-                        LogCase.offLogs();
-                        break;
-                    case "on":
-                        LogCase.onLogs();
-                        break;
-                    case "showlast":
-                        LogCase.showLastOf(Integer.parseInt(command[2]));
-                        break;
-                }
-                break;
         }
     }
 
-    private String[] descript(String message){
+    public String[] descript(String message){
         String[] s = new String[4];
         char[] c = message.toCharArray();
         int i = 0;
@@ -187,7 +182,6 @@ class ServerComReader extends Thread{
         while (!interrupted()){
         while (!isExecuting) {
             System.out.print("[ENTER COMMAND]: ");
-
             message = scanner.nextLine();
             message = message.toLowerCase();
             execute(descript(message));

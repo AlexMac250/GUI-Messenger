@@ -43,6 +43,10 @@ public class Console {
                 LogCase.putLog(new Log("[EXCEPTION] ("+getDateNow()+") "+str+": "+message));
                 break;
 
+            default:
+                System.err.println("["+type+"] ("+getDateNow()+") "+str+": "+message);
+                break;
+
         }
     }
 }
