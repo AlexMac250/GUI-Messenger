@@ -144,6 +144,19 @@ class ServerComReader extends Thread{
                     System.err.println("Not enough permissions >>> login as Admin");
                 }
                 break;
+            case "logs" :
+                switch (command[1]){
+                    case "off":
+                        LogCase.offLogs();
+                        break;
+                    case "on":
+                        LogCase.onLogs();
+                        break;
+                    case "showlast":
+                        LogCase.showLastOf(Integer.parseInt(command[2]));
+                        break;
+                }
+                break;
         }
     }
 

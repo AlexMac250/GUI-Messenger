@@ -1,5 +1,8 @@
 package ru.universum.Printer;
 
+import Server.Log;
+import Server.LogCase;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -21,23 +24,23 @@ public class Console {
     public void log (String message, String type){
         switch (type){
             case "":// standard
-                System.out.println("("+getDateNow()+") "+str+": " + message);
+                LogCase.putLog(new Log("("+getDateNow()+") "+str+": " + message));
                 break;
 
             case "w":
-                System.err.println("[WARNING] ("+getDateNow()+") "+str+": "+message);
+                LogCase.putLog(new Log("[WARNING] ("+getDateNow()+") "+str+": "+message));
                 break;
 
             case "m":
-                System.out.println("[MESSAGE] ("+getDateNow()+") "+str+": "+message);
+                LogCase.putLog(new Log("[MESSAGE] ("+getDateNow()+") "+str+": "+message));
                 break;
 
             case "err":
-                System.err.println("[ERROR] ("+getDateNow()+") "+str+": "+message);
+                LogCase.putLog(new Log("[ERROR] ("+getDateNow()+") "+str+": "+message));
                 break;
 
             case "exc":
-                System.err.println("[EXCEPTION] ("+getDateNow()+") "+str+": "+message);
+                LogCase.putLog(new Log("[EXCEPTION] ("+getDateNow()+") "+str+": "+message));
                 break;
 
         }
