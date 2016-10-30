@@ -30,15 +30,16 @@ public class LogCase {
     }
 
     public static void showLastOf(int howMuch){
-        if(logs.size()!=0){
+        int size = logs.size();
+        if(size!=0){
         int onWhichLog;
         for (int i = 0; i < howMuch-1 ; i++) {
-            if (howMuch >= logs.size() - 1) {
-                howMuch = logs.size() - 1;
+            if (howMuch >= size - 1) {
+                howMuch = size - 1;
             } else {
-                howMuch = logs.size()- 1 - howMuch;
+                howMuch = size- 1 - howMuch;
             }
-            onWhichLog = logs.size()-1-howMuch;
+            onWhichLog = size-1-howMuch;
             System.out.println(logs.get(onWhichLog).toString());
             }
         }

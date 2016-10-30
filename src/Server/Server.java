@@ -1,10 +1,8 @@
 package Server;
 
-import ru.universum.Client.Security;
 import ru.universum.Loader.Account;
 import ru.universum.Loader.FileLoader;
 import ru.universum.Loader.Friend;
-import ru.universum.Printer.Console;
 
 import java.io.*;
 import java.net.*;
@@ -19,7 +17,7 @@ public class Server{
      private static List<Integer> freePorts = new ArrayList<>();
      static boolean isClosed = false;
      private static int portlocal = 0;
-    static InetAddress ADDRESS;
+     static InetAddress ADDRESS;
      static ServerComReader reader = new ServerComReader();
 
     static List<WorkingServ> getActive() {
@@ -125,18 +123,13 @@ public class Server{
         try {
         List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
         for(NetworkInterface intf : interfaces) {
-            //System.out.println("("+intf.getName()+"):---");
             List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-
             for(InetAddress ipAddress : addrs){
-
                 if(!ipAddress.isLoopbackAddress() & !ipAddress.isLinkLocalAddress()){
                     ADDRESS = ipAddress;
                     break;
                 }
-                //System.out.println("IP: "+ipAddress.getHostAddress());
             }
-            //System.out.println("---");
         }
     }catch (Exception e) {console.log(""+e, "exc");
         }
@@ -177,6 +170,5 @@ public class Server{
                       break;
                   }
               }
-
     }
 }

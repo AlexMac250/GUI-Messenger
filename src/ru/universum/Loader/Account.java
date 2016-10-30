@@ -54,5 +54,4 @@ public class Account {
         this.password = password;
         this.friends = friends;
     }
-
 }
