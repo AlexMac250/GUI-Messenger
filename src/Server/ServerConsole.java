@@ -5,8 +5,9 @@ import java.util.Date;
 
 public class ServerConsole {
     static Date date = new Date();
-    static SimpleDateFormat formatter;
-    String str;
+    static SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yy hh:mm:ss");;
+    String str = "SERVER";
+
     public static String getDateNow(){
         date = new Date();
         return formatter.format(date);
@@ -15,23 +16,23 @@ public class ServerConsole {
         switch (type){
 
             case "":// standard
-                LogCase.putLog(new Log("("+getDateNow()+") "+str+": " + message));
+                System.out.print(new Log("\n("+getDateNow()+") "+str+": " + message));
                 break;
 
             case "w":
-                LogCase.putLog(new Log("[WARNING] ("+getDateNow()+") "+str+": "+message));
+                System.out.print(new Log("\n[WARNING] ("+getDateNow()+") "+str+": "+message));
                 break;
 
             case "m":
-                LogCase.putLog(new Log("[MESSAGE] ("+getDateNow()+") "+str+": "+message));
+                System.out.print(new Log("\n[MESSAGE] ("+getDateNow()+") "+str+": "+message));
                 break;
 
             case "err":
-                LogCase.putLog(new Log("[ERROR] ("+getDateNow()+") "+str+": "+message));
+                System.out.print(new Log("\n[ERROR] ("+getDateNow()+") "+str+": "+message));
                 break;
 
             case "exc":
-                LogCase.putLog(new Log("[EXCEPTION] ("+getDateNow()+") "+str+": "+message));
+                System.out.print(new Log("\n[EXCEPTION] ("+getDateNow()+") "+str+": "+message));
                 break;
         }
     }

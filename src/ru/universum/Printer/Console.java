@@ -24,23 +24,27 @@ public class Console {
     public void log (String message, String type){
         switch (type){
             case "":// standard
-                LogCase.putLog(new Log("("+getDateNow()+") "+str+": " + message));
+                LogCase.putLog(new Log("\n("+getDateNow()+") "+str+": " + message));
+                System.out.print("[ENTER COMMAND]");
                 break;
 
             case "w":
-                LogCase.putLog(new Log("[WARNING] ("+getDateNow()+") "+str+": "+message));
+                LogCase.putLog(new Log("\n[WARNING] ("+getDateNow()+") "+str+": "+message));
+                System.out.print("[ENTER COMMAND]");
                 break;
 
             case "m":
-                LogCase.putLog(new Log("[MESSAGE] ("+getDateNow()+") "+str+": "+message));
+                LogCase.putLog(new Log("\n[MESSAGE] ("+getDateNow()+") "+str+": "+message));
+                System.out.print("[ENTER COMMAND]");
                 break;
 
             case "err":
-                LogCase.putLog(new Log("[ERROR] ("+getDateNow()+") "+str+": "+message));
+                LogCase.putLog(new Log("\n[ERROR] ("+getDateNow()+") "+str+": "+message));
+                System.out.print("[ENTER COMMAND]");
                 break;
 
             case "exc":
-                LogCase.putLog(new Log("[EXCEPTION] ("+getDateNow()+") "+str+": "+message));
+                LogCase.putLog(new Log("\n[EXCEPTION] ("+getDateNow()+") "+str+": "+message));
                 break;
 
             default:

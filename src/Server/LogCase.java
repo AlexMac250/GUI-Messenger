@@ -28,11 +28,17 @@ public class LogCase {
     }
 
     public static void showLastOf(int howMuch){
-        int onWhichLog =0;
-        for (int i = 0; i < howMuch ; i++){
-            //howMuch>logs.size()? howMuch = logs.size()-1 :  ;
-            onWhichLog = logs.size()-1-howMuch+i;
+        if(logs.size()!=0){
+        int onWhichLog;
+        for (int i = 0; i < howMuch-1 ; i++) {
+            if (howMuch >= logs.size() - 1) {
+                howMuch = logs.size() - 1;
+            } else {
+                howMuch = logs.size()- 1 - howMuch;
+            }
+            onWhichLog = logs.size()-1-howMuch;
             System.out.println(logs.get(onWhichLog).toString());
+            }
         }
     }
 }

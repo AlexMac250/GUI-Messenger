@@ -141,7 +141,7 @@ public class Intellect extends Thread{
                 serv.console.log("Got command " + message, "m");
                 execute(descript(message));
             } catch (IOException e) {
-                System.err.println("User disconnected " + "# " + (serv.port-40000));
+                System.err.println("\nUser disconnected " + "# " + (serv.port-40000));
                 interrupt();
             }
         }

@@ -12,13 +12,13 @@ import java.util.*;
 public class Server{
      static ServerSocket mainSocket;
      static Integer connections = 40000;
-     static Console console = new Console("server");
+     static ServerConsole console = new ServerConsole();
      private static List<WorkingServ> active = new ArrayList<>();
      static List<Account> accs = FileLoader.Import();
      private static List<Integer> freePorts = new ArrayList<>();
      static boolean isClosed = false;
      private static int portlocal = 0;
-     static byte[] ip;
+    static InetAddress ADDRESS;
      static ServerComReader reader = new ServerComReader();
 
     static List<WorkingServ> getActive() {
@@ -119,24 +119,28 @@ public class Server{
             console.log("Server stopped", "w");
         }
     }
-    static void getIp(){
 
+    public static void setAddress() {
         try {
-            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for(NetworkInterface intf : interfaces) {
-                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-                for(InetAddress ipAddress : addrs){
-                    if(!ipAddress.isLoopbackAddress() & !ipAddress.getHostAddress().contains("192.168")){
-                        ip = ipAddress.getAddress();
-                        break;
-                    }
+        List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+        for(NetworkInterface intf : interfaces) {
+            //System.out.println("("+intf.getName()+"):---");
+            List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+
+            for(InetAddress ipAddress : addrs){
+
+                if(!ipAddress.isLoopbackAddress() & !ipAddress.isLinkLocalAddress()){
+                    ADDRESS = ipAddress;
+                    break;
                 }
+                //System.out.println("IP: "+ipAddress.getHostAddress());
             }
-        }catch (Exception e) {
-            console.log("No connection! SysAdmin -- \"Debil\" (\"Дебил\")", "w");
-            ip = "localhost".getBytes();
+            //System.out.println("---");
+        }
+    }catch (Exception e) {console.log(""+e, "exc");
         }
     }
+
 
     static void startNew(){
         if(!isClosed){
@@ -157,7 +161,7 @@ public class Server{
     static void start() {
         Account.idGL = accs.size()-1;
           try {
-              mainSocket = new ServerSocket(2905,0,InetAddress.getByAddress(ip));
+              mainSocket = new ServerSocket(2905,0,ADDRESS);
               console.log("started on " + mainSocket.getInetAddress().getHostAddress(), "m");
           } catch (Exception e1) {
               CLOSE();
