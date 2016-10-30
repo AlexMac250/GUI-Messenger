@@ -301,7 +301,8 @@ class Frames {
                 JPanel panMessages = new JPanel();
                 JPanel panSendMessage = new JPanel();
                 JButton butSendMessage = new JButton("Отправить");
-                JTextField textField = new JTextField(25);
+                JTextField textField = new JTextField(Client.os_name.equals("Linux") ? 25 : 45);
+
                 JScrollPane scrollMessage = new JScrollPane();
 
                 if (friend == null) {
