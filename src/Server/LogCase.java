@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogCase {
-    private static boolean isShowingLogs = false;
+    private static boolean isShowingLogs = true;
     static List<Log> logs = new ArrayList<>();
 
     public static void offLogs(){

@@ -15,7 +15,13 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 @SuppressWarnings("ALL")
 public class Client {
-    static final String version = "version 0.5 alpha 1";
+    static final String java_version = System.getProperty("java.version");
+    static final String os_name = System.getProperty("os.name");
+    static final String os_arch = System.getProperty("os.arch");
+    static final String os_version = System.getProperty("os.version");
+    static final String user_home = System.getProperty("user.home");
+
+    static final String client_version = "version 1.0 alpha 1";
     static List<ClientMessage> messages = new ArrayList<>();
     static Socket socket;
     static int port;
@@ -42,7 +48,7 @@ public class Client {
     //FIXME update to Dialogs
 
     public static void main(String[] args) {
-        Frames.startGUI();
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {Frames.startGUI();}});
         new BASH().run();
     }
 

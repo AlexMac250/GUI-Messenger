@@ -1,6 +1,6 @@
 package ru.universum;
 
-import ru.universum.Client.Security;
+import ru.universum.Loader.Security;
 
 import javax.swing.*;
 

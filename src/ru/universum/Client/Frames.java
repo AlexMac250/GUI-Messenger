@@ -3,6 +3,7 @@ package ru.universum.Client;
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Friend;
 import ru.universum.Printer.Console;
+import ru.universum.Loader.Security;
 
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
@@ -25,6 +26,7 @@ class Frames {
     private final Color MAIN_COLOR = new Color(69, 151, 249);
 
     private Console console = new Console("Frames");
+    private String typeILAF = "NLAF";
 
     private MainMenuFrame MainMenuFrame = new MainMenuFrame();
     LoginFrame LoginFrame = new LoginFrame();
@@ -48,7 +50,18 @@ class Frames {
 
         @Override
         public void initial() {
-            WindowUtilities.setNativeLookAndFeel();
+            switch (typeILAF){
+                case "NLAF":
+                    WindowUtilities.setNativeLookAndFeel();
+                    break;
+                case "JLAF":
+                    WindowUtilities.setJavaLookAndFeel();
+                    break;
+                case "MLAF":
+                    WindowUtilities.setMotifLookAndFeel();
+                    break;
+            }
+
             frame = new JFrame("NEOnline");
             butLogin = new JButton("Войти");
             butRegister = new JButton("Регистрация");
@@ -56,6 +69,11 @@ class Frames {
             butAbout = new JButton("О программе");
             label = new JLabel("NEOnline");
             info = new JLabel("");
+
+            butLogin.setFocusable(false);
+            butRegister.setFocusable(false);
+            butSettings.setFocusable(false);
+            butAbout.setFocusable(false);
 
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.setLayout(new GridBagLayout());
@@ -73,9 +91,10 @@ class Frames {
             GridBagLayoutManager(frame, butSettings, GridBagConstraints.HORIZONTAL, 0, 6, 1);
             GridBagLayoutManager(frame, getEmptyLabel(2), GridBagConstraints.HORIZONTAL, 0, 7, 1);
             GridBagLayoutManager(frame, butAbout, GridBagConstraints.HORIZONTAL, 0, 8, 1);
-
-            frame.setSize(160, 185);
-            frame.setResizable(true);
+            int w = 160;
+            int h = Client.os_name.equals("Linux") ? 205 : 185;
+            frame.setResizable(false);
+            frame.setSize(w, h);
             frame.setLocationRelativeTo(null);
 
             butLogin.addActionListener(e -> LoginFrame.showFrame());
@@ -207,10 +226,9 @@ class Frames {
         public void initial() {
             try {
                 currentFriend = null;
-                frame = new JFrame("NEOnline - Сообщения ("+Client.version+")");
-                if (System.getProperty("os.name").equals("Linux")) frame.setSize(799, 368);
-                else if (System.getProperty("os.name").equals("Windows")) frame.setSize(596, 386); //755, 500
-                frame.setResizable(true);                                // FIXME: 20.09.16 resizable
+                frame = new JFrame("NEOnline - Сообщения ("+Client.client_version+")");
+                if (Client.os_name.equals("Linux")) frame.setSize(597, 409);
+                else if (Client.os_name.equals("Windows")) frame.setSize(596, 386); //755, 500
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
                 panMainContent = new JPanel();
@@ -283,7 +301,7 @@ class Frames {
                 JPanel panMessages = new JPanel();
                 JPanel panSendMessage = new JPanel();
                 JButton butSendMessage = new JButton("Отправить");
-                JTextField textField = new JTextField(45);
+                JTextField textField = new JTextField(25);
                 JScrollPane scrollMessage = new JScrollPane();
 
                 if (friend == null) {
@@ -321,13 +339,15 @@ class Frames {
 
                     Dialog FDialog = null; //FIXME!!!
                     try {
-                        if (Client.dialogs.size() > 0) {
+                        if (Client.dialogs.size() >= 1) {
                             for (int i = 0; i < Client.dialogs.size(); i++) {
                                 if (Client.dialogs.get(i).dialogWith.login.equals(friend.login)) {
                                     FDialog = Client.dialogs.get(i);
                                 }
                             }
                             tabs.add(new Tab(scrollMessage, textField, butSendMessage, friend.login, FDialog));
+                        } else {
+                            System.out.println("Нет диалогов");
                         }
                     } catch (Exception e){
                         console.log(""+e, "exc");
@@ -456,7 +476,14 @@ class Frames {
         }
 
         @SuppressWarnings("ALL")   // FIXME: 24.09.16 delete WarningBloker
-        private void buildMenuBar() {}
+        private void buildMenuBar() {
+            JMenuBar menuBar = new JMenuBar();
+            JMenuItem accMenu = new JMenuItem("Аккаунт");
+            JMenuItem butToMineMenu = new JMenuItem("Выйти в главное меню");
+            accMenu.add(butToMineMenu);
+            menuBar.add(accMenu);
+            frame.setJMenuBar(menuBar);
+        }
 
         JFrame getFrame() {
             return frame;
@@ -638,7 +665,7 @@ class Frames {
             fieldSearch.setForeground(Color.WHITE);
             fieldSearch.setBackground(Color.GRAY);
             fieldSend.setBackground(Color.GRAY);
-            fieldSend.setForeground(Color.WHITE);
+            fieldSend.setForeground(Color.DARK_GRAY);
             panSearch.setBackground(Color.DARK_GRAY);
             panSend.setBackground(Color.DARK_GRAY);
             labSearch.setForeground(Color.DARK_GRAY);
@@ -673,12 +700,11 @@ class Frames {
 
             dialog.setLocationRelativeTo(null);
 
-            butSearch.addActionListener(e -> findUsers(fieldSearch.getText()));
+            butSearch.addActionListener(e -> setInfo("К сожалению, данная функция в этой версии недоступна. Возможно, она появится в следующей версии. Приносим свои извенения!", Color.RED)/*findUsers(fieldSearch.getText())*/);
 
             butSend.addActionListener(e -> sendAddFriend());
 
             butUpdate.addActionListener(e -> {
-
                 Client.usersInSearch = new ArrayList<>();
                 Client.execute(new String[]{"getUsers","",""});
                 dispose();
@@ -873,30 +899,33 @@ class Frames {
             butNativeJLeF = new JButton("Системный стиль");
             butStandartJLeF = new JButton("Java стиль");
             butMotifJLeF = new JButton("Motif стиль");
-            GridBagLayoutManager(dialog, toolBar, GridBagConstraints.CENTER, 0, 0, 1);
+
+            butNativeJLeF.setFocusable(false);
+            butStandartJLeF.setFocusable(false);
+            butMotifJLeF.setFocusable(false);
+
+            GridBagLayoutManager(dialog, info, GridBagConstraints.HORIZONTAL, 0, 0, 1);
+            GridBagLayoutManager(dialog, getEmptyLabel(5), GridBagConstraints.HORIZONTAL, 0, 1, 1);
+            GridBagLayoutManager(dialog, toolBar, GridBagConstraints.CENTER, 0, 1, 1);
             GridBagLayoutManager(toolBar, butNativeJLeF, GridBagConstraints.HORIZONTAL, 0, 0, 1);
             GridBagLayoutManager(toolBar, butStandartJLeF, GridBagConstraints.HORIZONTAL, 0, 1, 1);
             GridBagLayoutManager(toolBar, butMotifJLeF, GridBagConstraints.HORIZONTAL, 0, 2, 1);
-            GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 1, 1);
-
-
+            GridBagLayoutManager(dialog, getEmptyLabel(5), GridBagConstraints.HORIZONTAL, 0, 3, 1);
+            GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 4, 1);
 
             butNativeJLeF.addActionListener(e -> {
-                dialog.dispose();
-                WindowUtilities.setNativeLookAndFeel();
-                showFrame();
+                info.setText("Нажмите применить");
+                typeILAF = "NLAF";
             });
 
             butStandartJLeF.addActionListener(e -> {
-                dialog.dispose();
-                WindowUtilities.setJavaLookAndFeel();
-                showFrame();
+                info.setText("Нажмите применить");
+                typeILAF = "JLAF";
             });
 
             butMotifJLeF.addActionListener(e -> {
-                dialog.dispose();
-                WindowUtilities.setMotifLookAndFeel();
-                showFrame();
+                info.setText("Нажмите применить");
+                typeILAF = "MLAF";
             });
 
             butClose.addActionListener(e -> {
@@ -904,6 +933,9 @@ class Frames {
                 RegisterFrame.dispose();
                 SettingsFrame.dispose();
                 MainMenuFrame.dispose();
+                MainMenuFrame = new MainMenuFrame();
+                LoginFrame = new LoginFrame();
+                RegisterFrame = new RegisterFrame();
                 startGUI();
             });
 
@@ -941,7 +973,8 @@ class Frames {
             JLabel creatorsLab = new JLabel("Создатели:");
             JLabel labZver = new JLabel("ZVER - Иван Кокорев                 (https://vk.com/vanian98)");
             JLabel labAlex = new JLabel("ALEX - Александр Василенко    (https://vk.com/aleksandr_vasilenko)");
-            JLabel labVersion = new JLabel(Client.version);
+            JLabel labClientVersion = new JLabel(Client.client_version);
+            JLabel labJavaVersion = new JLabel("Java version: "+Client.java_version);
             JButton butCl = new JButton("Закрыть");
 
             dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -951,12 +984,13 @@ class Frames {
 
             dialog.getContentPane().setBackground(Color.DARK_GRAY);
             text.setForeground(Color.WHITE);
-            label.setFont(new Font(FONT_style, Font.BOLD, 20));
+            label.setFont(new Font(FONT_style, Font.BOLD, 40));
             label.setForeground(MAIN_COLOR);
             creatorsLab.setForeground(new Color(106, 135, 89));
             labAlex.setForeground(new Color(255, 100, 25));
             labZver.setForeground(new Color(255, 100, 25));
-            labVersion.setForeground(new Color(37, 37, 37));
+            labClientVersion.setForeground(new Color(37, 37, 37));
+            labJavaVersion.setForeground(new Color(37, 37, 37));
 
             GridBagLayoutManager(dialog, label, GridBagConstraints.CENTER, 0, 0, 2);
             GridBagLayoutManager(dialog, empty, GridBagConstraints.HORIZONTAL, 0, 1, 2);
@@ -967,10 +1001,11 @@ class Frames {
             GridBagLayoutManager(dialog, labAlex, GridBagConstraints.HORIZONTAL, 0, 7, 2);
             GridBagLayoutManager(dialog, empty, GridBagConstraints.HORIZONTAL, 0, 8, 2);
             GridBagLayoutManager(dialog, butCl, GridBagConstraints.PAGE_END, 1, 9, 1);
-            GridBagLayoutManager(dialog, labVersion,GridBagConstraints.CENTER, 1, 10, 1);
-            labVersion.setBounds(0, 0, labVersion.getWidth(), labVersion.getHeight());
+            GridBagLayoutManager(dialog, labClientVersion,GridBagConstraints.CENTER, 1, 10, 1);
+            GridBagLayoutManager(dialog, labJavaVersion, GridBagConstraints.LINE_END, 1, 11, 1);
+            labClientVersion.setBounds(0, 0, labClientVersion.getWidth(), labClientVersion.getHeight());
 
-            dialog.setSize(522, 199);
+            dialog.setSize(522, 205);
             dialog.setResizable(false);
             dialog.setLocationRelativeTo(null);
             butCl.addActionListener(e -> dialog.dispose());
@@ -1070,12 +1105,6 @@ class Frames {
 
     private static class WindowUtilities {
 
-        /** Tell system to use native look and feel, as in previous
-         *  releases. Metal (Java) LAF is the default otherwise.
-         */
-
-
-        //is used in current application
         static void setNativeLookAndFeel() {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

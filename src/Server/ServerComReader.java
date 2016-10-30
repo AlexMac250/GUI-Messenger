@@ -1,13 +1,11 @@
 package Server;
 
-import ru.universum.Client.Security;
+import ru.universum.Loader.Security;
 import ru.universum.Loader.Account;
 import ru.universum.Printer.Console;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.sql.Time;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -197,7 +195,7 @@ public class ServerComReader extends Thread{
         } catch (InterruptedException e) {
             interrupt();
         }
-        System.out.println("Enter \"help\" for more info");
+        System.out.println("\nEnter \"help\" for more info");
         while (!interrupted()){
             while (!isExecuting) {
                 System.out.print("[ENTER COMMAND]: ");
