@@ -32,9 +32,12 @@ public class LogCase {
     public static void showLastOf(int howMuch){
         int size = logs.size();
         if(size!=0){
-        int onWhichLog;
         for (int i = 0; i < howMuch-1 ; i++) {
-
+            if(size-1-howMuch>0){
+                System.out.println(logs.get(logs.size()-1-howMuch));
+                }else{
+                break;
+            }
             }
         }
     }
