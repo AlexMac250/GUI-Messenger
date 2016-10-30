@@ -177,7 +177,7 @@ class Frames {
             setInfo("Входим...", Color.ORANGE);
             if (loginField.getText().length() > 1 & passwordField.getPassword().length > 1) {
                 if (!Client.statusConnected) Client.connect();
-                Client.login(loginField.getText(), passwordField.getText());
+                Client.login(loginField.getText(), Security.getMD5(passwordField.getPassword()));
             } else {
                 setInfo("Введите данные!", Color.RED);
             }
@@ -549,9 +549,9 @@ class Frames {
 
 
             registerBut.addActionListener(e -> {        // FIXME: 30.08.16 ДОБАВИТЬ MD5 ШИФРОВАНИЕ
-                        if (!passwordField.getText().contains("!") && !passwordField.getText().contains("@") && !passwordField.getText().contains("\"") && !passwordField.getText().contains("?")){
+                        if (Security.getMD5(passwordField.getPassword()).equals(Security.getMD5(passwordField2.getPassword()))){
                             if (!Client.statusConnected)Client.connect();
-                            Client.register(loginField.getText(), passwordField.getText());
+                            Client.register(loginField.getText(), Security.getMD5(passwordField.getPassword()));
                         }
                     }
             );
