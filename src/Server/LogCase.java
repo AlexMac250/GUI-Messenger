@@ -34,13 +34,7 @@ public class LogCase {
         if(size!=0){
         int onWhichLog;
         for (int i = 0; i < howMuch-1 ; i++) {
-            if (howMuch >= size - 1) {
-                howMuch = size - 1;
-            } else {
-                howMuch = size- 1 - howMuch;
-            }
-            onWhichLog = size-1-howMuch;
-            System.out.println(logs.get(onWhichLog).toString());
+
             }
         }
     }
