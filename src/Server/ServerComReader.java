@@ -175,6 +175,10 @@ class ServerComReader extends Thread{
                 case "ifaces":
                     System.out.println(Server.ifases);
                     break;
+
+                case "egg":
+                    System.out.println("\n||\\  || ||̄ ̄ ̄ ̄  //̄ ̄ ̄ ̄ \\\\\n||\\\\ || ||____ ||    ||\n|| \\\\|| ||̄ ̄ ̄ ̄  ||    ||\n||  \\|| ||____ \\\\____//nline Server\n\nHave a nice day, bro! ;)\n");
+                    break;
             }
         } catch (Exception ignored) {
 

@@ -16,10 +16,10 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("ALL")
 public class Client {
     static final String java_version = System.getProperty("java.version");
-    static final String os_name = System.getProperty("os.name");
+    public static final String os_name = System.getProperty("os.name");
     static final String os_arch = System.getProperty("os.arch");
     static final String os_version = System.getProperty("os.version");
-    static final String user_home = System.getProperty("user.home");
+    static final String user_home = System.getProperty("user.dir");
 
     static final String client_version = "version 1.0 alpha 1";
     static List<ClientMessage> messages = new ArrayList<>();
@@ -27,11 +27,12 @@ public class Client {
     static int port;
     static DataInputStream is;
     static DataOutputStream os;
+    static InputReader reader;
     static Console console = new Console("Client");
 
     static final boolean NODATE = false;
     static final boolean DATED = true;
-    static String HOSTNAME = "25.55.87.69";
+    static String HOSTNAME = "95.154.89.186";
 
     static Account account = new Account();
 
@@ -49,7 +50,7 @@ public class Client {
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {Frames.startGUI();}});
-        new BASH().run();
+        //new BASH().run();
     }
 
     public static void connect(){
@@ -68,12 +69,30 @@ public class Client {
             os = new DataOutputStream(socket.getOutputStream());
             is = new DataInputStream(socket.getInputStream());
             //читает входящие комманды
-            InputReader reader = new InputReader(is);
+            reader = new InputReader(is);
             reader.start();
         } catch (Exception e) {
             Frames.LoginFrame.setInfo("Нет соединения", Color.RED);
             Frames.RegisterFrame.setInfo("Нет соединения", Color.RED);
             console.log("No connection", "exc");
+            e.printStackTrace();
+        }
+    }
+
+    public static void disconnect(){
+        try {
+            is.close();
+            os.close();
+            socket.close();
+            reader.interrupt();
+            statusConnected = false;
+            port = 0;
+            account = new Account();
+            usersInSearch = new ArrayList<>();
+            messages = new ArrayList<>();
+            dialogs = new HashMap<>();
+            Frames = new Frames();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

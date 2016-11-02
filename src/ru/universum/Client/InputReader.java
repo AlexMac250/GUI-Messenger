@@ -3,14 +3,15 @@ package ru.universum.Client;
 import java.io.DataInputStream;
 
 public class InputReader extends Thread {
-    DataInputStream in;
-    String message = "";
+    private DataInputStream in;
+    public String commands = "";
+    private String message = "";
 
-    public InputReader(DataInputStream in) {
+    InputReader(DataInputStream in) {
         this.in = in;
     }
 
-    public void throwCommand(){
+    private void throwCommand(){
         Client.execute(Client.descript(message));
     }
 
@@ -19,7 +20,7 @@ public class InputReader extends Thread {
         while (!interrupted()){
             try {
                 message = in.readUTF();
-                Client.console.log("Got command " + message, "m");
+                commands += "\n" + message;
                 throwCommand();
             }catch (Exception e){
                 e.printStackTrace();

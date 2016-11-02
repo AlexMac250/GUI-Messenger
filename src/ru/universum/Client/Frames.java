@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
 class Frames {
     @SuppressWarnings("ALL")
     private final String STYLE_heading = "heading";
@@ -127,7 +128,7 @@ class Frames {
         private JTextField loginField;
         private JPasswordField passwordField;
         private JButton butLogin;
-        private JCheckBox checkBox;
+        private JCheckBox remAccData;
         private JLabel info;
         private JLabel label;
 
@@ -137,18 +138,20 @@ class Frames {
 
         @Override
         public void initial() {
+
             dialog = new JDialog(MainMenuFrame.frame, "Войти", true);
             loginField = new JTextField(15);
             passwordField = new JPasswordField(15);
             butLogin = new JButton("Войти");
-            checkBox = new JCheckBox("Запомнить");
+            remAccData = new JCheckBox("Не запоминать");
             info = new JLabel();
             label = new JLabel("Введите логин и пароль");
 
             label.setForeground(Color.WHITE);
-            checkBox.setForeground(Color.WHITE);
-            checkBox.setFocusable(false);
-            checkBox.setBackground(Color.DARK_GRAY);
+            remAccData.setForeground(Color.WHITE);
+            remAccData.setFocusable(false);
+            remAccData.setBackground(Color.DARK_GRAY);
+            remAccData.setSelected(Security.getRemData());
             loginField.setBackground(Color.GRAY);
             passwordField.setBackground(Color.GRAY);
             dialog.getContentPane().setBackground(Color.DARK_GRAY);
@@ -164,7 +167,7 @@ class Frames {
             GridBagLayoutManager(dialog, passwordField, GridBagConstraints.HORIZONTAL, 0, 3, 2);
             GridBagLayoutManager(dialog, getEmptyLabel(3), GridBagConstraints.HORIZONTAL, 0, 4, 2);
             GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 5, 2);
-            GridBagLayoutManager(dialog, checkBox, GridBagConstraints.CENTER, 0, 6, 1);
+            GridBagLayoutManager(dialog, remAccData, GridBagConstraints.CENTER, 0, 6, 1);
             GridBagLayoutManager(dialog, butLogin, GridBagConstraints.CENTER, 1, 6, 1);
 
             dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -175,6 +178,9 @@ class Frames {
             butLogin.addActionListener(e -> login());
             loginField.addActionListener(e -> login());
             passwordField.addActionListener(e -> login());
+            loginField.setText(Security.getUserLogin());
+            passwordField.setText(Security.getUserPass());
+            remAccData.setSelected(Security.getRemData());
         }
 
         @Override
@@ -195,7 +201,19 @@ class Frames {
             info.setText(message);
         }
 
+        private String getPass(){
+            String s = "";
+            for (char ch : passwordField.getPassword()) {
+                s += ch;
+            }
+            return s;
+        }
+
         private void login(){
+            if (!remAccData.isSelected()){
+                Security.setAboutUser(loginField.getText(), getPass());
+                Security.setRemData(remAccData.isSelected());
+            }
             setInfo("Входим...", Color.ORANGE);
             if (loginField.getText().length() > 1 & passwordField.getPassword().length > 1) {
                 if (!Client.statusConnected) Client.connect();
@@ -227,8 +245,6 @@ class Frames {
             try {
                 currentFriend = null;
                 frame = new JFrame("NEOnline - Сообщения ("+Client.client_version+")");
-                if (Client.os_name.equals("Linux")) frame.setSize(597, 409);
-                else if (Client.os_name.equals("Windows")) frame.setSize(596, 386); //755, 500
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
                 panMainContent = new JPanel();
@@ -247,6 +263,10 @@ class Frames {
                 GridBagLayoutManager(frame, scrollFriends, GridBagConstraints.FIRST_LINE_START, GridBagConstraints.HORIZONTAL, 0, 0, 1);
                 panMainContent.add(tabbedPane);
                 GridBagLayoutManager(frame, panMainContent, GridBagConstraints.CENTER, 1, 0, 1);
+                loadFriends();
+                buildMenuBar();
+
+                frame.setSize(Pack(frame, 15, 15));
 
                 frame.setLocationRelativeTo(null);
 
@@ -258,7 +278,6 @@ class Frames {
         @Override
         public void showFrame() {
             initial();
-            loadFriends();
             frame.setVisible(true);
             frame.setVisible(false);
             frame.setVisible(true);
@@ -284,8 +303,7 @@ class Frames {
             panel1.add(butOK, BorderLayout.EAST);
             frMess.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             butOK.addActionListener(e -> frMess.dispose());
-            frMess.pack();
-            frMess.setSize(frMess.getWidth() + 30, frMess.getHeight() + 10);
+            frMess.setSize(Pack(frMess, 30, 10));
             frMess.setLocationRelativeTo(null);
 
             frMess.setVisible(true);
@@ -406,37 +424,35 @@ class Frames {
 
         void loadFriends() {
             panFriends.setLayout(new GridBagLayout());
-
             scrollFriends.createVerticalScrollBar();
             scrollFriends.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
             scrollFriends.setSize(scrollFriends.getWidth(), contentPain.getHeight() - 2);
-            //scrollFriends.setMaximumSize(new Dimension(136, 391));
             panFriends.setBackground(Color.GRAY);
 
-            final int COUNTFRIENDS = Client.account.friends.size();
-            GridBagConstraints c = new GridBagConstraints();
-
             JLabel label = new JLabel();
-            if (COUNTFRIENDS != 0) label.setText("Друзья:");
-            else label.setText("У вас ещё нет друзей :(");
-            label.setForeground(Color.WHITE);
-            c.fill = GridBagConstraints.CENTER;
-            c.gridx = 1;
-            c.gridy = 0;
-            panFriends.add(label, c);
 
-            for (int i = 0; i < COUNTFRIENDS; i++) {
+            final int FRIENDS = Client.account.friends.size();
+
+            if (FRIENDS != 0) label.setText("Ваши друзья:");
+            else {
+                label.setText("Давайте дружить!");
+                label.setToolTipText("Нажмите кнопку \"+\" для показа списка пользователей!");
+            }
+            label.setForeground(Color.WHITE);
+            GridBagLayoutManager(panFriends, label, GridBagConstraints.CENTER, 1, 0, 1);
+
+            int i = 0;
+            for (Friend friend : Client.account.friends) {
                 int maxLength = 12;
 
-                String login = Client.account.friends.get(i).login;
+                String login = friend.login;
                 JButton button = new JButton();
                 if (login.length() > maxLength) {
                     button.setToolTipText(login);
                     login = login.substring(0, maxLength - 1) + "...";
                 }
                 button.setText(login);
-                currentFriend = Client.account.friends.get(i);
+                currentFriend = friend;
                 JCheckBox checkBoxOnline = new JCheckBox("", currentFriend.isOnline);
                 checkBoxOnline.setBackground(Color.GRAY);
                 checkBoxOnline.setEnabled(false);
@@ -446,22 +462,24 @@ class Frames {
 
                 GridBagLayoutManager(panFriends, checkBoxOnline, GridBagConstraints.CENTER, 0, i + 1, 1);
                 GridBagLayoutManager(panFriends, button, GridBagConstraints.HORIZONTAL, 1, i + 1, 1);
-                if (COUNTFRIENDS > 13)
+                if (FRIENDS > 13)
                     GridBagLayoutManager(panFriends, new JLabel("    "), GridBagConstraints.HORIZONTAL, 2, i + 1, 1);
 
-                int finalI = i;
                 button.addActionListener(e -> {
-                    setDialog(Client.account.friends.get(finalI));
+                    setDialog(friend);
                     createTab(currentFriend);
                 });
             }
             JButton button = new JButton("+");
             button.setForeground(MAIN_COLOR);
             button.setFont(new Font(FONT_style, Font.BOLD, button.getFont().getSize() + 6));
-            GridBagLayoutManager(panFriends, button, GridBagConstraints.HORIZONTAL, 0, COUNTFRIENDS + 1, 2);
+            GridBagLayoutManager(panFriends, button, GridBagConstraints.HORIZONTAL, 0, FRIENDS + 1, 2);
 
-            button.addActionListener(e -> new FindFriend().showFrame());
-
+            button.addActionListener(e -> {
+                System.out.println(panFriends.getWidth());
+                new FindFriend().showFrame();
+            });
+            panFriends.setSize(124, frame.getHeight()-50);
         }
 
         void sendMessage(JTextField textField, JTextPane MessageBox){
@@ -477,13 +495,15 @@ class Frames {
             currentFriend = friend;
         }
 
-        @SuppressWarnings("ALL")   // FIXME: 24.09.16 delete WarningBloker
         private void buildMenuBar() {
             JMenuBar menuBar = new JMenuBar();
-            JMenuItem accMenu = new JMenuItem("Аккаунт");
-            JMenuItem butToMineMenu = new JMenuItem("Выйти в главное меню");
-            accMenu.add(butToMineMenu);
-            menuBar.add(accMenu);
+            JMenuItem butToMineMenu = new JMenuItem("Выйти в главное меню (not work)");
+            butToMineMenu.addActionListener(e -> {
+                dispose();
+                Client.disconnect();
+                startGUI();
+            });
+            menuBar.add(butToMineMenu);
             frame.setJMenuBar(menuBar);
         }
 
@@ -562,24 +582,11 @@ class Frames {
             dialog.pack();
             dialog.setSize(dialog.getWidth()+50,dialog.getHeight()+20);
 
-            loginField.addActionListener(e -> {
-                setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
-                dialog.pack();
-                dialog.setSize(dialog.getWidth()+50,dialog.getHeight()+20);
-            });
+            loginField.addActionListener(e -> reviewData());
 
-            passwordField.addActionListener(e -> {
-                setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
-                dialog.pack();
-                dialog.setSize(dialog.getWidth()+50,dialog.getHeight()+20);
-            });
+            passwordField.addActionListener(e -> reviewData());
 
-            passwordField2.addActionListener(e -> {
-                setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
-                dialog.pack();
-                dialog.setSize(dialog.getWidth()+50,dialog.getHeight()+20);
-            });
-
+            passwordField2.addActionListener(e -> reviewData());
 
             registerBut.addActionListener(e -> {
                         if (Security.getMD5(passwordField.getPassword()).equals(Security.getMD5(passwordField2.getPassword()))){
@@ -588,6 +595,11 @@ class Frames {
                         }
                     }
             );
+        }
+
+        private void reviewData(){
+            setInfo("Проврьте данные и нажмите кнопку \"Зарегистрироваться!\"", Color.ORANGE);
+            dialog.setSize(Pack(dialog, 50, 20));
         }
 
         @Override
@@ -695,8 +707,7 @@ class Frames {
             GridBagLayoutManager(panSend, fieldSend, GridBagConstraints.HORIZONTAL, 2, 0, 1);
             GridBagLayoutManager(panSend, butSend, GridBagConstraints.HORIZONTAL, 2, 1, 1);
 
-            dialog.pack();
-            dialog.setSize(dialog.getWidth()+30,dialog.getHeight()+10);
+            dialog.setSize(Pack(dialog, 30, 10));
 
             table.setSize(new Dimension(dialog.getWidth()-10, table.getHeight()));
 
@@ -741,7 +752,7 @@ class Frames {
             frMess.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             butOK.addActionListener(e -> frMess.dispose());
             frMess.pack();
-            frMess.setSize(frMess.getWidth()+30, frMess.getHeight()+10);
+            frMess.setSize(Pack(frMess, 30, 10));
             frMess.setLocationRelativeTo(null);
 
             frMess.setVisible(true);
@@ -756,6 +767,7 @@ class Frames {
                 if (acc.login.equals(fieldSend.getText()))
                     if (!Client.account.login.equals(fieldSend.getText())) {
                         Client.execute(new String[]{"addFriend", String.valueOf(acc.id), fieldSend.getText()});
+                        setInfo("Заявка в друзья отправлена!", Color.BLACK);
                         break;
                     } else {
                         setInfo("Нельзя добавить в друзья самого себя!", Color.RED);
@@ -874,6 +886,7 @@ class Frames {
                 listeners.remove(l);
             }
         }
+
     }
 
     //-------------------------------------------//
@@ -883,6 +896,7 @@ class Frames {
         JButton butNativeJLeF;
         JButton butStandartJLeF;
         JButton butMotifJLeF;
+        JButton butDelAccData;
         JToolBar toolBar;
 
         @Override
@@ -901,19 +915,22 @@ class Frames {
             butNativeJLeF = new JButton("Системный стиль");
             butStandartJLeF = new JButton("Java стиль");
             butMotifJLeF = new JButton("Motif стиль");
+            butDelAccData = new JButton("Удалить мои данные о аккаунте");
 
             butNativeJLeF.setFocusable(false);
             butStandartJLeF.setFocusable(false);
             butMotifJLeF.setFocusable(false);
 
-            GridBagLayoutManager(dialog, info, GridBagConstraints.HORIZONTAL, 0, 0, 1);
+            GridBagLayoutManager(dialog, info, GridBagConstraints.CENTER, 0, 0, 1);
             GridBagLayoutManager(dialog, getEmptyLabel(5), GridBagConstraints.HORIZONTAL, 0, 1, 1);
             GridBagLayoutManager(dialog, toolBar, GridBagConstraints.CENTER, 0, 1, 1);
             GridBagLayoutManager(toolBar, butNativeJLeF, GridBagConstraints.HORIZONTAL, 0, 0, 1);
             GridBagLayoutManager(toolBar, butStandartJLeF, GridBagConstraints.HORIZONTAL, 0, 1, 1);
             GridBagLayoutManager(toolBar, butMotifJLeF, GridBagConstraints.HORIZONTAL, 0, 2, 1);
-            GridBagLayoutManager(dialog, getEmptyLabel(5), GridBagConstraints.HORIZONTAL, 0, 3, 1);
-            GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 4, 1);
+            GridBagLayoutManager(dialog, getEmptyLabel(15), GridBagConstraints.HORIZONTAL, 0, 3, 1);
+            GridBagLayoutManager(dialog, butDelAccData, GridBagConstraints.CENTER, 0, 4, 1);
+            GridBagLayoutManager(dialog, getEmptyLabel(3), GridBagConstraints.CENTER, 0, 5, 1);
+            GridBagLayoutManager(dialog, butClose, GridBagConstraints.CENTER, 0, 6, 1);
 
             butNativeJLeF.addActionListener(e -> {
                 info.setText("Нажмите применить");
@@ -930,6 +947,13 @@ class Frames {
                 typeILAF = "MLAF";
             });
 
+            butDelAccData.addActionListener(e -> {
+                Security.setAboutUser("", "");
+                LoginFrame.loginField.setText("");
+                LoginFrame.passwordField.setText("");
+                info.setText("Успешно!");
+            });
+
             butClose.addActionListener(e -> {
                 LoginFrame.dispose();
                 RegisterFrame.dispose();
@@ -941,8 +965,7 @@ class Frames {
                 startGUI();
             });
 
-            dialog.pack();
-            dialog.setSize(dialog.getWidth()+40, dialog.getHeight()+30);
+            dialog.setSize(Pack(dialog, 40, 30));
             dialog.setLocationRelativeTo(null);
         }
 
@@ -1048,12 +1071,10 @@ class Frames {
                 Client.resOfFriend("no", friend.id);
                 frame.dispose();
             });
-
-            frame.pack();
             frame.setAlwaysOnTop(true);
             frame.setResizable(false);
             frame.getContentPane().setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight()+20);
-            frame.setSize(frame.getWidth()+25, frame.getHeight()+25);
+            frame.setSize(Pack(frame, 25, 25));
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         }
@@ -1101,11 +1122,24 @@ class Frames {
         emptyLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, size));
         return emptyLabel;
     }
+
     void startGUI(){
         MainMenuFrame.showFrame();
     }
 
+    static Dimension Pack(JFrame frame, int w, int h){
+        frame.pack();
+        return new Dimension(frame.getWidth()+w, frame.getHeight()+h);
+    }
+
+    static Dimension Pack(JDialog dialog, int w, int h){
+        dialog.pack();
+        return new Dimension(dialog.getWidth()+w, dialog.getHeight()+h);
+    }
+
     private static class WindowUtilities {
+
+
 
         static void setNativeLookAndFeel() {
             try {

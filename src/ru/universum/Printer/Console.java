@@ -5,7 +5,6 @@ import Server.LogCase;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Objects;
 
 public class Console {
     private static Date date = new Date();
