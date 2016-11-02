@@ -120,7 +120,7 @@ public class Server{
         }
     }
 
-    public static void setAddress() {
+    static void setAddress() {
         ifases = "\nINTERFACES:\n";
         try {
             List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
