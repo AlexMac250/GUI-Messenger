@@ -9,7 +9,7 @@ import java.net.*;
 import java.util.*;
 
 public class Server{
-    static ServerSocket mainSocket;
+    private static ServerSocket mainSocket;
     static Integer connections = 40000;
     static ServerConsole console = new ServerConsole();
     private static List<WorkingServ> active = new ArrayList<>();

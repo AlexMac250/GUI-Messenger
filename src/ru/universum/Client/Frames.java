@@ -340,7 +340,7 @@ class Frames {
 
                     Dialog FDialog = null; //FIXME!!!
                     try {
-                        if (Client.dialogs.size() >= 1) {
+                        if (Client.account.friends.size() > 0) {
                             for (int i = 0; i < Client.dialogs.size(); i++) {
                                 if (Client.dialogs.get(i).dialogWith.login.equals(friend.login)) {
                                     FDialog = Client.dialogs.get(i);
@@ -386,7 +386,7 @@ class Frames {
 //            for (String[] aTEXT : TEXT) {
 //                Style style = (aTEXT[1].equals(STYLE_heading)) ? heading : normal;
 //                insertText(editor, aTEXT[0], style);
-//            }
+//        }
            /* // Размещение компонента в конце текста
             StyledDocument doc = editor.getStyledDocument();
             editor.setCaretPosition(doc.getLength());
@@ -427,12 +427,13 @@ class Frames {
             panFriends.add(label, c);
 
             for (int i = 0; i < COUNTFRIENDS; i++) {
+                int maxLength = 12;
+
                 String login = Client.account.friends.get(i).login;
-                int max = 12;
                 JButton button = new JButton();
-                if (login.length() > max) {
+                if (login.length() > maxLength) {
                     button.setToolTipText(login);
-                    login = login.substring(0, max - 1) + "...";
+                    login = login.substring(0, maxLength - 1) + "...";
                 }
                 button.setText(login);
                 currentFriend = Client.account.friends.get(i);
@@ -701,7 +702,7 @@ class Frames {
 
             dialog.setLocationRelativeTo(null);
 
-            butSearch.addActionListener(e -> setInfo("К сожалению, данная функция в этой версии недоступна. Возможно, она появится в следующей версии. Приносим свои извенения!", Color.RED)/*findUsers(fieldSearch.getText())*/);
+            butSearch.addActionListener(e -> setInfo("К сожалению, данная функция в этой версии недоступна. Возможно, она появится в следующей версии. Приносим свои извенения!", MAIN_COLOR)/*findUsers(fieldSearch.getText())*/);
 
             butSend.addActionListener(e -> sendAddFriend());
 

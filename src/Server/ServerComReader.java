@@ -1,6 +1,5 @@
 package Server;
 
-import org.jetbrains.annotations.Nullable;
 import ru.universum.Loader.Security;
 import ru.universum.Loader.Account;
 import ru.universum.Printer.Console;
@@ -12,12 +11,12 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class ServerComReader extends Thread{
-    String message = "";
-    Scanner scanner = new Scanner(System.in);
+class ServerComReader extends Thread{
+    private String message = "";
+    private Scanner scanner = new Scanner(System.in);
     private boolean isAdminLogged = false;
-    Console console = new Console("Server-Console");
-    boolean isExecuting = false;
+    private Console console = new Console("Server-Console");
+    private boolean isExecuting = false;
 
     private void execute(String[] command) {
         try {
@@ -182,7 +181,7 @@ public class ServerComReader extends Thread{
         }
     }
 
-    @Nullable
+
     private String[] descript(String message){
         if(!message.equals("")) {
             List<StringBuilder> sl = new ArrayList<>();
