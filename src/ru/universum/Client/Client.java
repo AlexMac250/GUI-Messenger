@@ -50,7 +50,7 @@ public class Client {
 
     public static void main(String[] args) {
         javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {Frames.startGUI();}});
-        //new BASH().run();
+        new BASH().run();
     }
 
     public static void connect(){
@@ -81,21 +81,13 @@ public class Client {
     }
 
     public static void disconnect(){
-        try {
-            reader.interrupT();
-            os.close();
-            statusConnected = false;
-            port = 0;
-            account = new Account();
-            usersInSearch = new ArrayList<>();
-            messages = new ArrayList<>();
-            dialogs = new HashMap<>();
-            Frames = new Frames();
-            socket.close();
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        statusConnected = false;
+        port = 0;
+        account = new Account();
+        usersInSearch = new ArrayList<>();
+        messages = new ArrayList<>();
+        dialogs = new HashMap<>();
+        Frames = new Frames();
     }
 
     public static void login(String login, String password){
