@@ -5,11 +5,13 @@ import ru.universum.Loader.Friend;
 import ru.universum.Printer.Console;
 import ru.universum.Loader.Security;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.text.*;
 import java.awt.*;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,7 +64,6 @@ class Frames {
                     WindowUtilities.setMotifLookAndFeel();
                     break;
             }
-
             frame = new JFrame("NEOnline");
             butLogin = new JButton("Войти");
             butRegister = new JButton("Регистрация");
@@ -97,6 +98,11 @@ class Frames {
             frame.setResizable(false);
             frame.setSize(w, h);
             frame.setLocationRelativeTo(null);
+            try {
+                frame.setIconImage(ImageIO.read(MainMenuFrame.class.getResource("favicon.png")));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             butLogin.addActionListener(e -> LoginFrame.showFrame());
             butRegister.addActionListener(e -> RegisterFrame.showFrame());

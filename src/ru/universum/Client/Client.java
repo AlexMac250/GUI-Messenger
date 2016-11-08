@@ -70,6 +70,7 @@ public class Client {
             is = new DataInputStream(socket.getInputStream());
             //читает входящие комманды
             reader = new InputReader(is);
+            reader.setDaemon(true);
             reader.start();
         } catch (Exception e) {
             Frames.LoginFrame.setInfo("Нет соединения", Color.RED);
@@ -81,10 +82,8 @@ public class Client {
 
     public static void disconnect(){
         try {
-            is.close();
+            reader.interrupT();
             os.close();
-            socket.close();
-            reader.interrupt();
             statusConnected = false;
             port = 0;
             account = new Account();
@@ -92,6 +91,8 @@ public class Client {
             messages = new ArrayList<>();
             dialogs = new HashMap<>();
             Frames = new Frames();
+            socket.close();
+            is.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -200,7 +201,6 @@ public class Client {
                     socket.close();
                 } catch (IOException ignored) {
                 }
-                System.exit(1);
                 break;
 
             case "addFriend" :

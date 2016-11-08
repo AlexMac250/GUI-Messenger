@@ -1,6 +1,7 @@
 package ru.universum.Client;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 
 public class InputReader extends Thread {
     private DataInputStream in;
@@ -29,5 +30,8 @@ public class InputReader extends Thread {
             }
 
         }
+    }
+    public void interrupT() throws IOException {
+        in.close();
     }
 }
