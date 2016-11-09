@@ -18,14 +18,14 @@ public class InputReader extends Thread {
 
     @Override
     public void run() {
-        while (!interrupted()) {
+        while (!interrupted()& !Client.socket.isClosed()) {
             try {
                 message = in.readUTF();
                 commands += "\n" + message;
                 throwCommand();
             } catch (Exception e) {
-                e.printStackTrace();
-                Client.execute(new String[]{"connection"});
+                //e.printStackTrace();
+                //Client.execute(new String[]{"connection"});
                 interrupt();
             }
 

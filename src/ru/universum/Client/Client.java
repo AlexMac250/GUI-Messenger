@@ -81,13 +81,20 @@ public class Client {
     }
 
     public static void disconnect(){
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         statusConnected = false;
         port = 0;
+        //account.friends = new ArrayList<Friend>();
         account = new Account();
         usersInSearch = new ArrayList<>();
         messages = new ArrayList<>();
         dialogs = new HashMap<>();
         Frames = new Frames();
+        javax.swing.SwingUtilities.invokeLater(() -> {Frames.startGUI();});
     }
 
     public static void login(String login, String password){

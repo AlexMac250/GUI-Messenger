@@ -31,12 +31,12 @@ class Frames {
     private Console console = new Console("Frames");
     private String typeILAF = "NLAF";
 
-    private MainMenuFrame MainMenuFrame = new MainMenuFrame();
-    LoginFrame LoginFrame = new LoginFrame();
-    RegisterFrame RegisterFrame = new RegisterFrame();
-    private AboutFrame AboutFrame = new AboutFrame();
-    MainFrame MainFrame = new MainFrame();
-    private SettingsFrame SettingsFrame = new SettingsFrame();
+    private MainMenuFrame MainMenuFrame;
+    LoginFrame LoginFrame;
+    RegisterFrame RegisterFrame;
+    private AboutFrame AboutFrame;
+    MainFrame MainFrame;
+    private SettingsFrame SettingsFrame;
 
     private class MainMenuFrame extends AbstractFrame {
         private JFrame frame;
@@ -250,7 +250,7 @@ class Frames {
         public void initial() {
             try {
                 currentFriend = null;
-                frame = new JFrame("NEOnline - Сообщения ("+Client.client_version+")");
+                frame = new JFrame("NEOnline - Сообщения ("+Client.client_version+") "+Client.account.login);
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
                 panMainContent = new JPanel();
@@ -503,11 +503,10 @@ class Frames {
 
         private void buildMenuBar() {
             JMenuBar menuBar = new JMenuBar();
-            JMenuItem butToMineMenu = new JMenuItem("Выйти в главное меню (not work)");
+            JMenuItem butToMineMenu = new JMenuItem("Разлогиниться и выйти в главное меню");
             butToMineMenu.addActionListener(e -> {
                 dispose();
                 Client.disconnect();
-                startGUI();
             });
             menuBar.add(butToMineMenu);
             frame.setJMenuBar(menuBar);
@@ -1130,6 +1129,12 @@ class Frames {
     }
 
     void startGUI(){
+        MainMenuFrame = new MainMenuFrame();
+        SettingsFrame = new SettingsFrame();
+        LoginFrame = new LoginFrame();
+        RegisterFrame = new RegisterFrame();
+        AboutFrame = new AboutFrame();
+        MainFrame = new MainFrame();
         MainMenuFrame.showFrame();
     }
 
