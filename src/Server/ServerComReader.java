@@ -121,7 +121,7 @@ class ServerComReader extends Thread{
                         System.out.println("Enter \"login\" to log in as Admin");
                     } else {
                         System.out.println(
-                                "--------------------------------- \n" +
+                                        "--------------------------------- \n" +
                                         "Command \"stop\" - stops server if this one is working \n" +
                                         "Command \"out\" - logging out \n" +
                                         "Command \"showinfo\" - shows meta-inf about server \n" +
@@ -160,6 +160,7 @@ class ServerComReader extends Thread{
 
                 case "logs":
                     switch (command[1]) {
+
                         case "off":
                             LogCase.offLogs();
                             break;
@@ -169,6 +170,7 @@ class ServerComReader extends Thread{
                         case "showlast":
                             LogCase.showLastOf(Integer.parseInt(command[2]));
                             break;
+
                     }
                     break;
 

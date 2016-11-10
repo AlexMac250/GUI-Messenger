@@ -5,14 +5,8 @@ import ru.universum.Loader.Friend;
 import ru.universum.Loader.Message;
 
 class Answer {
-    private int idOf = 0;
-    private String answer = "";
-    private WorkingServ serv;
 
-    public Answer(int idOf, String answer, WorkingServ serv) {
-        this.serv = serv;
-        this.idOf = idOf;
-        this.answer = answer;
+    Answer(int idOf, String answer, WorkingServ serv) {
 
         if(answer.equals("yes")){
             Server.accs.get(idOf).getWorkingServ().newFriend(new Friend(serv.acc.id, serv.acc.login));

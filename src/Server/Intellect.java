@@ -58,6 +58,7 @@ public class Intellect extends Thread{
         int i = 0;
 
         switch (command[0]){
+
             case "send":
                 if(Server.accs.get(Integer.parseInt(command[1])).isOnline){
                     int to = Integer.parseInt(command[1]);
@@ -85,7 +86,7 @@ public class Intellect extends Thread{
                 break;
 
             case "resOfFriend" :
-                answers.add(new Answer(Integer.parseInt(command[1]),command[2],serv));
+                new Answer(Integer.parseInt(command[1]),command[2],serv);
                 break;
 
             case "getUsers":

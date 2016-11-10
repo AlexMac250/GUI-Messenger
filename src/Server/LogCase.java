@@ -5,13 +5,13 @@ import java.util.List;
 
 public class LogCase {
     private static boolean isShowingLogs = true;
-    static List<Log> logs = new ArrayList<>();
+    private static List<Log> logs = new ArrayList<>();
 
-    public static void offLogs(){
+    static void offLogs(){
         isShowingLogs = false;
     }
 
-    public static void onLogs(){
+    static void onLogs(){
         isShowingLogs = true;
     }
 
@@ -24,12 +24,10 @@ public class LogCase {
     }
 
     public static void showLogs (){
-        for (Log log : logs){
-            System.out.println(log);
-        }
+        logs.forEach(System.out::println);
     }
 
-    public static void showLastOf(int howMuch){
+    static void showLastOf(int howMuch){
         int size = logs.size();
         if(size!=0){
         for (int i = 0; i < howMuch-1 ; i++) {

@@ -1,7 +1,7 @@
 package Server;
 
 public class Log {
-    String message;
+    private String message;
 
     public Log(String message) {
         this.message = message;
