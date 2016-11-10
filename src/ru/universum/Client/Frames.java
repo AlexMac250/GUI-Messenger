@@ -5,18 +5,19 @@ import ru.universum.Loader.Friend;
 import ru.universum.Printer.Console;
 import ru.universum.Loader.Security;
 
-import javax.imageio.ImageIO;
+//import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import javax.swing.text.*;
 import java.awt.*;
-import java.io.IOException;
+import java.awt.event.MouseEvent;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -98,11 +99,12 @@ class Frames {
             frame.setResizable(false);
             frame.setSize(w, h);
             frame.setLocationRelativeTo(null);
-            try {
-                frame.setIconImage(ImageIO.read(MainMenuFrame.class.getResource("favicon.png")));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+//            try {
+//                frame.setIconImage(ImageIO.read(MainMenuFrame.class.getResource("favicon.png")));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
 
             butLogin.addActionListener(e -> LoginFrame.showFrame());
             butRegister.addActionListener(e -> RegisterFrame.showFrame());
@@ -162,6 +164,10 @@ class Frames {
             passwordField.setBackground(Color.GRAY);
             dialog.getContentPane().setBackground(Color.DARK_GRAY);
             butLogin.setFocusable(false);
+
+            loginField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            passwordField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            remAccData.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
             loginField.setToolTipText("ЛОГИН");
             passwordField.setToolTipText("ПАРОЛЬ");
@@ -236,7 +242,7 @@ class Frames {
         Style heading = null; // стиль заголовка
         Style normal = null; // стиль текста
         JTabbedPane tabbedPane;
-        ArrayList<Tab> tabs = new ArrayList<>();
+        Map<Integer, Tab> tabs = new HashMap<>();
         private JFrame frame;
         private Container contentPain;
         JPanel panFriends;
@@ -317,71 +323,85 @@ class Frames {
 
         //-----//
 
-        void createTab(Friend friend) {
-            try {
-                JPanel panel = new JPanel();
-                panel.setLayout(new GridBagLayout());
-                JTextPane MessageBox = new JTextPane();
-                JPanel panMessages = new JPanel();
-                JPanel panSendMessage = new JPanel();
-                JButton butSendMessage = new JButton("Отправить");
-                JTextField textField = new JTextField(Client.os_name.equals("Linux") ? 25 : 45);
-
-                JScrollPane scrollMessage = new JScrollPane();
-
-                if (friend == null) {
-                    JLabel lab = new JLabel(Client.account.friends.size() >= 1 ? "Выберете друга" : "У вас нет друзей :(");
-                    lab.setFont(new Font(FONT_style, Font.BOLD, 40));
-                    lab.setForeground(MAIN_COLOR);
-                    GridBagLayoutManager(panel, lab, GridBagConstraints.CENTER, 0, 0, 1);
-                    panel.setPreferredSize(new Dimension(468, 272));
-                    panel.setBackground(Color.DARK_GRAY);
-                    tabs.add(new Tab(scrollMessage, textField, butSendMessage, "Привет!", null));
-                } else {
-
-                    panMessages.setLayout(null);
-                    MessageBox.setBounds(0, 0, 490, 280);
-                    panMessages.add(MessageBox);
-                    panMessages.setPreferredSize(new Dimension(468, 272));
-                    createStyles(MessageBox);
-                    MessageBox.setBackground(Color.GRAY);
-                    MessageBox.setForeground(Color.WHITE);
-                    scrollMessage.setBackground(Color.DARK_GRAY);
-                    panSendMessage.setBackground(Color.DARK_GRAY);
-
-                    scrollMessage.createVerticalScrollBar();
-                    scrollMessage.getViewport().add(panMessages);
-                    scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                    scrollMessage.setAutoscrolls(true);
-
+        void createTab(Friend friend) {// FIXME: 10.11.2016 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            if (!tabs.containsKey(friend == null ? -2 : friend.id)) {
+                try {
+                    JPanel panel = new JPanel();
                     panel.setLayout(new GridBagLayout());
-                    GridBagLayoutManager(panel, scrollMessage, GridBagConstraints.CENTER, 0, 0, 2);
-                    GridBagLayoutManager(panel, textField, GridBagConstraints.HORIZONTAL, 0, 1, 1);
-                    GridBagLayoutManager(panel, butSendMessage, GridBagConstraints.HORIZONTAL, 1, 1, 1);
+                    JTextPane MessageBox = new JTextPane();
+                    JPanel panMessages = new JPanel();
+                    JPanel panSendMessage = new JPanel();
+                    JButton butSendMessage = new JButton("Отправить");
+                    JButton butCloseTab = new JButton("╳");
+                    JTextField textField = new JTextField(Client.os_name.equals("Linux") ? 25 : 45);
+                    MessageBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-                    textField.addActionListener(e -> sendMessage(textField, MessageBox));
-                    butSendMessage.addActionListener(e -> sendMessage(textField, MessageBox));
+                    JScrollPane scrollMessage = new JScrollPane();
 
-                    Dialog FDialog = null; //FIXME!!!
-                    try {
-                        if (Client.account.friends.size() > 0) {
-                            for (int i = 0; i < Client.dialogs.size(); i++) {
-                                if (Client.dialogs.get(i).dialogWith.login.equals(friend.login)) {
-                                    FDialog = Client.dialogs.get(i);
-                                }
-                            }
-                            tabs.add(new Tab(scrollMessage, textField, butSendMessage, friend.login, FDialog));
-                        } else {
-                            System.out.println("Нет диалогов");
+                    if (friend == null) {
+                        JLabel lab = new JLabel(Client.account.friends.size() >= 1 ? "Выберете друга" : "У вас нет друзей :(");
+                        lab.setFont(new Font(FONT_style, Font.BOLD, 40));
+                        lab.setForeground(MAIN_COLOR);
+                        GridBagLayoutManager(panel, lab, GridBagConstraints.CENTER, 0, 0, 1);
+                        panel.setPreferredSize(new Dimension(500, 325));
+                        panel.setBackground(Color.DARK_GRAY);
+                        tabs.put(-1, new Tab(scrollMessage, textField, butSendMessage, panel, "Привет!", null));
+                    } else {
+                        if (tabs.containsKey(-1)){
+                            tabbedPane.remove(tabs.get(-1).count);
+                            tabs.remove(-1);
                         }
-                    } catch (Exception e){
-                        console.log(""+e, "exc");
-                    }
-                }
+                        panMessages.setLayout(null);
+                        MessageBox.setBounds(0, 0, 498, 320);
+                        panMessages.add(MessageBox);
+                        panMessages.setPreferredSize(new Dimension(468, 272));
+                        createStyles(MessageBox);
+                        MessageBox.setBackground(Color.GRAY);
+                        MessageBox.setForeground(Color.WHITE);
+                        scrollMessage.setBackground(Color.DARK_GRAY);
+                        panSendMessage.setBackground(Color.DARK_GRAY);
 
-                tabbedPane.addTab(friend == null ? "Привет!" : friend.login, panel);
-            } catch (Exception e) {
-                e.printStackTrace();
+                        scrollMessage.createVerticalScrollBar();
+                        scrollMessage.getViewport().add(panMessages);
+                        scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+                        scrollMessage.setAutoscrolls(true);
+
+                        panel.setLayout(new GridBagLayout());
+                        GridBagLayoutManager(panel, scrollMessage, GridBagConstraints.CENTER, 0, 0, 3);
+                        GridBagLayoutManager(panel, butCloseTab, GridBagConstraints.HORIZONTAL, 0, 1, 1);
+                        GridBagLayoutManager(panel, textField, GridBagConstraints.HORIZONTAL, 1, 1, 1);
+                        GridBagLayoutManager(panel, butSendMessage, GridBagConstraints.HORIZONTAL, 2, 1, 1);
+
+                        textField.addActionListener(e -> sendMessage(textField, MessageBox));
+                        butSendMessage.addActionListener(e -> sendMessage(textField, MessageBox));
+                        butCloseTab.addActionListener(e -> {
+                            tabbedPane.remove(tabs.get(currentFriend.id).count);
+                            tabs.remove(currentFriend.id);
+                            if (tabs.size() == 0) createTab(null);
+                        });
+
+                        Dialog FDialog = null; //FIXME!!!
+                        try {
+                            if (Client.account.friends.size() > 0) {
+                                for (int i = 0; i < Client.dialogs.size(); i++) {
+//                                if (Client.dialogs.get(i).dialogWith.login.equals(friend.login)) {
+//                                    FDialog = Client.dialogs.get(i);// FIXME: 10.11.2016 !!!
+//                                }
+                                }
+                                tabs.put(friend.id, new Tab(scrollMessage, textField, butSendMessage, panel, friend.login, FDialog));
+                            } else {
+                                System.out.println("Нет диалогов");
+                            }
+                        } catch (Exception e) {
+                            console.log("" + e, "exc");
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                tabbedPane.setSelectedIndex(friend.id-1);
             }
         }
 
@@ -395,7 +415,6 @@ class Frames {
             StyleConstants.setFontSize(heading, 18);
             StyleConstants.setBold(heading, true);
         }
-
         void insertText(JTextPane editor, String string, Style style) {
             try {
                 Document doc = editor.getDocument();
@@ -487,8 +506,8 @@ class Frames {
             });
             panFriends.setSize(124, frame.getHeight()-50);
         }
-
         void sendMessage(JTextField textField, JTextPane MessageBox){
+            System.out.println(tabbedPane.getSize());
             if (textField.getText().length() > 0) {
                 insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "\n", heading);
                 insertText(MessageBox, textField.getText() + "\n", normal);
@@ -496,11 +515,9 @@ class Frames {
                 textField.setText("");
             }
         }
-
         void setDialog(Friend friend) {
             currentFriend = friend;
         }
-
         private void buildMenuBar() {
             JMenuBar menuBar = new JMenuBar();
             JMenuItem butToMineMenu = new JMenuItem("Разлогиниться и выйти в главное меню");
@@ -516,28 +533,12 @@ class Frames {
             return frame;
         }
 
-        class Tab{
-            JScrollPane MessageBox;
-            JTextField textField;
-            JButton button;
-            int count;
-            String tabName;
-            Dialog dialog;
 
-            Tab(JScrollPane messageBox, JTextField textField, JButton button, String tabName, Dialog dialog) {
-                MessageBox = messageBox;
-                this.textField = textField;
-                this.button = button;
-                this.count = tabs.size()+1;
-                this.tabName = tabName;
-                this.dialog = dialog;
-            }
-        }
     }
 
     //-------------------------------------------//
 
-    @SuppressWarnings("ALL")
+    @SuppressWarnings("WeakerAccess")
     class RegisterFrame extends AbstractFrame {
 
         JDialog dialog;
@@ -551,7 +552,7 @@ class Frames {
         JPasswordField passwordField2;
         JButton registerBut;
 
-        public RegisterFrame() {
+        RegisterFrame() {
             initial();
         }
 
@@ -577,6 +578,10 @@ class Frames {
             loginField.setBackground(Color.GRAY);
             passwordField.setBackground(Color.GRAY);
             passwordField2.setBackground(Color.GRAY);
+
+            loginField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            passwordField.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            passwordField2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
             dialog.setLayout(new GridBagLayout());
             dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -624,7 +629,7 @@ class Frames {
             info.setForeground(color);
         }
 
-        public void buildFrame(){
+        void buildFrame(){
             GridBagLayoutManager(dialog, label, GridBagConstraints.CENTER, 0, 0, 2);
             GridBagLayoutManager(dialog, labLogin, GridBagConstraints.EAST, 0, 1, 1);
             GridBagLayoutManager(dialog, loginField, GridBagConstraints.HORIZONTAL, 1, 1, 1);
@@ -718,7 +723,10 @@ class Frames {
 
             dialog.setLocationRelativeTo(null);
 
-            butSearch.addActionListener(e -> setInfo("К сожалению, данная функция в этой версии недоступна. Возможно, она появится в следующей версии. Приносим свои извенения!", MAIN_COLOR)/*findUsers(fieldSearch.getText())*/);
+            butSearch.addActionListener(e -> {
+                //setInfo("К сожалению, данная функция в этой версии недоступна. Возможно, она появится в следующей версии. Приносим свои извенения!", MAIN_COLOR);
+                findUsers(fieldSearch.getText());
+            });
 
             butSend.addActionListener(e -> sendAddFriend());
 
@@ -1001,8 +1009,10 @@ class Frames {
             JLabel empty= new JLabel(" ");
             JLabel text = new JLabel("Лучший бесплатный мессенджер!");
             JLabel creatorsLab = new JLabel("Создатели:");
-            JLabel labZver = new JLabel("ZVER - Иван Кокорев                 (https://vk.com/vanian98)");
-            JLabel labAlex = new JLabel("ALEX - Александр Василенко    (https://vk.com/aleksandr_vasilenko)");
+            JLabel labZver = new JLabel("ZVER - Иван Кокорев                 ");
+            JLabel labAlex = new JLabel("ALEX - Александр Василенко    ");
+            JLabel labURIZver = new JLabel("https://vk.com/vanian98");
+            JLabel labURIAlex = new JLabel("https://vk.com/aleksandr_vasilenko");
             JLabel labClientVersion = new JLabel(Client.client_version);
             JLabel labJavaVersion = new JLabel("Java version: "+Client.java_version);
             JButton butCl = new JButton("Закрыть");
@@ -1019,6 +1029,10 @@ class Frames {
             creatorsLab.setForeground(new Color(106, 135, 89));
             labAlex.setForeground(new Color(255, 100, 25));
             labZver.setForeground(new Color(255, 100, 25));
+            labURIAlex.setForeground(MAIN_COLOR);
+            labURIZver.setForeground(MAIN_COLOR);
+            labURIAlex.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            labURIZver.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             labClientVersion.setForeground(new Color(37, 37, 37));
             labJavaVersion.setForeground(new Color(37, 37, 37));
 
@@ -1027,14 +1041,87 @@ class Frames {
             GridBagLayoutManager(dialog, text, GridBagConstraints.CENTER, 0, 2, 2);
             GridBagLayoutManager(dialog, empty, GridBagConstraints.HORIZONTAL, 0, 3, 2);
             GridBagLayoutManager(dialog, creatorsLab, GridBagConstraints.CENTER, 0, 4, 2);
-            GridBagLayoutManager(dialog, labZver, GridBagConstraints.HORIZONTAL, 0, 6, 2);
-            GridBagLayoutManager(dialog, labAlex, GridBagConstraints.HORIZONTAL, 0, 7, 2);
+            GridBagLayoutManager(dialog, labZver, GridBagConstraints.HORIZONTAL, 0, 6, 1);
+            GridBagLayoutManager(dialog, labURIZver, GridBagConstraints.HORIZONTAL, 1, 6, 1);
+            GridBagLayoutManager(dialog, labAlex, GridBagConstraints.HORIZONTAL, 0, 7, 1);
+            GridBagLayoutManager(dialog, labURIAlex, GridBagConstraints.HORIZONTAL, 1, 7, 1);
             GridBagLayoutManager(dialog, empty, GridBagConstraints.HORIZONTAL, 0, 8, 2);
-            GridBagLayoutManager(dialog, butCl, GridBagConstraints.PAGE_END, 1, 9, 1);
-            GridBagLayoutManager(dialog, labClientVersion,GridBagConstraints.CENTER, 1, 10, 1);
-            GridBagLayoutManager(dialog, labJavaVersion, GridBagConstraints.LINE_END, 1, 11, 1);
+            GridBagLayoutManager(dialog, butCl, GridBagConstraints.PAGE_END, 0, 9, 2);
+            GridBagLayoutManager(dialog, labClientVersion,GridBagConstraints.CENTER, 0, 10, 2);
+            GridBagLayoutManager(dialog, labJavaVersion, GridBagConstraints.LINE_END, 0, 11, 2);
             labClientVersion.setBounds(0, 0, labClientVersion.getWidth(), labClientVersion.getHeight());
 
+            labURIAlex.addMouseListener(new MouseInputAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        Util.openLink(new URI(labURIAlex.getText()));
+                    } catch (URISyntaxException se) {
+                        System.out.println("Не верный URL: "+se.getMessage());
+                    }
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    labURIAlex.setForeground(new Color(140, 190, 250));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    labURIAlex.setForeground(MAIN_COLOR);
+                }
+            });
+
+            labURIZver.addMouseListener(new MouseInputAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    try {
+                        Util.openLink(new URI(labURIZver.getText()));
+                    } catch (URISyntaxException se) {
+                        System.out.println("Не верный URL: "+se.getMessage());
+                    }
+
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    labURIZver.setForeground(new Color(140, 190, 250));
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    labURIZver.setForeground(MAIN_COLOR);
+                }
+            });
+
+            final boolean[] isRand = {false};
+
+            label.addMouseListener(new MouseInputAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    isRand[0] = true;
+                    new Thread(() -> {
+                        while (isRand[0]) {
+                            Random random = new Random();
+                            int r = random.nextInt(255);
+                            int g = random.nextInt(255);
+                            int b = random.nextInt(255);
+                            try {
+                                TimeUnit.MILLISECONDS.sleep(150);
+                            } catch (InterruptedException runnable) {
+                                runnable.printStackTrace();
+                            }
+                            label.setForeground(new Color(r, g, b));
+                        }
+                    }).start();
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    isRand[0] = false;
+                    label.setForeground(MAIN_COLOR);
+                }
+            });
             dialog.setSize(522, 205);
             dialog.setResizable(false);
             dialog.setLocationRelativeTo(null);
@@ -1060,13 +1147,22 @@ class Frames {
             JLabel label = new JLabel("Вас хотят добавить в друзья");
             JLabel friendInf = new JLabel("Ник: "+friend.login+", Статус: "+((friend.isOnline) ? "Онлайн" : "Оффлайн"));
 
+            frame.getContentPane().setBackground(Color.DARK_GRAY);
+            butAccept.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            butAccept.setFocusable(false);
+            butRefuse.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            butRefuse.setFocusable(false);
+            label.setForeground(Color.WHITE);
+            friendInf.setForeground(Color.WHITE);
+
             frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             frame.setLayout(new GridBagLayout());
 
-            GridBagLayoutManager(frame, label, GridBagConstraints.CENTER, 0, 0, 2);
-            GridBagLayoutManager(frame, friendInf, GridBagConstraints.CENTER, 0, 1, 2);
+            GridBagLayoutManager(frame, label, GridBagConstraints.CENTER, 0, 0, 3);
+            GridBagLayoutManager(frame, friendInf, GridBagConstraints.CENTER, 0, 1, 3);
             GridBagLayoutManager(frame, butRefuse, GridBagConstraints.HORIZONTAL, 0, 2, 1);
-            GridBagLayoutManager(frame, butAccept, GridBagConstraints.HORIZONTAL, 1, 2, 1);
+            GridBagLayoutManager(frame, getEmptyLabel(20), GridBagConstraints.CENTER, 1, 2, 1);
+            GridBagLayoutManager(frame, butAccept, GridBagConstraints.HORIZONTAL, 2, 2, 1);
 
             butAccept.addActionListener(e -> {
                 Client.resOfFriend("yes", friend.id);
@@ -1079,13 +1175,34 @@ class Frames {
             frame.setAlwaysOnTop(true);
             frame.setResizable(false);
             frame.getContentPane().setSize(frame.getContentPane().getWidth(), frame.getContentPane().getHeight()+20);
-            frame.setSize(Pack(frame, 25, 25));
+            frame.setSize(Pack(frame, 50, 25));
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
         }
     }
 
     //-----------------------------------------------------------------------------------------------------//
+
+
+    class Tab{
+        JScrollPane MessageBox;
+        JTextField textField;
+        JButton button;
+        int count;
+        String tabName;
+        Dialog dialog;
+
+        Tab(JScrollPane messageBox, JTextField textField, JButton button, JPanel panel, String tabName, Dialog dialog) {
+            this.count = MainFrame.tabbedPane.getTabCount();
+            MessageBox = messageBox;
+            this.textField = textField;
+            this.button = button;
+            this.tabName = tabName;
+            this.dialog = dialog;
+            MainFrame.tabbedPane.addTab(tabName, panel);
+        }
+    }
+
 
     private static void GridBagLayoutManager(JFrame frame, JComponent component, int fill, int gridX, int gridY, int gridWidth){
         GridBagConstraints c = new GridBagConstraints();
@@ -1138,12 +1255,12 @@ class Frames {
         MainMenuFrame.showFrame();
     }
 
-    static Dimension Pack(JFrame frame, int w, int h){
+    private static Dimension Pack(JFrame frame, int w, int h){
         frame.pack();
         return new Dimension(frame.getWidth()+w, frame.getHeight()+h);
     }
 
-    static Dimension Pack(JDialog dialog, int w, int h){
+    private static Dimension Pack(JDialog dialog, int w, int h){
         dialog.pack();
         return new Dimension(dialog.getWidth()+w, dialog.getHeight()+h);
     }

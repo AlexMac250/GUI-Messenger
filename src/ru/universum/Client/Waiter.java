@@ -3,6 +3,7 @@ package ru.universum.Client;
 import java.net.Socket;
 import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("all")
 public class Waiter extends Thread {
     boolean res;
     @Override

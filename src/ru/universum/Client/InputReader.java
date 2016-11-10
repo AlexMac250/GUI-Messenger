@@ -1,11 +1,11 @@
 package ru.universum.Client;
 
 import java.io.DataInputStream;
-import java.io.IOException;
 
-public class InputReader extends Thread {
+class InputReader extends Thread {
     private DataInputStream in;
-    public String commands = "";
+    @SuppressWarnings("WeakerAccess")
+    String commands = "";
     private String message = "";
 
     InputReader(DataInputStream in) {

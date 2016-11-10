@@ -13,20 +13,21 @@ import java.net.Socket;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
 @SuppressWarnings("ALL")
 public class Client {
     static final String java_version = System.getProperty("java.version");
-    public static final String os_name = System.getProperty("os.name");
+    public static final String os_name = System.getProperty("os.version");
     static final String os_arch = System.getProperty("os.arch");
     static final String os_version = System.getProperty("os.version");
-    static final String user_home = System.getProperty("user.dir");
+    static final String working_directory = Util.getWorkingDirectory().getAbsolutePath();
 
     static final String client_version = "version 1.0 alpha 1";
-    static List<ClientMessage> messages = new ArrayList<>();
+    private static List<ClientMessage> messages = new ArrayList<>();
     static Socket socket;
     static int port;
-    static DataInputStream is;
-    static DataOutputStream os;
+    private static DataInputStream is;
+    private static DataOutputStream os;
     static InputReader reader;
     static Console console = new Console("Client");
 
@@ -49,7 +50,7 @@ public class Client {
     //FIXME update to Dialogs
 
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {public void run() {Frames.startGUI();}});
+        javax.swing.SwingUtilities.invokeLater(() -> Frames.startGUI());
         new BASH().run();
     }
 
