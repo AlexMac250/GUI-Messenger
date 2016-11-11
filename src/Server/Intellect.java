@@ -10,18 +10,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@SuppressWarnings("ALL")
-public class Intellect extends Thread{
+class Intellect extends Thread{
     private int GettingUsers = 0;
-    private DataOutputStream os;
     private DataInputStream is;
     private Account acc;
     private WorkingServ serv ;
-    private List<Answer> answers = new ArrayList<>();
 
     Intellect(WorkingServ workingServ) {
-        this.os = workingServ.dataOutputStream;
         this.serv = workingServ;
         this.is = workingServ.is;
         this.acc = workingServ.acc;

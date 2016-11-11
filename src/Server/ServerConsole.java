@@ -12,12 +12,12 @@ public class ServerConsole {
         date = new Date();
         return formatter.format(date);
     }
+
+    public void log (String message){
+        System.out.print(new Log("\n("+getDateNow()+") "+str+": " + message));
+    }
     public void log (String message, String type){
         switch (type){
-
-            case "":// standard
-                System.out.print(new Log("\n("+getDateNow()+") "+str+": " + message));
-                break;
 
             case "w":
                 System.out.print(new Log("\n[WARNING] ("+getDateNow()+") "+str+": "+message));
