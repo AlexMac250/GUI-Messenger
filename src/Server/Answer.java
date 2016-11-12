@@ -16,7 +16,7 @@ class Answer {
                 // говорим человеку который отправил запрос , что его отклонили
                 Server.accs.get(idOf).getWorkingServ().send(new Command("noFriended", serv.acc.login));
             }else {
-                Server.accs.get(idOf).oflineMes.add(new Message("noFriended",serv.acc.login,"",false));
+                Server.accs.get(idOf).offlineMes.add(new Message("noFriended",serv.acc.login,"",false));
             }
         }
     }

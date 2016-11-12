@@ -1,8 +1,12 @@
 package ru.universum.Loader;
 
 import Server.WorkingServ;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import ru.universum.Client.Dialog;
 
 public class Account {
     public boolean isOnline = false;
@@ -12,7 +16,8 @@ public class Account {
     public String name = "";
     public ArrayList<Friend> friends = new ArrayList<>();
     public static long idGL = 0;
-    public List<Message> oflineMes = new ArrayList<>();
+    public List<Message> offlineMes = new ArrayList<>();
+    public Map<Friend, Dialog> dialogs = new HashMap<>();
     private WorkingServ workingServ;
 
     public WorkingServ getWorkingServ() {
@@ -25,12 +30,12 @@ public class Account {
     }
 
     public void writeOffline(Message message){
-        oflineMes.add(message);
+        offlineMes.add(message);
     }
 
     @Override
     public String toString() {
-        return "Loader.Account{" +
+        return "Account{" +
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +

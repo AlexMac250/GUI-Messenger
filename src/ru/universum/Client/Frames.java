@@ -239,9 +239,11 @@ class Frames {
     //-------------------------------------------//
 
     class MainFrame extends AbstractFrame {
+        boolean isInit = false;
         Style heading = null; // стиль заголовка
         Style normal = null; // стиль текста
         JTabbedPane tabbedPane;
+        Map<Integer, PanFriend> panFriendList = new HashMap<>();
         Map<Integer, Tab> tabs = new HashMap<>();
         private JFrame frame;
         private Container contentPain;
@@ -256,7 +258,7 @@ class Frames {
         public void initial() {
             try {
                 currentFriend = null;
-                frame = new JFrame("NEOnline - Сообщения ("+Client.client_version+") "+Client.account.login);
+                frame = new JFrame("NEOnline - Сообщения ("+Client.client_version+") | "+Client.account.login);
                 contentPain = frame.getContentPane();
                 panFriends = new JPanel();
                 panMainContent = new JPanel();
@@ -281,6 +283,7 @@ class Frames {
                 frame.setSize(Pack(frame, 15, 15));
 
                 frame.setLocationRelativeTo(null);
+                isInit = true;
 
             } catch (Exception e) {
                 setInfo(e.toString(), Color.RED);
@@ -356,6 +359,7 @@ class Frames {
                         panMessages.add(MessageBox);
                         panMessages.setPreferredSize(new Dimension(468, 272));
                         createStyles(MessageBox);
+
                         MessageBox.setBackground(Color.GRAY);
                         MessageBox.setForeground(Color.WHITE);
                         scrollMessage.setBackground(Color.DARK_GRAY);
@@ -401,10 +405,9 @@ class Frames {
                     e.printStackTrace();
                 }
             } else {
-                tabbedPane.setSelectedIndex(friend.id-1);
+                tabbedPane.setSelectedIndex(tabs.get(friend.id).count);
             }
         }
-
         private void createStyles(JTextPane editor) {
             // Создание стилей
             normal = editor.addStyle(STYLE_normal, null);
@@ -423,30 +426,6 @@ class Frames {
                 e.printStackTrace();
             }
         }
-
-//        private void loadText(JTextPane editor) {
-//            // Загружаем в документ содержимое
-//            for (String[] aTEXT : TEXT) {
-//                Style style = (aTEXT[1].equals(STYLE_heading)) ? heading : normal;
-//                insertText(editor, aTEXT[0], style);
-//        }
-           /* // Размещение компонента в конце текста
-            StyledDocument doc = editor.getStyledDocument();
-            editor.setCaretPosition(doc.getLength());
-            JCheckBox check = new JCheckBox("JCheckBox");
-            check.setFont(new Font(FONT_style, Font.ITALIC, 16));
-            check.setOpaque(false);
-            editor.insertComponent(check);
-
-            JRadioButton radio = new JRadioButton("JRadioButton");
-            radio.setFont(new Font(FONT_style, Font.ITALIC, 16));
-            radio.setOpaque(false);
-            radio.setSelected(true);
-            editor.insertComponent(radio);
-
-        }*/
-
-
         void loadFriends() {
             panFriends.setLayout(new GridBagLayout());
             scrollFriends.createVerticalScrollBar();
@@ -467,18 +446,19 @@ class Frames {
             GridBagLayoutManager(panFriends, label, GridBagConstraints.CENTER, 1, 0, 1);
 
             int i = 0;
+
             for (Friend friend : Client.account.friends) {
                 int maxLength = 12;
-
                 String login = friend.login;
                 JButton button = new JButton();
+                JCheckBox checkBoxOnline = new JCheckBox("", friend.isOnline);
+
                 if (login.length() > maxLength) {
                     button.setToolTipText(login);
                     login = login.substring(0, maxLength - 1) + "...";
                 }
+
                 button.setText(login);
-                currentFriend = friend;
-                JCheckBox checkBoxOnline = new JCheckBox("", currentFriend.isOnline);
                 checkBoxOnline.setBackground(Color.GRAY);
                 checkBoxOnline.setEnabled(false);
 
@@ -487,14 +467,21 @@ class Frames {
 
                 GridBagLayoutManager(panFriends, checkBoxOnline, GridBagConstraints.CENTER, 0, i + 1, 1);
                 GridBagLayoutManager(panFriends, button, GridBagConstraints.HORIZONTAL, 1, i + 1, 1);
-                if (FRIENDS > 13)
-                    GridBagLayoutManager(panFriends, new JLabel("    "), GridBagConstraints.HORIZONTAL, 2, i + 1, 1);
+                if (FRIENDS > 13) GridBagLayoutManager(panFriends, new JLabel("    "), GridBagConstraints.HORIZONTAL, 2, i + 1, 1);
 
                 button.addActionListener(e -> {
+                    currentFriend = friend;
+                    System.out.println("friend selected");
+                    System.out.println(currentFriend.toString());
                     setDialog(friend);
-                    createTab(currentFriend);
+                    createTab(friend);
+                    tabbedPane.setSelectedIndex(tabs.get(friend.id).count);
                 });
+                panFriendList.put(friend.id, new PanFriend(button, checkBoxOnline));
+                System.out.println(friend.toString());
+                i++;
             }
+
             JButton button = new JButton("+");
             button.setForeground(MAIN_COLOR);
             button.setFont(new Font(FONT_style, Font.BOLD, button.getFont().getSize() + 6));
@@ -504,10 +491,8 @@ class Frames {
                 System.out.println(panFriends.getWidth());
                 new FindFriend().showFrame();
             });
-            panFriends.setSize(124, frame.getHeight()-50);
         }
         void sendMessage(JTextField textField, JTextPane MessageBox){
-            System.out.println(tabbedPane.getSize());
             if (textField.getText().length() > 0) {
                 insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "\n", heading);
                 insertText(MessageBox, textField.getText() + "\n", normal);
@@ -533,7 +518,55 @@ class Frames {
             return frame;
         }
 
+        class PanFriend{
+            JButton button;
+            JCheckBox isOnline;
 
+            public PanFriend(JButton button, JCheckBox isOnline) {
+                this.button = button;
+                this.isOnline = isOnline;
+            }
+        }
+
+        public class Tab{
+            JScrollPane MessageBox;
+            JTextField textField;
+            JButton button;
+            int count;
+            String tabName;
+            Dialog dialog;
+
+            Tab(JScrollPane messageBox, JTextField textField, JButton button, JPanel panel, String tabName, Dialog dialog) {
+                this.count = tabbedPane.getTabCount();
+                MessageBox = messageBox;
+                this.textField = textField;
+                this.button = button;
+                this.tabName = tabName;
+                this.dialog = dialog;
+                tabbedPane.addTab(tabName, panel);
+            }
+        }
+        /* // Размещение компонента в конце текста
+            StyledDocument doc = editor.getStyledDocument();
+            editor.setCaretPosition(doc.getLength());
+            JCheckBox check = new JCheckBox("JCheckBox");
+            check.setFont(new Font(FONT_style, Font.ITALIC, 16));
+            check.setOpaque(false);
+            editor.insertComponent(check);
+
+            JRadioButton radio = new JRadioButton("JRadioButton");
+            radio.setFont(new Font(FONT_style, Font.ITALIC, 16));
+            radio.setOpaque(false);
+            radio.setSelected(true);
+            editor.insertComponent(radio);
+
+        }*/
+        /*private void loadText(JTextPane editor) {
+            // Загружаем в документ содержимое
+            for (String[] aTEXT : TEXT) {
+                Style style = (aTEXT[1].equals(STYLE_heading)) ? heading : normal;
+                insertText(editor, aTEXT[0], style);
+        }*/
     }
 
     //-------------------------------------------//
@@ -724,8 +757,8 @@ class Frames {
             dialog.setLocationRelativeTo(null);
 
             butSearch.addActionListener(e -> {
-                //setInfo("К сожалению, данная функция в этой версии недоступна. Возможно, она появится в следующей версии. Приносим свои извенения!", MAIN_COLOR);
-                findUsers(fieldSearch.getText());
+                setInfo("К сожалению, данная функция в этой версии недоступна. Возможно, она появится в следующей версии. Приносим свои извенения!", Color.BLACK);
+                //findUsers(fieldSearch.getText());
             });
 
             butSend.addActionListener(e -> sendAddFriend());
@@ -1113,13 +1146,13 @@ class Frames {
                             }
                             label.setForeground(new Color(r, g, b));
                         }
+                        label.setForeground(MAIN_COLOR);
                     }).start();
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
                     isRand[0] = false;
-                    label.setForeground(MAIN_COLOR);
                 }
             });
             dialog.setSize(522, 205);
@@ -1183,27 +1216,6 @@ class Frames {
 
     //-----------------------------------------------------------------------------------------------------//
 
-
-    class Tab{
-        JScrollPane MessageBox;
-        JTextField textField;
-        JButton button;
-        int count;
-        String tabName;
-        Dialog dialog;
-
-        Tab(JScrollPane messageBox, JTextField textField, JButton button, JPanel panel, String tabName, Dialog dialog) {
-            this.count = MainFrame.tabbedPane.getTabCount();
-            MessageBox = messageBox;
-            this.textField = textField;
-            this.button = button;
-            this.tabName = tabName;
-            this.dialog = dialog;
-            MainFrame.tabbedPane.addTab(tabName, panel);
-        }
-    }
-
-
     private static void GridBagLayoutManager(JFrame frame, JComponent component, int fill, int gridX, int gridY, int gridWidth){
         GridBagConstraints c = new GridBagConstraints();
         c.fill = fill;
@@ -1259,16 +1271,12 @@ class Frames {
         frame.pack();
         return new Dimension(frame.getWidth()+w, frame.getHeight()+h);
     }
-
     private static Dimension Pack(JDialog dialog, int w, int h){
         dialog.pack();
         return new Dimension(dialog.getWidth()+w, dialog.getHeight()+h);
     }
 
     private static class WindowUtilities {
-
-
-
         static void setNativeLookAndFeel() {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

@@ -4,8 +4,8 @@ import ru.universum.Loader.Friend;
 
 import java.util.ArrayList;
 import java.util.List;
-@SuppressWarnings("ALL")
-class Dialog {
+
+public class Dialog{
 
     Dialog(Friend dialogWith) {
         this.dialogWith = dialogWith;

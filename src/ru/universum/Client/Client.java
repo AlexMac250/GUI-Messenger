@@ -46,7 +46,7 @@ public class Client {
     //есть только id и login
     static ArrayList<Account> usersInSearch = new ArrayList<>();//есть только id и login
 
-    static Map<Integer , Dialog> dialogs = new HashMap<>();
+    static Map<Friend , Dialog> dialogs = new HashMap<>();
     //FIXME update to Dialogs
 
     public static void main(String[] args) {
@@ -132,14 +132,14 @@ public class Client {
         MFrame.currentFriend = friend;
         boolean isTab = false;
         for (int i = 0; i < MFrame.tabbedPane.getTabCount(); i++) {
-            if (MFrame.tabbedPane.getComponent(i).getName().equals(friend.login)){
-                MFrame.tabbedPane.setSelectedIndex(i);
+            if (MFrame.tabs.get(friend.id).tabName.equals(friend.login)){
+                MFrame.tabbedPane.setSelectedIndex(MFrame.tabs.get(friend.id).count);
                 isTab = true;
                 break;
             }
         }
         if (!isTab){
-            MFrame.createTab(friend);
+            MFrame.panFriendList.get(friend.id).button.setForeground(Color.RED);
         }
 
     }
@@ -216,12 +216,8 @@ public class Client {
             case "online" :
                 for (Friend fr : account.friends){
                     if(fr.id == Integer.parseInt(command[2])){
-                        fr.isOnline = true;
-                        Frames.MainFrame.panFriends.removeAll();
-                        Frames.MainFrame.loadFriends();
-                        Frames.MainFrame.getFrame().repaint();
-                        Frames.MainFrame.getFrame().setVisible(false);
-                        Frames.MainFrame.getFrame().setVisible(true);
+                        Frames.MainFrame.panFriendList.get(fr.id).isOnline.setSelected(true);
+                        Frames.MainFrame.panFriendList.get(fr.id).isOnline.setToolTipText("Оффлайн");
                         break;
                     }
                 }
@@ -230,12 +226,8 @@ public class Client {
             case "offline" :
                 for (Friend fr : account.friends){
                     if(fr.id == Integer.parseInt(command[2])) {
-                        fr.isOnline = false;
-                        Frames.MainFrame.panFriends.removeAll();
-                        Frames.MainFrame.loadFriends();
-                        Frames.MainFrame.getFrame().repaint();
-                        Frames.MainFrame.getFrame().setVisible(false);
-                        Frames.MainFrame.getFrame().setVisible(true);
+                        Frames.MainFrame.panFriendList.get(fr.id).isOnline.setSelected(false);
+                        Frames.MainFrame.panFriendList.get(fr.id).isOnline.setToolTipText("Оффлайн");
                         break;
                     }
                 }
@@ -282,7 +274,8 @@ public class Client {
     public static void addFriend(String[] args){
         if(!Objects.equals(args[2], "null")){
             account.friends.add(new Friend(Integer.parseInt(args[2]),args[3]));
-            dialogs.put(Integer.parseInt(args[2]), new Dialog(account.friends.get(account.friends.size()-1)));
+            account.dialogs.put(account.friends.get(account.friends.size()-1), new Dialog(account.friends.get(account.friends.size()-1)));
+            if (Frames.MainFrame.isInit) Frames.MainFrame.loadFriends();
         }else{
             console.log("No friends", "m");
         }

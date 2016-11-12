@@ -8,7 +8,6 @@ import ru.universum.Printer.Console;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
@@ -102,7 +101,7 @@ public class WorkingServ extends Thread {
             if (Server.accs.get(idOf).isOnline) {
                 Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend", new String[]{String.valueOf(acc.id), acc.login}));
             } else {
-                Server.accs.get(idOf).oflineMes.add(new Message("askToFriend", "", String.valueOf(acc.id), acc.login));
+                Server.accs.get(idOf).offlineMes.add(new Message("askToFriend", "", String.valueOf(acc.id), acc.login));
             }
         }else{
             send(new Command("noFriended",Server.accs.get(idOf).login));
@@ -141,8 +140,8 @@ public class WorkingServ extends Thread {
             case "login":
                 login(command[1], command[2]);
                 if (acc != null) {
-                    acc.oflineMes.forEach(this::send);
-                    acc.oflineMes = new ArrayList<>();
+                    acc.offlineMes.forEach(this::send);
+                    acc.offlineMes = new ArrayList<>();
                     sendOnline();
                 }
                 break;

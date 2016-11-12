@@ -5,7 +5,6 @@ import ru.universum.Loader.Command;
 import ru.universum.Loader.Message;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,7 @@ class Intellect extends Thread{
     }
 
     private void sendOffline(Message message, int id){
-        Server.accs.get(id).oflineMes.add(message);
+        Server.accs.get(id).offlineMes.add(message);
     }
 
     private void execute(String[] command){
