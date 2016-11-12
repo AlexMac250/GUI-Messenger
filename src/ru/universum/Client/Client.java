@@ -10,42 +10,39 @@ import java.awt.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("ALL")
+//@SuppressWarnings("ALL")
 public class Client {
     static final String java_version = System.getProperty("java.version");
     public static final String os_name = System.getProperty("os.version");
     static final String os_arch = System.getProperty("os.arch");
     static final String os_version = System.getProperty("os.version");
-    static final String working_directory = Util.getWorkingDirectory().getAbsolutePath();
+//    static final String working_directory = Util.getWorkingDirectory().getAbsolutePath();
 
     static final String client_version = "version 1.0 alpha 1";
     private static List<ClientMessage> messages = new ArrayList<>();
     static Socket socket;
     static int port;
-    private static DataInputStream is;
     private static DataOutputStream os;
-    static InputReader reader;
+    private static InputReader reader;
     static Console console = new Console("Client");
 
-    static final boolean NODATE = false;
-    static final boolean DATED = true;
+    private static final boolean NODATE = false;
+    private static final boolean DATED = true;
     static String HOSTNAME = "95.154.89.186";
 
     static Account account = new Account();
 
-    static boolean statusLogged = false;
+    private static boolean statusLogged = false;
     static boolean statusConnected = false;
-    static boolean statusRegistered = false;
-
+    private static boolean statusRegistered = false;
 
     static Frames Frames = new Frames();
-    //есть только id и login
     static ArrayList<Account> usersInSearch = new ArrayList<>();//есть только id и login
-
     static Map<Friend , Dialog> dialogs = new HashMap<>();
     //FIXME update to Dialogs
 
@@ -53,12 +50,11 @@ public class Client {
         javax.swing.SwingUtilities.invokeLater(() -> Frames.startGUI());
         new BASH().run();
     }
-
     public static void connect(){
         try {
             Frames.LoginFrame.setInfo("Входим...", Color.ORANGE);
             socket = new Socket(InetAddress.getByName(HOSTNAME), 2905);
-            is = new DataInputStream(socket.getInputStream());
+            DataInputStream is = new DataInputStream(socket.getInputStream());
             port = is.readInt();
             System.out.println("got port");
             socket.close();
@@ -80,7 +76,6 @@ public class Client {
             e.printStackTrace();
         }
     }
-
     public static void disconnect(){
         try {
             socket.close();
@@ -89,7 +84,6 @@ public class Client {
         }
         statusConnected = false;
         port = 0;
-        //account.friends = new ArrayList<Friend>();
         account = new Account();
         usersInSearch = new ArrayList<>();
         messages = new ArrayList<>();
@@ -97,10 +91,9 @@ public class Client {
         Frames = new Frames();
         javax.swing.SwingUtilities.invokeLater(() -> {Frames.startGUI();});
     }
-
     public static void login(String login, String password){
-        send(new Message("login",login,password,NODATE));}
-
+        send(new Message("login",login,password,NODATE));
+    }
     public static void register(String login, String password){
         send(new Message("register",login,password,NODATE));
         try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
@@ -111,15 +104,12 @@ public class Client {
             Frames.RegisterFrame.setInfo("Ошибка регистрации", Color.RED);
         }
     }
-
     public static ArrayList<Account> getUsersInSearch(){
         return usersInSearch;
     }
-
     public static void resOfFriend(String ans, int id){
         execute(descript("resOfFriend$"+id+"$"+ans));
     }
-
     public static void writeMessage(String from, String date, String message){
         Frames.MainFrame MFrame = Frames.MainFrame;
         Friend friend = null;
@@ -133,7 +123,10 @@ public class Client {
         boolean isTab = false;
         for (int i = 0; i < MFrame.tabbedPane.getTabCount(); i++) {
             if (MFrame.tabs.get(friend.id).tabName.equals(friend.login)){
-                MFrame.tabbedPane.setSelectedIndex(MFrame.tabs.get(friend.id).count);
+                ru.universum.Client.Frames.MainFrame.Tab tab = MFrame.tabs.get(friend.id);
+                MFrame.tabbedPane.setSelectedIndex(tab.count);
+                MFrame.insertText(tab.MessageBox, "\n" +MFrame.currentFriend.login + " [" + date + "\n", MFrame.heading);
+                MFrame.insertText(tab.MessageBox, message + "\n", MFrame.normal);
                 isTab = true;
                 break;
             }
@@ -143,7 +136,6 @@ public class Client {
         }
 
     }
-
     public static void execute(String[] command){
         switch (command[0]){
             // второй аргумент - логин третий пароль
@@ -163,7 +155,7 @@ public class Client {
 
             case "message" :
                 //принял входящее сообщеине
-                dialogs.get(Integer.parseInt(command[1])).addMes(new ClientMessage(command[1], command[2], command[3]));
+                //dialogs.get(Integer.parseInt(command[1])).addMes(new ClientMessage(command[1], command[2], command[3]));
                 writeMessage(command[1], command[2], command[3]);
                // System.out.println(messages.get(messages.size()-1));
                 break;
@@ -209,7 +201,7 @@ public class Client {
 
             //если ошибка при добавлении в друзья
             case "noFriended" :
-                Frames.MainFrame.setInfo("Ваше предложение в друзья "+command[1]+", отменено.", Color.BLACK);
+                Frames.MainFrame.setInfo("Ваше предложение в друзья "+command[2]+", отменено.", Color.BLACK);
                 //ЗДЕСЬ СДЕЛАЙ ВЫВОД ТОГО ЧТО ЕГО ПРЕДЛОЖЕНИЕ В ДРУЗЬЯ ПРОИГНОРИЛ ПОЛЬЗОВАТЕЛЬ С НИКОМ command[1]
                 break;
 
@@ -270,8 +262,7 @@ public class Client {
                 break;
         }
     }
-
-    public static void addFriend(String[] args){
+    private static void addFriend(String[] args){
         if(!Objects.equals(args[2], "null")){
             account.friends.add(new Friend(Integer.parseInt(args[2]),args[3]));
             account.dialogs.put(account.friends.get(account.friends.size()-1), new Dialog(account.friends.get(account.friends.size()-1)));
@@ -280,9 +271,7 @@ public class Client {
             console.log("No friends", "m");
         }
     }
-
-    //работает , не трогать
-    public static String[] descript(String message){
+    static String[] descript(String message){
         String[] s = new String[4];
         char[] c = message.toCharArray();
         int i = 0;
@@ -301,8 +290,7 @@ public class Client {
         }
         return s;
     }
-    //работает , не трогать
-    public static void send(Message message){
+    private static void send(Message message){
         try {
             os = new DataOutputStream(socket.getOutputStream());
             os.writeUTF(message.toString());

@@ -54,13 +54,12 @@ class Intellect extends Thread{
         switch (command[0]){
 
             case "send":
+                int to = Integer.parseInt(command[1]);
                 if(Server.accs.get(Integer.parseInt(command[1])).isOnline){
-                    int to = Integer.parseInt(command[1]);
                     command[1] = String.valueOf(acc.id);
                     Server.accs.get(to).getWorkingServ().execute(command);
                 }
                 else{
-                    int to = Integer.parseInt(command[1]);
                     command[1] = String.valueOf(acc.id);
                     sendOffline(new Message("message", command[1] , command[2], command[3]) , to);
                 }

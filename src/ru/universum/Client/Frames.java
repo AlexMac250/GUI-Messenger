@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-
+@SuppressWarnings("ALL")
 class Frames {
     @SuppressWarnings("ALL")
     private final String STYLE_heading = "heading";
@@ -130,7 +130,6 @@ class Frames {
     }
 
     //-------------------------------------------//
-    @SuppressWarnings("ALL")
     class LoginFrame extends AbstractFrame {
         JDialog dialog;
         private JTextField loginField;
@@ -326,7 +325,7 @@ class Frames {
 
         //-----//
 
-        void createTab(Friend friend) {// FIXME: 10.11.2016 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        void createTab(Friend friend) {
             if (!tabs.containsKey(friend == null ? -2 : friend.id)) {
                 try {
                     JPanel panel = new JPanel();
@@ -336,6 +335,7 @@ class Frames {
                     JPanel panSendMessage = new JPanel();
                     JButton butSendMessage = new JButton("Отправить");
                     JButton butCloseTab = new JButton("╳");
+                    butCloseTab.setToolTipText("Закрыть вкладку");
                     JTextField textField = new JTextField(Client.os_name.equals("Linux") ? 25 : 45);
                     MessageBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
@@ -348,7 +348,7 @@ class Frames {
                         GridBagLayoutManager(panel, lab, GridBagConstraints.CENTER, 0, 0, 1);
                         panel.setPreferredSize(new Dimension(500, 325));
                         panel.setBackground(Color.DARK_GRAY);
-                        tabs.put(-1, new Tab(scrollMessage, textField, butSendMessage, panel, "Привет!", null));
+                        tabs.put(-1, new Tab(scrollMessage, MessageBox, textField, butSendMessage, panel, "Привет!", null));
                     } else {
                         if (tabs.containsKey(-1)){
                             tabbedPane.remove(tabs.get(-1).count);
@@ -371,6 +371,7 @@ class Frames {
                         scrollMessage.setAutoscrolls(true);
 
                         panel.setLayout(new GridBagLayout());
+
                         GridBagLayoutManager(panel, scrollMessage, GridBagConstraints.CENTER, 0, 0, 3);
                         GridBagLayoutManager(panel, butCloseTab, GridBagConstraints.HORIZONTAL, 0, 1, 1);
                         GridBagLayoutManager(panel, textField, GridBagConstraints.HORIZONTAL, 1, 1, 1);
@@ -392,7 +393,7 @@ class Frames {
 //                                    FDialog = Client.dialogs.get(i);// FIXME: 10.11.2016 !!!
 //                                }
                                 }
-                                tabs.put(friend.id, new Tab(scrollMessage, textField, butSendMessage, panel, friend.login, FDialog));
+                                tabs.put(friend.id, new Tab(scrollMessage, MessageBox, textField, butSendMessage, panel, friend.login, FDialog));
                             } else {
                                 System.out.println("Нет диалогов");
                             }
@@ -514,9 +515,7 @@ class Frames {
             frame.setJMenuBar(menuBar);
         }
 
-        JFrame getFrame() {
-            return frame;
-        }
+
 
         class PanFriend{
             JButton button;
@@ -527,18 +526,19 @@ class Frames {
                 this.isOnline = isOnline;
             }
         }
-
         public class Tab{
-            JScrollPane MessageBox;
+            JScrollPane jScrollPane;
+            JTextPane MessageBox;
             JTextField textField;
             JButton button;
             int count;
             String tabName;
             Dialog dialog;
 
-            Tab(JScrollPane messageBox, JTextField textField, JButton button, JPanel panel, String tabName, Dialog dialog) {
+            Tab(JScrollPane jScrollPane, JTextPane MessageBox, JTextField textField, JButton button, JPanel panel, String tabName, Dialog dialog) {
                 this.count = tabbedPane.getTabCount();
-                MessageBox = messageBox;
+                this.jScrollPane = jScrollPane;
+                this.MessageBox = MessageBox;
                 this.textField = textField;
                 this.button = button;
                 this.tabName = tabName;
@@ -560,13 +560,15 @@ class Frames {
             radio.setSelected(true);
             editor.insertComponent(radio);
 
-        }*/
-        /*private void loadText(JTextPane editor) {
+        private void loadText(JTextPane editor) {
             // Загружаем в документ содержимое
             for (String[] aTEXT : TEXT) {
                 Style style = (aTEXT[1].equals(STYLE_heading)) ? heading : normal;
                 insertText(editor, aTEXT[0], style);
         }*/
+        JFrame getFrame() {
+            return frame;
+        }
     }
 
     //-------------------------------------------//
