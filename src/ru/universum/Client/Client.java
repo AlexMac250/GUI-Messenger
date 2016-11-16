@@ -114,7 +114,7 @@ public class Client {
         execute(descript("resOfFriend$"+id+"$"+ans));
     }
 
-    public static void writeMessage(String from, String date, String message){
+    private static void writeMessage(String from, String date, String message){
         Frames.MainFrame MFrame = Frames.MainFrame;
         Friend friend = null;
         for (Friend fr : account.friends) {
@@ -129,14 +129,15 @@ public class Client {
             if (MFrame.tabs.get(friend.id).tabName.equals(friend.login)){
                 ru.universum.Client.Frames.MainFrame.Tab tab = MFrame.tabs.get(friend.id);
                 MFrame.tabbedPane.setSelectedIndex(tab.count);
-
-                MFrame.insertText(tab.MessageBox, "\n" +MFrame.currentFriend.login + " [" + date + "\n", MFrame.heading);
+                MFrame.insertText(tab.MessageBox, "\n" +MFrame.currentFriend.login + " [" + date + "]\n", MFrame.heading);
                 MFrame.insertText(tab.MessageBox, message + "\n", MFrame.normal);
                 isTab = true;
                 break;
             }
         }
+        System.out.println(isTab);
         if (!isTab){
+            System.out.println("BUTTON!");
             MFrame.panFriendList.get(friend.id).button.setForeground(Color.RED);
         }
 

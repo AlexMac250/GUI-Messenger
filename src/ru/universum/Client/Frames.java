@@ -339,7 +339,7 @@ class Frames {
                     JTextField textField = new JTextField(Client.os_name.equals("Linux") ? 25 : 45);
                     MessageBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-                    JScrollPane scrollMessage = new JScrollPane();
+                    JScrollPane scrollMessage = new JScrollPane(panMessages);
 
                     if (friend == null) {
                         JLabel lab = new JLabel(Client.account.friends.size() >= 1 ? "Выберите друга" : "У вас нет друзей :(");
@@ -365,10 +365,9 @@ class Frames {
                         scrollMessage.setBackground(Color.DARK_GRAY);
                         panSendMessage.setBackground(Color.DARK_GRAY);
 
-                        scrollMessage.createVerticalScrollBar();
                         scrollMessage.getViewport().add(panMessages);
+                        scrollMessage.createVerticalScrollBar();
                         scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-                        scrollMessage.setAutoscrolls(true);
 
                         panel.setLayout(new GridBagLayout());
 
