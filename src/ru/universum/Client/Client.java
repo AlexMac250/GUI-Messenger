@@ -33,7 +33,7 @@ public class Client {
 
     private static final boolean NODATE = false;
     private static final boolean DATED = true;
-    static String HOSTNAME = "95.154.89.186";
+    static String HOSTNAME = "25.55.87.69";
 
     static Account account = new Account();
 
@@ -266,7 +266,9 @@ public class Client {
         if(!Objects.equals(args[2], "null")){
             account.friends.add(new Friend(Integer.parseInt(args[2]),args[3]));
             account.dialogs.put(account.friends.get(account.friends.size()-1), new Dialog(account.friends.get(account.friends.size()-1)));
-            if (Frames.MainFrame.isInit) Frames.MainFrame.loadFriends();
+            if (Frames.MainFrame.isInit){
+                Frames.MainFrame.loadFriends();
+            }
         }else{
             console.log("No friends", "m");
         }

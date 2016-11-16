@@ -492,6 +492,8 @@ class Frames {
                 System.out.println(panFriends.getWidth());
                 new FindFriend().showFrame();
             });
+            frame.setVisible(false);
+            frame.setVisible(true);
         }
         void sendMessage(JTextField textField, JTextPane MessageBox){
             if (textField.getText().length() > 0) {

@@ -22,6 +22,7 @@ class InputReader extends Thread {
             try {
                 message = in.readUTF();
                 commands += "\n" + message;
+               // System.out.println(message);
                 throwCommand();
             } catch (Exception e) {
                 //e.printStackTrace();

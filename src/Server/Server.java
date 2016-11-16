@@ -139,6 +139,7 @@ public class Server{
             console.log(""+e, "exc");
         }
     }
+
     @SuppressWarnings("ALL")
     public static void setAddress(String address) {
         try {
