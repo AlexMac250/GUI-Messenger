@@ -10,7 +10,6 @@ import java.awt.*;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +32,7 @@ public class Client {
 
     private static final boolean NODATE = false;
     private static final boolean DATED = true;
-    static String HOSTNAME = "25.55.87.69";
+    static String HOSTNAME = "127.0.0.1";
 
     static Account account = new Account();
 
@@ -43,7 +42,10 @@ public class Client {
 
     static Frames Frames = new Frames();
     static ArrayList<Account> usersInSearch = new ArrayList<>();//есть только id и login
-    static Map<Friend , Dialog> dialogs = new HashMap<>();
+    static Map<Integer , Dialog> dialogs = new HashMap<>();
+    public static ArrayList<Account> getUsersInSearch(){
+        return usersInSearch;
+    }
     //FIXME update to Dialogs
 
     public static void main(String[] args) {
@@ -76,6 +78,7 @@ public class Client {
             e.printStackTrace();
         }
     }
+
     public static void disconnect(){
         try {
             socket.close();
@@ -91,9 +94,11 @@ public class Client {
         Frames = new Frames();
         javax.swing.SwingUtilities.invokeLater(() -> {Frames.startGUI();});
     }
+
     public static void login(String login, String password){
         send(new Message("login",login,password,NODATE));
     }
+
     public static void register(String login, String password){
         send(new Message("register",login,password,NODATE));
         try {TimeUnit.MILLISECONDS.sleep(500);} catch (InterruptedException ignored) {}
@@ -104,12 +109,11 @@ public class Client {
             Frames.RegisterFrame.setInfo("Ошибка регистрации", Color.RED);
         }
     }
-    public static ArrayList<Account> getUsersInSearch(){
-        return usersInSearch;
-    }
+
     public static void resOfFriend(String ans, int id){
         execute(descript("resOfFriend$"+id+"$"+ans));
     }
+
     public static void writeMessage(String from, String date, String message){
         Frames.MainFrame MFrame = Frames.MainFrame;
         Friend friend = null;
@@ -125,6 +129,7 @@ public class Client {
             if (MFrame.tabs.get(friend.id).tabName.equals(friend.login)){
                 ru.universum.Client.Frames.MainFrame.Tab tab = MFrame.tabs.get(friend.id);
                 MFrame.tabbedPane.setSelectedIndex(tab.count);
+
                 MFrame.insertText(tab.MessageBox, "\n" +MFrame.currentFriend.login + " [" + date + "\n", MFrame.heading);
                 MFrame.insertText(tab.MessageBox, message + "\n", MFrame.normal);
                 isTab = true;
@@ -155,10 +160,10 @@ public class Client {
 
             case "message" :
                 //принял входящее сообщеине
-                //dialogs.get(Integer.parseInt(command[1])).addMes(new ClientMessage(command[1], command[2], command[3]));
+                dialogs.get(Integer.parseInt(command[1])).addMes(new ClientMessage(command[1], command[2], command[3]));
                 writeMessage(command[1], command[2], command[3]);
-               // System.out.println(messages.get(messages.size()-1));
                 break;
+
             //заполняет френдов с сервера.
             case "friend" :
                 addFriend(command);
@@ -265,7 +270,7 @@ public class Client {
     private static void addFriend(String[] args){
         if(!Objects.equals(args[2], "null")){
             account.friends.add(new Friend(Integer.parseInt(args[2]),args[3]));
-            account.dialogs.put(account.friends.get(account.friends.size()-1), new Dialog(account.friends.get(account.friends.size()-1)));
+            dialogs.put(account.friends.get(account.friends.size()-1).id, new Dialog(account.friends.get(account.friends.size()-1)));
             if (Frames.MainFrame.isInit){
                 Frames.MainFrame.loadFriends();
             }

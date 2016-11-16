@@ -2,9 +2,9 @@ package ru.universum.Client;
 
 class ClientMessage {
 
-    private String from ;
-    private String date ;
-    private String text ;
+    String from ;
+    String date ;
+    String text ;
 
     @Override
     public String toString() {

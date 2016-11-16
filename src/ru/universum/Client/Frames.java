@@ -342,7 +342,7 @@ class Frames {
                     JScrollPane scrollMessage = new JScrollPane();
 
                     if (friend == null) {
-                        JLabel lab = new JLabel(Client.account.friends.size() >= 1 ? "Выберете друга" : "У вас нет друзей :(");
+                        JLabel lab = new JLabel(Client.account.friends.size() >= 1 ? "Выберите друга" : "У вас нет друзей :(");
                         lab.setFont(new Font(FONT_style, Font.BOLD, 40));
                         lab.setForeground(MAIN_COLOR);
                         GridBagLayoutManager(panel, lab, GridBagConstraints.CENTER, 0, 0, 1);
@@ -388,12 +388,14 @@ class Frames {
                         Dialog FDialog = null; //FIXME!!!
                         try {
                             if (Client.account.friends.size() > 0) {
-                                for (int i = 0; i < Client.dialogs.size(); i++) {
-//                                if (Client.dialogs.get(i).dialogWith.login.equals(friend.login)) {
-//                                    FDialog = Client.dialogs.get(i);// FIXME: 10.11.2016 !!!
-//                                }
-                                }
+                                FDialog = Client.dialogs.get(friend.id);
                                 tabs.put(friend.id, new Tab(scrollMessage, MessageBox, textField, butSendMessage, panel, friend.login, FDialog));
+                                if(Client.dialogs.size()!=0){
+                                    for (ClientMessage message : FDialog.messages) {
+                                        insertText(MessageBox, "\n" + currentFriend.login + " [" + message.date + "]\n", heading);
+                                        insertText(MessageBox, message.text + "\n", normal);
+                                    }
+                                }
                             } else {
                                 System.out.println("Нет диалогов");
                             }
@@ -428,6 +430,7 @@ class Frames {
             }
         }
         void loadFriends() {
+            panFriends.removeAll();
             panFriends.setLayout(new GridBagLayout());
             scrollFriends.createVerticalScrollBar();
             scrollFriends.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);

@@ -17,7 +17,7 @@ public class Account {
     public ArrayList<Friend> friends = new ArrayList<>();
     public static long idGL = 0;
     public List<Message> offlineMes = new ArrayList<>();
-    public Map<Friend, Dialog> dialogs = new HashMap<>();
+    public Map<Integer, Dialog> dialogs = new HashMap<>();
     private WorkingServ workingServ;
 
     public WorkingServ getWorkingServ() {
