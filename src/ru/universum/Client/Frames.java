@@ -158,7 +158,7 @@ class Frames {
             remAccData.setForeground(Color.WHITE);
             remAccData.setFocusable(false);
             remAccData.setBackground(Color.DARK_GRAY);
-            remAccData.setSelected(Security.getRemData());
+            //remAccData.setSelected(Security.getRemData());
             loginField.setBackground(Color.GRAY);
             passwordField.setBackground(Color.GRAY);
             dialog.getContentPane().setBackground(Color.DARK_GRAY);
@@ -191,7 +191,7 @@ class Frames {
             passwordField.addActionListener(e -> login());
             loginField.setText(Security.getUserLogin());
             passwordField.setText(Security.getUserPass());
-            remAccData.setSelected(Security.getRemData());
+            //remAccData.setSelected(Security.getRemData());
         }
 
         @Override
