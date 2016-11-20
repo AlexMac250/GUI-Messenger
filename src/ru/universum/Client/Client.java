@@ -32,7 +32,7 @@ public class Client {
 
     private static final boolean NODATE = false;
     private static final boolean DATED = true;
-    static String HOSTNAME = "127.0.0.1";
+    static String HOSTNAME = "25.55.87.69";
 
     static Account account = new Account();
 
@@ -52,6 +52,7 @@ public class Client {
         javax.swing.SwingUtilities.invokeLater(() -> Frames.startGUI());
         new BASH().run();
     }
+
     public static void connect(){
         try {
             Frames.LoginFrame.setInfo("Входим...", Color.ORANGE);

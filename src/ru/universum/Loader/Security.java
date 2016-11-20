@@ -35,10 +35,10 @@ public class Security {
         WinRegistryWrapper.WinRegSetValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_remdata" , bool ? "true" : "false");
     }
 
-    public static boolean getRemData() {
-        String res = WinRegistryWrapper.WinRegQueryValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_pass");
-        return res != null && Boolean.getBoolean(res);
-    }
+  //  public static boolean getRemData() {
+  //      String res = WinRegistryWrapper.WinRegQueryValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_pass");
+  //      return res != null && Boolean.getBoolean(res);
+  //  }
 
     public static String getMD5(char[] pass) {
         String st = null;

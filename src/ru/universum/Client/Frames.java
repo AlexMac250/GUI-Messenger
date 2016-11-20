@@ -158,7 +158,7 @@ class Frames {
             remAccData.setForeground(Color.WHITE);
             remAccData.setFocusable(false);
             remAccData.setBackground(Color.DARK_GRAY);
-            remAccData.setSelected(Security.getRemData());
+            //remAccData.setSelected(Security.getRemData());
             loginField.setBackground(Color.GRAY);
             passwordField.setBackground(Color.GRAY);
             dialog.getContentPane().setBackground(Color.DARK_GRAY);
@@ -191,7 +191,7 @@ class Frames {
             passwordField.addActionListener(e -> login());
             loginField.setText(Security.getUserLogin());
             passwordField.setText(Security.getUserPass());
-            remAccData.setSelected(Security.getRemData());
+            //remAccData.setSelected(Security.getRemData());
         }
 
         @Override
@@ -319,7 +319,6 @@ class Frames {
             butOK.addActionListener(e -> frMess.dispose());
             frMess.setSize(Pack(frMess, 30, 10));
             frMess.setLocationRelativeTo(null);
-
             frMess.setVisible(true);
         }
 
@@ -410,6 +409,7 @@ class Frames {
                 tabbedPane.setSelectedIndex(tabs.get(friend.id).count);
             }
         }
+
         private void createStyles(JTextPane editor) {
             // Создание стилей
             normal = editor.addStyle(STYLE_normal, null);
@@ -420,6 +420,7 @@ class Frames {
             StyleConstants.setFontSize(heading, 18);
             StyleConstants.setBold(heading, true);
         }
+
         void insertText(JTextPane editor, String string, Style style) {
             try {
                 Document doc = editor.getDocument();
@@ -428,6 +429,7 @@ class Frames {
                 e.printStackTrace();
             }
         }
+
         void loadFriends() {
             panFriends.removeAll();
             panFriends.setLayout(new GridBagLayout());
@@ -497,6 +499,7 @@ class Frames {
             frame.setVisible(false);
             frame.setVisible(true);
         }
+
         void sendMessage(JTextField textField, JTextPane MessageBox){
             if (textField.getText().length() > 0) {
                 insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "\n", heading);
@@ -505,6 +508,7 @@ class Frames {
                 textField.setText("");
             }
         }
+
         void setDialog(Friend friend) {
             currentFriend = friend;
         }
@@ -530,6 +534,7 @@ class Frames {
                 this.isOnline = isOnline;
             }
         }
+
         public class Tab{
             JScrollPane jScrollPane;
             JTextPane MessageBox;
