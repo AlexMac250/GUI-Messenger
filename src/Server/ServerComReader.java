@@ -91,6 +91,12 @@ class ServerComReader extends Thread{
 
                 case "restart":
                     isExecuting = true;
+                    try {
+                        if (System.getProperty("os.name").equals("Windows"))
+                            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                    } catch (Exception e) {
+                        interrupt();
+                    }
                     Server.startNew();
                     break;
 
