@@ -14,7 +14,6 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-//@SuppressWarnings("ALL")
 public class Client {
     static final String java_version = System.getProperty("java.version");
     public static final String os_name = System.getProperty("os.version");

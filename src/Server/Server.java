@@ -175,16 +175,16 @@ public class Server{
               console.log(""+e,"exc");
               System.out.println("[MESSAGE] Restart server with another IP");
           }
-              while (!isClosed) {
-                  try {
-                      new Server(mainSocket.accept());
-                  }catch (Exception e){
-                      CLOSE();
-                      console.log("Connection lost", "w");
-                      console.log(""+e, "exc");
-                      break;
-                  }
-              }
+        while (!isClosed) {
+            try {
+                new Server(mainSocket.accept());
+            }catch (Exception e){
+                CLOSE();
+                console.log("Connection lost", "w");
+                console.log(""+e, "exc");
+                break;
+            }
+        }
 
     }
 }

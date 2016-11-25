@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -51,7 +52,11 @@ class ServerComReader extends Thread{
                 case "login":
                     isExecuting = true;
                     if (command[1].equals("admin")) {
-                        Account acc = Server.logIn("admin", Security.getMD5(command[2].toCharArray()));
+                        Account acc = null;
+                        for (Account a: Server.accs) {
+                            if (Objects.equals(a.password, command[2]))
+                                acc = a;
+                        }
                         if (acc != null & !isAdminLogged) {
                             isAdminLogged = true;
                             console.log("Admin logged in", "m");
