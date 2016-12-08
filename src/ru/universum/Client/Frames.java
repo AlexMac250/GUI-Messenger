@@ -5,7 +5,7 @@ import ru.universum.Loader.Friend;
 import ru.universum.Printer.Console;
 import ru.universum.Loader.Security;
 
-//import javax.imageio.ImageIO;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 import javax.swing.event.TableModelListener;
@@ -94,17 +94,18 @@ class Frames {
             GridBagLayoutManager(frame, butSettings, GridBagConstraints.HORIZONTAL, 0, 6, 1);
             GridBagLayoutManager(frame, getEmptyLabel(2), GridBagConstraints.HORIZONTAL, 0, 7, 1);
             GridBagLayoutManager(frame, butAbout, GridBagConstraints.HORIZONTAL, 0, 8, 1);
+
             int w = 160;
             int h = Client.os_name.equals("Linux") ? 205 : 185;
             frame.setResizable(false);
             frame.setSize(w, h);
             frame.setLocationRelativeTo(null);
 
-//            try {
-//                frame.setIconImage(ImageIO.read(MainMenuFrame.class.getResource("favicon.png")));
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
+            try {
+                frame.setIconImage(ImageIO.read(MainMenuFrame.class.getResource("favicon.png")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             butLogin.addActionListener(e -> LoginFrame.showFrame());
             butRegister.addActionListener(e -> RegisterFrame.showFrame());
@@ -222,8 +223,8 @@ class Frames {
 
         private void login(){
             if (!remAccData.isSelected()){
-                Security.setAboutUser(loginField.getText(), getPass());
-                Security.setRemData(remAccData.isSelected());
+//                Security.setAboutUser(loginField.getText(), getPass());
+//                Security.setRemData(remAccData.isSelected());
             }
             setInfo("Входим...", Color.ORANGE);
             if (loginField.getText().length() > 1 & passwordField.getPassword().length > 1) {
@@ -265,6 +266,12 @@ class Frames {
                 tabbedPane = new JTabbedPane();
                 tabbedPane.setBackground(Color.DARK_GRAY);
                 createTab(null);
+
+                try {
+                    frame.setIconImage(ImageIO.read(MainMenuFrame.class.getResource("favicon.png")));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 panMainContent.setBackground(Color.DARK_GRAY);
                 contentPain.setBackground(Color.DARK_GRAY);
