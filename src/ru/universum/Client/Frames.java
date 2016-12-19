@@ -328,7 +328,6 @@ class Frames {
             frMess.setLocationRelativeTo(null);
             frMess.setVisible(true);
         }
-
         //-----//
 
         void createTab(Friend friend) {
@@ -345,14 +344,14 @@ class Frames {
                     JTextField textField = new JTextField(Client.os_name.equals("Linux") ? 25 : 45);
                     MessageBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-                    JScrollPane scrollMessage = new JScrollPane(panMessages);
+                    JScrollPane scrollMessage = new JScrollPane();
 
                     if (friend == null) {
                         JLabel lab = new JLabel(Client.account.friends.size() >= 1 ? "Выберите друга" : "У вас нет друзей :(");
                         lab.setFont(new Font(FONT_style, Font.BOLD, 40));
                         lab.setForeground(MAIN_COLOR);
                         GridBagLayoutManager(panel, lab, GridBagConstraints.CENTER, 0, 0, 1);
-                        panel.setPreferredSize(new Dimension(500, 325));
+                        panel.setPreferredSize(new Dimension(500, 300));
                         panel.setBackground(Color.DARK_GRAY);
                         tabs.put(-1, new Tab(scrollMessage, MessageBox, textField, butSendMessage, panel, "Привет!", null));
                     } else {
@@ -360,10 +359,9 @@ class Frames {
                             tabbedPane.remove(tabs.get(-1).count);
                             tabs.remove(-1);
                         }
-                        panMessages.setLayout(null);
+                        MessageBox.setLayout(null);
+                        MessageBox.setPreferredSize(new Dimension(500, 272));
                         MessageBox.setBounds(0, 0, 498, 320);
-                        panMessages.add(MessageBox);
-                        panMessages.setPreferredSize(new Dimension(468, 272));
                         createStyles(MessageBox);
 
                         MessageBox.setBackground(Color.GRAY);
@@ -371,7 +369,7 @@ class Frames {
                         scrollMessage.setBackground(Color.DARK_GRAY);
                         panSendMessage.setBackground(Color.DARK_GRAY);
 
-                        scrollMessage.getViewport().add(panMessages);
+                        scrollMessage.getViewport().add(MessageBox);
                         scrollMessage.createVerticalScrollBar();
                         scrollMessage.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 

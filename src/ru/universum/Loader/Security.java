@@ -1,6 +1,6 @@
 package ru.universum.Loader;
 
-import com.sun.deploy.association.utility.WinRegistryWrapper;
+//import com.sun.deploy.association.utility.WinRegistryWrapper;
 import ru.universum.Client.Client;
 
 import java.math.BigInteger;
@@ -9,11 +9,11 @@ import java.security.NoSuchAlgorithmException;
 
 public class Security {
     public static String getUserLogin(){
-        String login = "";
-        if (Client.os_name.equals("Windows")) login = WinRegistryWrapper.WinRegQueryValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_login");
-        if (login != null) {
-            return login;
-        }
+//        String login = "";
+//        if (Client.os_name.equals("Windows")) login = WinRegistryWrapper.WinRegQueryValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_login");
+//        if (login != null) {
+//            return login;
+//        }
         return "";
     }
 
@@ -32,7 +32,7 @@ public class Security {
     }
 
     public static void setRemData(boolean bool){
-        WinRegistryWrapper.WinRegSetValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_remdata" , bool ? "true" : "false");
+        //WinRegistryWrapper.WinRegSetValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_remdata" , bool ? "true" : "false");
     }
 
    // public static boolean getRemData() {
