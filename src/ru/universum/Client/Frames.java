@@ -290,7 +290,7 @@ class Frames {
 
                 frame.setLocationRelativeTo(null);
                 isInit = true;
-                setInfo("Внимание! Это OPEN BETA версия программы! Возможны глюки и лаги. Об всех происходящих ошибках просим ссобщить программистам!", Color.red);
+                setInfo("Внимание! Это beta версия программы! Возможны глюки и лаги. Обо всех происходящих ошибках просим сообщить программистам!", Color.red);
             } catch (Exception e) {
                 setInfo(e.toString(), Color.RED);
             }
