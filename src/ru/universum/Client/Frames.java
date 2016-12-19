@@ -794,6 +794,7 @@ class Frames {
         @Override
         public void showFrame() {
             initial();
+            setInfo("Напоминаем, что это бета версия программы. Возможны ошибки. Нажмите \"Обновить\" в углу окна.",Color.BLACK);
             dialog.setVisible(true);
         }
 
