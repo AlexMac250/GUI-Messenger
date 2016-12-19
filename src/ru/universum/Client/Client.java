@@ -21,7 +21,7 @@ public class Client {
     static final String os_version = System.getProperty("os.version");
 //    static final String working_directory = Util.getWorkingDirectory().getAbsolutePath();
 
-    static final String client_version = "version 1.0 alpha 1";
+    static final String client_version = "version 1.4 open_beta 1";
     private static List<ClientMessage> messages = new ArrayList<>();
     static Socket socket;
     static int port;
@@ -31,7 +31,7 @@ public class Client {
 
     private static final boolean NODATE = false;
     private static final boolean DATED = true;
-    static String HOSTNAME = "10.0.0.9";
+    static String HOSTNAME = "95.154.89.186";
 
     static Account account = new Account();
 
@@ -92,7 +92,7 @@ public class Client {
         messages = new ArrayList<>();
         dialogs = new HashMap<>();
         Frames = new Frames();
-        javax.swing.SwingUtilities.invokeLater(() -> {Frames.startGUI();});
+        javax.swing.SwingUtilities.invokeLater(() -> Frames.startGUI());
     }
 
     public static void login(String login, String password){

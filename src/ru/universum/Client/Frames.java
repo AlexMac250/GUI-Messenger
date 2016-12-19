@@ -290,7 +290,7 @@ class Frames {
 
                 frame.setLocationRelativeTo(null);
                 isInit = true;
-
+                setInfo("Внимание! Это OPEN BETA версия программы! Возможны глюки и лаги. Об всех происходящих ошибках просим ссобщить программистам!", Color.red);
             } catch (Exception e) {
                 setInfo(e.toString(), Color.RED);
             }
@@ -345,7 +345,6 @@ class Frames {
                     MessageBox.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
                     JScrollPane scrollMessage = new JScrollPane();
-
                     if (friend == null) {
                         JLabel lab = new JLabel(Client.account.friends.size() >= 1 ? "Выберите друга" : "У вас нет друзей :(");
                         lab.setFont(new Font(FONT_style, Font.BOLD, 40));
@@ -354,20 +353,24 @@ class Frames {
                         panel.setPreferredSize(new Dimension(500, 300));
                         panel.setBackground(Color.DARK_GRAY);
                         tabs.put(-1, new Tab(scrollMessage, MessageBox, textField, butSendMessage, panel, "Привет!", null));
+                        //tabbedPane.getComponentAt(tabs.get(currentFriend.id).count).setForeground(MAIN_COLOR);
                     } else {
                         if (tabs.containsKey(-1)){
                             tabbedPane.remove(tabs.get(-1).count);
                             tabs.remove(-1);
                         }
                         MessageBox.setLayout(null);
+                        MessageBox.setEditable(false);
                         MessageBox.setPreferredSize(new Dimension(500, 272));
                         MessageBox.setBounds(0, 0, 498, 320);
                         createStyles(MessageBox);
 
                         MessageBox.setBackground(Color.GRAY);
                         MessageBox.setForeground(Color.WHITE);
-                        scrollMessage.setBackground(Color.DARK_GRAY);
+                        //scrollMessage.setBackground(Color.DARK_GRAY);
                         panSendMessage.setBackground(Color.DARK_GRAY);
+                        butSendMessage.setForeground(MAIN_COLOR);
+                        butCloseTab.setForeground(Color.RED);
 
                         scrollMessage.getViewport().add(MessageBox);
                         scrollMessage.createVerticalScrollBar();
@@ -393,6 +396,7 @@ class Frames {
                             if (Client.account.friends.size() > 0) {
                                 FDialog = Client.dialogs.get(friend.id);
                                 tabs.put(friend.id, new Tab(scrollMessage, MessageBox, textField, butSendMessage, panel, friend.login, FDialog));
+                                tabbedPane.getComponentAt(tabs.get(currentFriend.id).count).setForeground(MAIN_COLOR);
                                 if(Client.dialogs.size()!=0){
                                     for (ClientMessage message : FDialog.messages) {
                                         insertText(MessageBox, "\n" + currentFriend.login + " [" + message.date + "]\n", heading);
