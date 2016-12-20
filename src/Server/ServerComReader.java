@@ -4,6 +4,10 @@ import ru.universum.Loader.Security;
 import ru.universum.Loader.Account;
 import ru.universum.Printer.Console;
 
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -15,6 +19,15 @@ import java.util.concurrent.TimeUnit;
 class ServerComReader extends Thread{
     private String message = "";
     private Scanner scanner = new Scanner(System.in);
+    public DataInputStream inputStream;
+    public DataOutputStream outputStream;
+    public boolean isRemoting;
+    private String pass = "";
+
+    public void setRemoting(boolean remoting) {
+        isRemoting = remoting;
+    }
+
     private boolean isAdminLogged = false;
     private Console console = new Console("Server-Console");
     private boolean isExecuting = false;
@@ -27,22 +40,28 @@ class ServerComReader extends Thread{
                     isExecuting = true;
                     while (isAdminLogged) {
                         if (!Server.isClosed) {
+                            Server.console.log("Type password one more time", "m");
+                            read();
+                            if(Security.getMD5(message.toCharArray()).equals(pass)){
                             Server.console.log("Are u sure? (y/n)", "m");
-                            message = scanner.next();
-                            message = message.toLowerCase();
+                            read();
                             if (message.equals("y") & !Server.isClosed) {
                                 Server.CLOSE();
                                 break;
-                            } else {
-                                if (message.equals("n")) {
+                            } else
+                                {
+                                if (message.equals("n"))
+                                    {
                                     isExecuting = false;
                                     break;
-                                } else {
+                                    } else
+                                        {
                                     System.out.println("Error symbol");
+                                    }
                                 }
                             }
                         } else {
-                            System.err.println("Server already stopped >>> change ip and restart it");
+                            Server.console.log("Server already stopped >>> change ip and restart it", "err");
                             break;
                         }
                     }
@@ -54,8 +73,10 @@ class ServerComReader extends Thread{
                     if (command[1].equals("admin")) {
                         Account acc = null;
                         for (Account a: Server.accs) {
-                            if (Objects.equals(a.password, command[2]))
+                            if (Objects.equals(a.password, Security.getMD5(command[2].toCharArray())) & a.login.equals("admin"))
                                 acc = a;
+                            assert acc != null;
+                            pass = acc.password;
                         }
                         if (acc != null & !isAdminLogged) {
                             isAdminLogged = true;
@@ -148,8 +169,7 @@ class ServerComReader extends Thread{
                     if (isAdminLogged) {
                         if (Server.isClosed) {
                             Server.console.log("Are u sure?(y/n)", "");
-                            message = scanner.next();
-                            message = message.toLowerCase();
+                            read();
                             if (message.equals("y")) {
                                 System.exit(0);
                                 break;
@@ -223,6 +243,23 @@ class ServerComReader extends Thread{
         }
         return null;
     }
+
+    public void read(){
+        if(!isRemoting) {
+            message = scanner.nextLine();
+            message = message.toLowerCase();
+        }else {
+            try {
+                message = inputStream.readUTF();
+                message = message.toLowerCase();
+            } catch (IOException e) {
+                isRemoting = false ;
+                Server.remoteAccess.notConnected();
+                //System.out.println("Exc");
+            }
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -234,8 +271,7 @@ class ServerComReader extends Thread{
         while (!interrupted()){
             while (!isExecuting) {
                 System.out.print("[ENTER COMMAND]: ");
-                message = scanner.nextLine();
-                message = message.toLowerCase();
+                read();
                 execute(descript(message));
                 try {
                     TimeUnit.MILLISECONDS.sleep(10);

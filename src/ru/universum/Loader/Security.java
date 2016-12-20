@@ -18,27 +18,12 @@ public class Security {
     }
 
     public static String getUserPass(){
-  //      String pass = "";
-  //      if (Client.os_name.equals("Windows")) pass = WinRegistryWrapper.WinRegQueryValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_pass");
-  //      if (pass != null) {
-  //          return pass;
-  //      }
         return "";
-    }
-
-    public static void setAboutUser(String login, String pass){
-       // WinRegistryWrapper.WinRegSetValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_login" , login);
-        //WinRegistryWrapper.WinRegSetValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_pass" , pass);
     }
 
     public static void setRemData(boolean bool){
         //WinRegistryWrapper.WinRegSetValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_remdata" , bool ? "true" : "false");
     }
-
-   // public static boolean getRemData() {
-//        String res = WinRegistryWrapper.WinRegQueryValueEx(WinRegistryWrapper.HKEY_CURRENT_USER, "SOFTWARE\\NEOnline\\SysInfo", "user_pass");
-//        return res != null && Boolean.getBoolean(res);
-   // }
 
     public static String getMD5(char[] pass) {
         String st = null;

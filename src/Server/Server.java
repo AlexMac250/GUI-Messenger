@@ -19,7 +19,8 @@ public class Server{
     private static int localport = 0;
     static InetAddress ADDRESS;
     static String ifases = null;
-    static ServerComReader reader = new ServerComReader();
+    static ServerComReader comReader = new ServerComReader();
+    static RemoteAccess remoteAccess = null;
 
     static List<WorkingServ> getActive() {
         return active;
@@ -153,19 +154,22 @@ public class Server{
         if(!isClosed){
             CLOSE();
         }
-        reader.interrupt();
+        comReader.interrupt();
         connections = 40000;
         active = new ArrayList<>();
         accs = FileLoader.Import();
         freePorts = new ArrayList<>();
         isClosed = false;
         localport = 0;
-        reader = new ServerComReader();
-        reader.start();
+        comReader = new ServerComReader();
+        comReader.start();
         start();
     }
 
     static void start() {
+        try {
+            remoteAccess = new RemoteAccess();
+        } catch (IOException ignored) {}
         Account.idGL = accs.size()-1;
           try {
               mainSocket = new ServerSocket(2905, 0, ADDRESS);

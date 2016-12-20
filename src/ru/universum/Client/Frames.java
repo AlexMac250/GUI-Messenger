@@ -1015,7 +1015,7 @@ class Frames {
             });
 
             butDelAccData.addActionListener(e -> {
-                Security.setAboutUser("", "");
+                //Security.setAboutUser("", "");
                 LoginFrame.loginField.setText("");
                 LoginFrame.passwordField.setText("");
                 info.setText("Успешно!");
