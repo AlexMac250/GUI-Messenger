@@ -173,7 +173,7 @@ public class Server{
 //        }
         Account.idGL = accs.size()-1;
           try {
-              mainSocket = new ServerSocket(2905, 0, ADDRESS);
+              mainSocket = new ServerSocket(2900, 0, ADDRESS);
               console.log("Started on " + mainSocket.getInetAddress().getHostAddress(), "m");
           } catch (Exception e) {
               CLOSE();

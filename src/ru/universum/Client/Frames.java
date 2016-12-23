@@ -523,12 +523,29 @@ class Frames {
         }
         private void buildMenuBar() {
             JMenuBar menuBar = new JMenuBar();
+            JMenu butMenu = new JMenu("Меню");
+            JMenuItem butAbout = new JMenuItem("О приложении");
+            JMenu exitMenu = new JMenu("Выход");
             JMenuItem butToMineMenu = new JMenuItem("Разлогиниться и выйти в главное меню");
+            JMenuItem shutdownProgram = new JMenuItem("Разлогиниться и закрыть приложение");
+            butAbout.addActionListener(e -> {
+                AboutFrame.showFrame();
+            });
+
             butToMineMenu.addActionListener(e -> {
                 dispose();
                 Client.disconnect();
             });
-            menuBar.add(butToMineMenu);
+
+            shutdownProgram.addActionListener(e -> {
+                Client.disconnect();
+                System.exit(0);
+            });
+            menuBar.add(butMenu);
+            butMenu.add(exitMenu);
+            butMenu.add(butAbout);
+            exitMenu.add(butToMineMenu);
+            exitMenu.add(shutdownProgram);
             frame.setJMenuBar(menuBar);
         }
 
@@ -794,7 +811,6 @@ class Frames {
         @Override
         public void showFrame() {
             initial();
-            setInfo("Напоминаем, что это бета версия программы. Возможны ошибки. Нажмите \"Обновить\" в углу окна.",Color.BLACK);
             dialog.setVisible(true);
         }
 
@@ -1155,19 +1171,46 @@ class Frames {
                 public void mouseEntered(MouseEvent e) {
                     isRand[0] = true;
                     new Thread(() -> {
+                        int red = 69;
+                        int green = 151;
+                        boolean colR = true;
+                        boolean colG = true;
+                        boolean color = false;
                         while (isRand[0]) {
-                            Random random = new Random();
-                            int r = random.nextInt(255);
-                            int g = random.nextInt(255);
-                            int b = random.nextInt(255);
+                            if (red <= 1) {
+                                colR = true;
+                                color = true;
+                            }
+                            if (red >= 130) colR = false;
+                            if (green >= 255){
+                                colR = true;
+                                color = false;
+                            }
+                            if (color & colR) red += 2;
+                            if (!color & colR) red -= 2;
+                            if (color) green += 2;
+                            if (!color) green -= 2;
                             try {
-                                TimeUnit.MILLISECONDS.sleep(150);
+                                TimeUnit.MILLISECONDS.sleep(20);
                             } catch (InterruptedException runnable) {
                                 runnable.printStackTrace();
                             }
-                            label.setForeground(new Color(r, g, b));
+                            label.setForeground(new Color(red, green, 249));
                         }
-                        label.setForeground(MAIN_COLOR);
+                        while (true) {
+                            if (red < 69) red += 1;
+                            if (red > 69) red -= 1;
+                            if (green < 151) green += 1;
+                            if (green > 151) green -= 1;
+                            try {
+                                TimeUnit.MILLISECONDS.sleep(10);
+                            } catch (InterruptedException runnable) {
+                                runnable.printStackTrace();
+                            }
+                            label.setForeground(new Color(red, green, 249));
+                            if (red == 69 & green == 151) break;
+                        }
+                        //label.setForeground(MAIN_COLOR);
                     }).start();
                 }
 

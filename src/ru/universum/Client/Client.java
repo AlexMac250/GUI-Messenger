@@ -31,7 +31,7 @@ public class Client {
 
     private static final boolean NODATE = false;
     private static final boolean DATED = true;
-    static String HOSTNAME = "2001:0:284c:c3ec:47:2513:3f57:ff97";
+    static String HOSTNAME = "95.154.89.186";//"2001:0:284c:c3ec:47:2513:3f57:ff97";
 
     static Account account = new Account();
 
@@ -55,7 +55,7 @@ public class Client {
     public static void connect(){
         try {
             Frames.LoginFrame.setInfo("Входим...", Color.ORANGE);
-            socket = new Socket(InetAddress.getByName(HOSTNAME), 2905);
+            socket = new Socket(InetAddress.getByName(HOSTNAME), 2900);
             DataInputStream is = new DataInputStream(socket.getInputStream());
             port = is.readInt();
             System.out.println("got port");
