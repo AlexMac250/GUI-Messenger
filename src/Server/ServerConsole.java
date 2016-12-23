@@ -15,7 +15,7 @@ public class ServerConsole {
     }
 
     public void log (String message){
-        System.out.print(new Log("\n("+getDateNow()+") "+str+": " + message));
+        System.out.print(new Log("\n("+getDateNow()+") " + str + ": " + message));
     }
 
     public void log (String message, String type){

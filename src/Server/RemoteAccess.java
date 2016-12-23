@@ -9,9 +9,10 @@ import java.net.Socket;
 public class RemoteAccess extends Thread {
     private boolean isConnected;
     private Socket client;
-    private ServerSocket remotingSocket = new ServerSocket(2904 , 0 , Server.ADDRESS);
+    private ServerSocket remotingSocket;
 
     public RemoteAccess() throws IOException {
+        remotingSocket = new ServerSocket(2904 , 0 , Server.ADDRESS);
         run();
     }
 
