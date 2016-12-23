@@ -55,7 +55,7 @@ public class Client {
     public static void connect(){
         try {
             Frames.LoginFrame.setInfo("Входим...", Color.ORANGE);
-            socket = new Socket(InetAddress.getByName(HOSTNAME), 2900);
+            socket = new Socket(InetAddress.getByName(HOSTNAME), 2905);
             DataInputStream is = new DataInputStream(socket.getInputStream());
             port = is.readInt();
             System.out.println("got port");
