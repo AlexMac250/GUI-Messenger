@@ -511,7 +511,7 @@ class Frames {
 
         void sendMessage(JTextField textField, JTextPane MessageBox){
             if (textField.getText().length() > 0) {
-                insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "\n", heading);
+                insertText(MessageBox, "\n" + Client.account.login + " [" + new SimpleDateFormat("dd/MM/yyyy | hh:mm").format(new Date()) + "]\n", heading);
                 insertText(MessageBox, textField.getText() + "\n", normal);
                 Client.execute(new String[]{"send", currentFriend.id + "", textField.getText()});
                 textField.setText("");
