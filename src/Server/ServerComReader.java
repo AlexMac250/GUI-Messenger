@@ -35,7 +35,6 @@ class ServerComReader extends Thread{
     private void execute(String[] command) {
         try {
             switch (command[0]) {
-
                 case "stop":
                     isExecuting = true;
                     while (isAdminLogged) {
@@ -65,7 +64,6 @@ class ServerComReader extends Thread{
                             break;
                         }
                     }
-                    isExecuting = false;
                     break;
 
                 case "login":
@@ -80,12 +78,11 @@ class ServerComReader extends Thread{
                         }
                         if (acc != null & !isAdminLogged) {
                             isAdminLogged = true;
-                            console.log("Admin logged in", "m");
+                            System.out.println("[MESSAGE]" + '(' +Console.getDateNow() + ')' + "Server-Console : Admin logged");
                         } else {
-                            console.log("Error logging in console", "err");
+                            System.err.println("[ERROR]" + '(' +Console.getDateNow() + ')' + "Server-Console : Error logging");
                         }
                     }
-                    isExecuting = false;
                     break;
 
                 case "out":
@@ -95,7 +92,6 @@ class ServerComReader extends Thread{
                     } else {
                         System.err.println("Not enough permissions >>> login as Admin");
                     }
-                    isExecuting = false;
                     break;
 
                 case "showinfo":
@@ -107,7 +103,6 @@ class ServerComReader extends Thread{
                     } else {
                         System.err.println("Not enough permissions >>> login as Admin");
                     }
-                    isExecuting = false;
                     break;
 
                 case "restart":
@@ -162,7 +157,6 @@ class ServerComReader extends Thread{
                                         "Command \"exit\" - shutdown program" +
                                         "\n--------------------------------- \n");
                     }
-                    isExecuting = false;
                     break;
 
                 case "exit":
@@ -255,7 +249,6 @@ class ServerComReader extends Thread{
             } catch (IOException e) {
                 isRemoting = false ;
                 Server.remoteAccess.notConnected();
-                //System.out.println("Exc");
             }
         }
     }
@@ -273,6 +266,7 @@ class ServerComReader extends Thread{
                 System.out.print("[ENTER COMMAND]: ");
                 read();
                 execute(descript(message));
+                isExecuting = false;
                 try {
                     TimeUnit.MILLISECONDS.sleep(10);
                 } catch (InterruptedException e) {
