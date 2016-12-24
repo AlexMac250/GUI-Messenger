@@ -12,13 +12,13 @@ public class RemoteAccess extends Thread {
     private ServerSocket remotingSocket;
 
     public RemoteAccess() throws IOException {
-        remotingSocket = new ServerSocket(2904 , 0 , Server.ADDRESS);
+        remotingSocket = new ServerSocket(65500 , 0 , Server.ADDRESS);
         start();
     }
 
     public void setInputOutOnComReader() throws IOException {
-        Server.comReader.inputStream = (DataInputStream) client.getInputStream();
-        Server.comReader.outputStream = (DataOutputStream) client.getOutputStream();
+        Server.comReader.inputStream = new DataInputStream(client.getInputStream());
+        Server.comReader.outputStream = new DataOutputStream(client.getOutputStream());
         Server.comReader.setRemoting(true);
     }
 
@@ -29,7 +29,7 @@ public class RemoteAccess extends Thread {
     @Override
     public void run() {
         Server.console.log("Remote accss started" , "m");
-        while(!isConnected){
+        while(true){
             try {
                 client = remotingSocket.accept();
                 isConnected = true;
