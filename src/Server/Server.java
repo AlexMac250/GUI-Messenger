@@ -167,26 +167,23 @@ public class Server{
     }
 
     static void start() {
+        Account.idGL = accs.size() - 1;
         try {
+            mainSocket = new ServerSocket(2905, 0, ADDRESS);
             remoteAccess = new RemoteAccess();
-        } catch (IOException e) {
+            console.log("Started on " + mainSocket.getInetAddress().getHostAddress(), "m");
+        } catch (Exception e) {
+            CLOSE();
+            console.log("" + e, "exc");
+            System.out.println("[MESSAGE] Restart server with another IP");
         }
-        Account.idGL = accs.size()-1;
-          try {
-              mainSocket = new ServerSocket(2905, 0, ADDRESS);
-              console.log("Started on " + mainSocket.getInetAddress().getHostAddress(), "m");
-          } catch (Exception e) {
-              CLOSE();
-              console.log(""+e,"exc");
-              System.out.println("[MESSAGE] Restart server with another IP");
-          }
         while (!isClosed) {
             try {
                 new Server(mainSocket.accept());
-            }catch (Exception e){
+            } catch (Exception e) {
                 CLOSE();
                 console.log("Connection lost", "w");
-                console.log(""+e, "exc");
+                console.log("" + e, "exc");
                 break;
             }
         }

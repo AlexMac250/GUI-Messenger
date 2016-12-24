@@ -13,7 +13,7 @@ public class RemoteAccess extends Thread {
 
     public RemoteAccess() throws IOException {
         remotingSocket = new ServerSocket(2904 , 0 , Server.ADDRESS);
-        run();
+        start();
     }
 
     public void setInputOutOnComReader() throws IOException {
