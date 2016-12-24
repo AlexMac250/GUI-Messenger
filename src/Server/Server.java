@@ -167,10 +167,10 @@ public class Server{
     }
 
     static void start() {
-      //         remoteAccess = new RemoteAccess();
-//        } catch (IOException ignored) {
-//            ignored.printStackTrace();
-//        }
+        try {
+            remoteAccess = new RemoteAccess();
+        } catch (IOException e) {
+        }
         Account.idGL = accs.size()-1;
           try {
               mainSocket = new ServerSocket(2905, 0, ADDRESS);
