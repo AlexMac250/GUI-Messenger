@@ -19,6 +19,7 @@ public class Account {
     public List<Message> offlineMes = new ArrayList<>();
     public Map<Integer, Dialog> dialogs = new HashMap<>();
     private WorkingServ workingServ;
+    private List<Message> messages = new ArrayList<>();
 
     public WorkingServ getWorkingServ() {
         return workingServ;
