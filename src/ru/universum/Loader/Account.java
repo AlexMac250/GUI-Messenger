@@ -15,7 +15,7 @@ public class Account {
     public String login = "";
     public String password = "";
     public String name = "";
-    public ArrayList<Friend> friends = new ArrayList<>();
+    public Map<Integer , Friend> friends = new HashMap<>();
     public static long idGL = 0;
     public List<Message> offlineMes = new ArrayList<>();
     public Map<Integer, Dialog> dialogs = new HashMap<>();
@@ -57,7 +57,7 @@ public class Account {
         this.isOnline = isOnline;
     }
 
-    public Account(int id, String login, String password, ArrayList<Friend> friends){
+    public Account(int id, String login, String password, Map<Integer ,Friend> friends){
         this.id = id;
         this.login = login;
         this.password = password;

@@ -461,11 +461,11 @@ class Frames {
 
             int i = 0;
 
-            for (Friend friend : Client.account.friends) {
+            for (Map.Entry<Integer , Friend> entry : Client.account.friends.entrySet()) {//for (Map.Entry<Integer , Friend> entry : acc.friends.entrySet()) {
                 int maxLength = 12;
-                String login = friend.login;
+                String login = entry.getValue().login;
                 JButton button = new JButton();
-                JCheckBox checkBoxOnline = new JCheckBox("", friend.isOnline);
+                JCheckBox checkBoxOnline = new JCheckBox("", entry.getValue().isOnline);
 
                 if (login.length() > maxLength) {
                     button.setToolTipText(login);
@@ -484,15 +484,15 @@ class Frames {
                 if (FRIENDS > 13) GridBagLayoutManager(panFriends, new JLabel("    "), GridBagConstraints.HORIZONTAL, 2, i + 1, 1);
 
                 button.addActionListener(e -> {
-                    currentFriend = friend;
+                    currentFriend = entry.getValue();
                     System.out.println("friend selected");
                     System.out.println(currentFriend.toString());
-                    setDialog(friend);
-                    createTab(friend);
-                    tabbedPane.setSelectedIndex(tabs.get(friend.id).count);
+                    setDialog(entry.getValue());
+                    createTab(entry.getValue());
+                    tabbedPane.setSelectedIndex(tabs.get(entry.getValue().id).count);
                 });
-                panFriendList.put(friend.id, new PanFriend(button, checkBoxOnline));
-                System.out.println(friend.toString());
+                panFriendList.put(entry.getValue().id, new PanFriend(button, checkBoxOnline));
+                System.out.println(entry.getValue().toString());
                 i++;
             }
 

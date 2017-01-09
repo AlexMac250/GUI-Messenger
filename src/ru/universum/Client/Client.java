@@ -118,9 +118,9 @@ public class Client {
     private static void writeMessage(String from, String date, String message){
         Frames.MainFrame MFrame = Frames.MainFrame;
         Friend friend = null;
-        for (Friend fr : account.friends) {
-            if (fr.id == Integer.parseInt(from)){
-                friend = fr;
+        for (Map.Entry<Integer , Friend> entry : account.friends.entrySet()) {
+            if (entry.getKey() == Integer.parseInt(from)){
+                friend = entry.getValue();
                 break;
             }
         }
@@ -215,20 +215,20 @@ public class Client {
                 break;
 
             case "online" :
-                for (Friend fr : account.friends){
-                    if(fr.id == Integer.parseInt(command[2])){
-                        Frames.MainFrame.panFriendList.get(fr.id).isOnline.setSelected(true);
-                        Frames.MainFrame.panFriendList.get(fr.id).isOnline.setToolTipText("Оффлайн");
+                for (Map.Entry<Integer , Friend> entry : account.friends.entrySet()) {
+                    if(entry.getKey() == Integer.parseInt(command[2])){
+                        Frames.MainFrame.panFriendList.get(entry.getKey()).isOnline.setSelected(true);
+                        Frames.MainFrame.panFriendList.get(entry.getKey()).isOnline.setToolTipText("Оффлайн");
                         break;
                     }
                 }
                 break;
 
             case "offline" :
-                for (Friend fr : account.friends){
-                    if(fr.id == Integer.parseInt(command[2])) {
-                        Frames.MainFrame.panFriendList.get(fr.id).isOnline.setSelected(false);
-                        Frames.MainFrame.panFriendList.get(fr.id).isOnline.setToolTipText("Оффлайн");
+                for (Map.Entry<Integer , Friend> entry : account.friends.entrySet()) {
+                    if(entry.getKey() == Integer.parseInt(command[2])) {
+                        Frames.MainFrame.panFriendList.get(entry.getKey()).isOnline.setSelected(false);
+                        Frames.MainFrame.panFriendList.get(entry.getKey()).isOnline.setToolTipText("Оффлайн");
                         break;
                     }
                 }
@@ -277,7 +277,7 @@ public class Client {
     }
     private static void addFriend(String[] args){
         if(!Objects.equals(args[2], "null")){
-            account.friends.add(new Friend(Integer.parseInt(args[2]),args[3]));
+            account.friends.put(Integer.parseInt(args[2]),new Friend(Integer.parseInt(args[2]),args[3]));
             dialogs.put(account.friends.get(account.friends.size()-1).id, new Dialog(account.friends.get(account.friends.size()-1)));
             if (Frames.MainFrame.isInit){
                 Frames.MainFrame.loadFriends();

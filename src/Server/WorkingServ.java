@@ -74,10 +74,10 @@ public class WorkingServ extends Thread {
     //отправляет всех друзей оушена
     private void sendFriends(){
         if(acc.friends.size()!=0){
-            for(Friend fr : acc.friends) {
+            for (Map.Entry<Integer , Friend> entry : acc.friends.entrySet()) {
                 String[] friend = new String[2];
-                friend[0] = String.valueOf(fr.id);
-                friend[1] = fr.login;
+                friend[0] = String.valueOf(entry.getKey());
+                friend[1] = entry.getValue().login;
                 send(new Command("friend", friend));
             }
         }else{
@@ -99,7 +99,7 @@ public class WorkingServ extends Thread {
     }
 
     private void askToFriend(int idOf){
-        if(!acc.friends.contains(new Friend(Server.accs.get(idOf).id,Server.accs.get(idOf).login))) {
+        if(!acc.friends.containsValue(new Friend(Server.accs.get(idOf).id,Server.accs.get(idOf).login))) {
             if (Server.accs.get(idOf).isOnline) {
                 Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend", new String[]{String.valueOf(acc.id), acc.login}));
             } else {
@@ -112,18 +112,22 @@ public class WorkingServ extends Thread {
 
     private void sendOnline() {
         if (acc.friends.size() != 0) {
-            acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend -> {
-                send(new Command("online", String.valueOf(friend.id)));
-                Server.accs.get(friend.id).getWorkingServ().send(new Command("online", String.valueOf(acc.id)));
-            });
+            for (Map.Entry<Integer, Friend> entry : acc.friends.entrySet()) {
+                if (Server.accs.get(entry.getValue().id).isOnline) {
+                    send(new Command("online", String.valueOf(entry.getKey())));
+                    Server.accs.get(entry.getValue().id).getWorkingServ().send(new Command("online", String.valueOf(acc.id)));
+                }
+            }
         }
     }
-
     private void sendOffline() {
         if (acc != null) {
             if (acc.friends.size() != 0) {
-                acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend ->
-                    Server.accs.get(friend.id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id))));
+                for (Map.Entry<Integer , Friend> entry : acc.friends.entrySet()) {
+                if(Server.accs.get(entry.getKey()).isOnline){
+                    Server.accs.get(entry.getValue().id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id)));
+                    }
+                }
             }
         }
     }
@@ -166,8 +170,8 @@ public class WorkingServ extends Thread {
     }
 
     void sendHistory(){
-        for(Friend f : acc.friends){
-            for (Message message1 : f.with.get()){
+        for (Map.Entry<Integer , Friend> entry : acc.friends.entrySet()) {
+            for (Message message1 : entry.getValue().with.get()){
                 send(message1);
             }
         }
