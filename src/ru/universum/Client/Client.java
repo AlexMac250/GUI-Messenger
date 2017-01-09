@@ -269,6 +269,10 @@ public class Client {
             case "findByNick" :
                 send(new Message(command[0],command[1],"",NODATE));
                 break;
+
+            case "addToDialogWith" :
+                dialogs.get(Integer.parseInt(command[2])).addMes(new ClientMessage(account.name ,command[3] , command[4]));
+                break;
         }
     }
     private static void addFriend(String[] args){
