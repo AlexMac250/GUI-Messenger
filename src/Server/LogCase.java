@@ -20,7 +20,7 @@ public class LogCase {
             else {
             logs.add(log);
             System.out.println(log.toString());
-            System.out.print("[ENTER COMMAND]");
+            //System.out.print("[ENTER COMMAND]");
         }
     }
 

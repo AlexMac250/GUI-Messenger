@@ -263,7 +263,7 @@ class ServerComReader extends Thread{
         System.out.println("\nEnter \"help\" for more info");
         while (!interrupted()){
             while (!isExecuting) {
-                System.out.print("[ENTER COMMAND]: ");
+                //System.out.print("[ENTER COMMAND]: ");
                 read();
                 execute(descript(message));
                 isExecuting = false;

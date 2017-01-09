@@ -110,7 +110,7 @@ class Intellect extends Thread{
                         break;
                     }
                 }
-                GettingUsers+=20;
+                GettingUsers += 20;
                 break;
 
             case "findByNick":
