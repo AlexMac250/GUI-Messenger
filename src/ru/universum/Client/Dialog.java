@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Dialog{
 
-    Dialog(Friend dialogWith) {
+    public Dialog(Friend dialogWith) {
         this.dialogWith = dialogWith;
     }
 

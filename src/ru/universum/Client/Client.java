@@ -6,6 +6,7 @@ import ru.universum.Loader.Friend;
 import ru.universum.Loader.Message;
 import ru.universum.Printer.Console;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.net.InetAddress;
@@ -31,7 +32,7 @@ public class Client {
 
     private static final boolean NODATE = false;
     private static final boolean DATED = true;
-    static String HOSTNAME = "95.154.89.186";//"2001:0:284c:c3ec:47:2513:3f57:ff97";
+    static String HOSTNAME = "95.154.89.186";//"95.154.89.186";
 
     static Account account = new Account();
 
@@ -131,6 +132,8 @@ public class Client {
                 MFrame.tabbedPane.setSelectedIndex(tab.count);
                 MFrame.insertText(tab.MessageBox, "\n" +MFrame.currentFriend.login + " [" + date + "]\n", MFrame.heading);
                 MFrame.insertText(tab.MessageBox, message + "\n", MFrame.normal);
+                JScrollBar vertical = tab.jScrollPane.getVerticalScrollBar();
+                vertical.setValue(vertical.getMaximum());
                 isTab = true;
                 break;
             }

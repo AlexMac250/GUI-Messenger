@@ -1,5 +1,6 @@
 package ru.universum.Loader;
 
+import Server.Dialogue;
 import Server.WorkingServ;
 
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ public class Account {
     public List<Message> offlineMes = new ArrayList<>();
     public Map<Integer, Dialog> dialogs = new HashMap<>();
     private WorkingServ workingServ;
-    private List<Message> messages = new ArrayList<>();
 
     public WorkingServ getWorkingServ() {
         return workingServ;
@@ -45,7 +45,10 @@ public class Account {
     }
 
     public Account(){
+    }
 
+    public void addToDialogWith(Message message){
+        friends.get(Integer.parseInt(message.from)).with.addmes(message);
     }
 
     public Account(String login, int id , boolean isOnline) {
@@ -60,4 +63,5 @@ public class Account {
         this.password = password;
         this.friends = friends;
     }
+
 }

@@ -1,5 +1,6 @@
 package Server;
 
+import ru.universum.Client.Dialog;
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Command;
 import ru.universum.Loader.Friend;
@@ -21,6 +22,7 @@ public class WorkingServ extends Thread {
     private Intellect intellect;
     DataInputStream is;
     Console console;
+    private Message message;
 
     WorkingServ(int port) {
         this.port = port;
@@ -134,7 +136,9 @@ public class WorkingServ extends Thread {
                 break;
             //отправляет сообщение
             case "send":
-                send(new Message("message", command[1], command[2], command[3]));
+                message =  new Message("message", command[1], command[2], command[3]);
+                send(message);
+                acc.addToDialogWith(message);
                 break;
             //логинит входящее соединение
             case "login":
@@ -142,6 +146,7 @@ public class WorkingServ extends Thread {
                 if (acc != null) {
                     acc.offlineMes.forEach(this::send);
                     acc.offlineMes = new ArrayList<>();
+                    sendHistory();
                     sendOnline();
                 }
                 break;
@@ -157,6 +162,14 @@ public class WorkingServ extends Thread {
             case "user" :
                 send(new Command(command[0],new String[]{command[1],command[2]}));
                 break;
+        }
+    }
+
+    void sendHistory(){
+        for(Friend f : acc.friends){
+            for (Message message1 : f.with.get()){
+                send(message1);
+            }
         }
     }
 

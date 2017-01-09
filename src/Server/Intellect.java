@@ -52,15 +52,17 @@ class Intellect extends Thread{
         int i = 0;
 
         switch (command[0]){
-
+            //sending message to the working server or to offline holder
             case "send":
                 int to = Integer.parseInt(command[1]);
                 if(Server.accs.get(Integer.parseInt(command[1])).isOnline){
-                    command[1] = String.valueOf(acc.id);
-                    Server.accs.get(to).getWorkingServ().execute(command);
+                    command[1] = String.valueOf(acc.id);//id of sender
+                    Server.accs.get(to).getWorkingServ().execute(command);//sending message to working server
+                    acc.addToDialogWith(new Message("addToDialogWith", String.valueOf(to) , command[2], command[3]));
                 }
                 else{
                     command[1] = String.valueOf(acc.id);
+                    //from/message/data/to
                     sendOffline(new Message("message", command[1] , command[2], command[3]) , to);
                 }
                 break;

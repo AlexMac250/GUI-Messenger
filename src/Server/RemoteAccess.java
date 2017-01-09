@@ -28,7 +28,7 @@ public class RemoteAccess extends Thread {
 
     @Override
     public void run() {
-        Server.console.log("Remote accss started" , "m");
+        Server.console.log("Remote access started" , "m");
         while(true){
             try {
                 client = remotingSocket.accept();

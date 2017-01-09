@@ -44,7 +44,7 @@ public class Server{
             }
         }
         if(!isInFriend) {
-            accs.get(id).friends.add(friend);
+            accs.get(id).friends.add(friend.id,friend);
             isInFriend = true;
             boolean needToRewrite = false;
             for (Account acc: accs) {
