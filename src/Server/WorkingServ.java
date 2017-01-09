@@ -89,8 +89,8 @@ public class WorkingServ extends Thread {
         boolean res = Server.addFriend(acc.id, friend);
         if (res) {
             String[] friendArr = new String[2];
-            friendArr[0] = String.valueOf(acc.friends.get(acc.friends.size() - 1).id);
-            friendArr[1] = acc.friends.get(acc.friends.size() - 1).login;
+            friendArr[0] = String.valueOf(friend.id);
+            friendArr[1] = friend.login;
             send(new Command("friend", friendArr));
             if (Server.accs.get(friend.id).isOnline) {
                 send(new Command("online", String.valueOf(friend.id)));
