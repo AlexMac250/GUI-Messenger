@@ -122,22 +122,24 @@ public class Server{
     }
 
     static void setAddress() {
-        ifases = "\nINTERFACES:\n";
-        try {
-            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
-            for(NetworkInterface intf : interfaces) {
-                ifases += "\n("+intf.getName()+"):\n";
-                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
-                for(InetAddress ipAddress : addrs){
-                    ifases += ipAddress.getHostAddress()+"\n";
-                    if(!ipAddress.isLoopbackAddress() & !ipAddress.isLinkLocalAddress()){
-                        ADDRESS = ipAddress;
-                        break;
+            ifases = "\nINTERFACES:";
+              try {
+                List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+                for(NetworkInterface intf : interfaces) {
+                    ifases += "\n     "+intf.getName()+": ";
+                    List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                    for(int i = 0; i < addrs.size(); i++){
+                        InetAddress ipAddress =addrs.get(i);
+                        ifases += ipAddress.getHostAddress()+(i == addrs.size()-1 ? "": ", ");
+                        if(!ipAddress.isLoopbackAddress() & !ipAddress.isLinkLocalAddress() & !ipAddress.getHostAddress().contains(":")){
+                            ADDRESS = ipAddress;
+                            break;
+                        }
                     }
                 }
-            }
-        }catch (Exception e) {
-            console.log(""+e, "exc");
+                ifases += "\n----end of interfaces----";
+            }catch (Exception e) {
+                console.log(""+e, "exc");
         }
     }
 

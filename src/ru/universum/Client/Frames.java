@@ -794,7 +794,7 @@ class Frames {
             dialog.setLocationRelativeTo(null);
 
             butSearch.addActionListener(e -> {
-                setInfo("К сожалению, данная функция в этой версии недоступна. Возможно, она появится в следующей версии. Приносим свои извенения!", Color.BLACK);
+                setInfo("К сожалению, данная функция в этой версии недоступна :-( Возможно, она появится в следующей версии. Приносим свои извенения", Color.BLACK);
                 //findUsers(fieldSearch.getText());
             });
 
