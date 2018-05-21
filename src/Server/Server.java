@@ -37,14 +37,14 @@ public class Server{
 
     static synchronized boolean addFriend(int id, Friend friend){
         boolean isInFriend = false;
-        for (Map.Entry<Integer , Friend> entry : accs.get(id).friends.entrySet()) {
-            if(Objects.equals(entry.getValue().login, friend.login)){
+        for(Friend fr : accs.get(id).friends){
+            if(Objects.equals(fr.login, friend.login)){
                 isInFriend = true;
                 break;
             }
         }
         if(!isInFriend) {
-            accs.get(id).friends.put(friend.id,friend);
+            accs.get(id).friends.add(friend);
             isInFriend = true;
             boolean needToRewrite = false;
             for (Account acc: accs) {
@@ -86,8 +86,8 @@ public class Server{
             }
         }else res = true;
         if(res){
-            FileLoader.writeInBase(new Account((int)Account.idGL , login , password , new HashMap<>()));
-            accs.add(new Account((int)Account.idGL , login , password , new HashMap<>()));
+            FileLoader.writeInBase(new Account((int)Account.idGL , login , password , new ArrayList<>()));
+            accs.add(new Account((int)Account.idGL , login , password , new ArrayList<>()));
         }
         return res;
     }

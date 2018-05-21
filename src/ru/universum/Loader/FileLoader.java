@@ -1,10 +1,7 @@
 package ru.universum.Loader;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 @SuppressWarnings("ALL")
 public class FileLoader {
     static File file = new File(System.getProperty("user.home")+"/"+"Accounts(NEOnline).txt");
@@ -17,7 +14,7 @@ public class FileLoader {
         List<String> inf = new ArrayList<>();
         String info = "";
         int i;
-        Map<Integer ,Friend> friends = new HashMap<>();
+        ArrayList<Friend> friends = new ArrayList<>();
         try (FileInputStream fin = new FileInputStream(file)) {
             while ((i = fin.read()) != -1) {
                 if ((char) i != '\n' & (char)i != '\r') {
@@ -42,12 +39,12 @@ public class FileLoader {
                         info = "";
                         i = 0;
                         for (; i < inf.size(); ) {
-                            friends.put(Integer.parseInt(inf.get(i)),new Friend(Integer.parseInt(inf.get(i)), inf.get(i + 1)));
+                            friends.add(new Friend(Integer.parseInt(inf.get(i)), inf.get(i + 1)));
                             i += 2;
                         }
                         base.add(new Account(id, login, password, friends));
                         inf = new ArrayList<>();
-                        friends = new HashMap<>();
+                        friends = new ArrayList<>();
                     }
                 }
             }
@@ -65,12 +62,12 @@ public class FileLoader {
                 info = "";
                 i = 0;
                 for (; i < inf.size(); ) {
-                    friends.put(Integer.parseInt(inf.get(i)) , new Friend(Integer.parseInt(inf.get(i)), inf.get(i + 1)));
+                    friends.add(new Friend(Integer.parseInt(inf.get(i)), inf.get(i + 1)));
                     i += 2;
                 }
                 base.add(new Account(id, login, password, friends));
                 inf = new ArrayList<>();
-                friends = new HashMap<>();
+                friends = new ArrayList<>();
             }
         } catch (Exception ex){
             ex.printStackTrace();
@@ -91,10 +88,10 @@ public class FileLoader {
             if (0 != acc.friends.size()) {
                 info += '/';
                 i = 1;
-                for (Map.Entry<Integer , Friend> entry : acc.friends.entrySet()) {
-                    info += entry.getKey();
+                for (Friend f : acc.friends) {
+                    info += f.id;
                     info += '/';
-                    info += entry.getValue().login;
+                    info += f.login;
                     if (i != acc.friends.size()) {
                         info += '/';
                     }
@@ -122,10 +119,10 @@ public class FileLoader {
         if (0 != acc.friends.size()) {
             info += '/';
             i = 1;
-            for (Map.Entry<Integer , Friend> entry : acc.friends.entrySet()) {
-                info += entry.getKey();
+            for (Friend f : acc.friends) {
+                info += f.id;
                 info += '/';
-                info += entry.getValue().login;
+                info += f.login;
                 if (i != acc.friends.size()) {
                     info += '/';
                 }

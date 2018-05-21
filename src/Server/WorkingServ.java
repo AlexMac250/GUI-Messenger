@@ -1,6 +1,5 @@
 package Server;
 
-import ru.universum.Client.Dialog;
 import ru.universum.Loader.Account;
 import ru.universum.Loader.Command;
 import ru.universum.Loader.Friend;
@@ -22,7 +21,6 @@ public class WorkingServ extends Thread {
     private Intellect intellect;
     DataInputStream is;
     Console console;
-    private Message message;
 
     WorkingServ(int port) {
         this.port = port;
@@ -74,10 +72,10 @@ public class WorkingServ extends Thread {
     //отправляет всех друзей оушена
     private void sendFriends(){
         if(acc.friends.size()!=0){
-            for (Map.Entry<Integer , Friend> entry : acc.friends.entrySet()) {
+            for(Friend fr : acc.friends) {
                 String[] friend = new String[2];
-                friend[0] = String.valueOf(entry.getKey());
-                friend[1] = entry.getValue().login;
+                friend[0] = String.valueOf(fr.id);
+                friend[1] = fr.login;
                 send(new Command("friend", friend));
             }
         }else{
@@ -89,8 +87,8 @@ public class WorkingServ extends Thread {
         boolean res = Server.addFriend(acc.id, friend);
         if (res) {
             String[] friendArr = new String[2];
-            friendArr[0] = String.valueOf(friend.id);
-            friendArr[1] = friend.login;
+            friendArr[0] = String.valueOf(acc.friends.get(acc.friends.size() - 1).id);
+            friendArr[1] = acc.friends.get(acc.friends.size() - 1).login;
             send(new Command("friend", friendArr));
             if (Server.accs.get(friend.id).isOnline) {
                 send(new Command("online", String.valueOf(friend.id)));
@@ -99,7 +97,7 @@ public class WorkingServ extends Thread {
     }
 
     private void askToFriend(int idOf){
-        if(!acc.friends.containsValue(new Friend(Server.accs.get(idOf).id,Server.accs.get(idOf).login))) {
+        if(!acc.friends.contains(new Friend(Server.accs.get(idOf).id,Server.accs.get(idOf).login))) {
             if (Server.accs.get(idOf).isOnline) {
                 Server.accs.get(idOf).getWorkingServ().send(new Command("askToFriend", new String[]{String.valueOf(acc.id), acc.login}));
             } else {
@@ -112,22 +110,18 @@ public class WorkingServ extends Thread {
 
     private void sendOnline() {
         if (acc.friends.size() != 0) {
-            for (Map.Entry<Integer, Friend> entry : acc.friends.entrySet()) {
-                if (Server.accs.get(entry.getValue().id).isOnline) {
-                    send(new Command("online", String.valueOf(entry.getKey())));
-                    Server.accs.get(entry.getValue().id).getWorkingServ().send(new Command("online", String.valueOf(acc.id)));
-                }
-            }
+            acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend -> {
+                send(new Command("online", String.valueOf(friend.id)));
+                Server.accs.get(friend.id).getWorkingServ().send(new Command("online", String.valueOf(acc.id)));
+            });
         }
     }
+
     private void sendOffline() {
         if (acc != null) {
             if (acc.friends.size() != 0) {
-                for (Map.Entry<Integer , Friend> entry : acc.friends.entrySet()) {
-                if(Server.accs.get(entry.getKey()).isOnline){
-                    Server.accs.get(entry.getValue().id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id)));
-                    }
-                }
+                acc.friends.stream().filter(friend -> Server.accs.get(friend.id).isOnline).forEachOrdered(friend ->
+                    Server.accs.get(friend.id).getWorkingServ().send(new Command("offline", String.valueOf(acc.id))));
             }
         }
     }
@@ -140,9 +134,7 @@ public class WorkingServ extends Thread {
                 break;
             //отправляет сообщение
             case "send":
-                message =  new Message("message", command[1], command[2], command[3]);
-                send(message);
-                acc.addToDialogWith(message);
+                send(new Message("message", command[1], command[2], command[3]));
                 break;
             //логинит входящее соединение
             case "login":
@@ -150,7 +142,6 @@ public class WorkingServ extends Thread {
                 if (acc != null) {
                     acc.offlineMes.forEach(this::send);
                     acc.offlineMes = new ArrayList<>();
-                    sendHistory();
                     sendOnline();
                 }
                 break;
@@ -166,14 +157,6 @@ public class WorkingServ extends Thread {
             case "user" :
                 send(new Command(command[0],new String[]{command[1],command[2]}));
                 break;
-        }
-    }
-
-    void sendHistory(){
-        for (Map.Entry<Integer , Friend> entry : acc.friends.entrySet()) {
-            for (Message message1 : entry.getValue().with.get()){
-                send(message1);
-            }
         }
     }
 
